@@ -11,112 +11,115 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 清华大学计算机系操作系统课程
+# Tsinghua University Computer Department Operating System Course
 
 <br>
 <br>
 
-###  向勇 陈渝 李国良 任炬
+### Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
 
 <br>
 <br>
 
-## 2023 春季
+## Spring 2023
 
 ---
 
 <!-- theme: gaia -->
-## 第一讲 操作系统概述
-- [第一节 课程概述 & 教学安排](./lec1/p1-intro.html)
-- [第二节 什么是操作系统](./lec1/p2-whatisos.html)
-- [第三节 操作系统历史演化](./lec1/p3-oshistory.html)
-- [第四节 操作系统结构](./lec1/p4-osarchitecture.html)
-- [第五节 实践：试试UNIX/Linux](./lec1/p5-tryunix.html)
+## Lecture 1 Operating System Overview
+- [Section 1 Course Overview & Teaching Arrangement](./lec1/p1-intro.html)
+- [Section 2 The Definition of Operating System](./lec1/p2-whatisos.html)
+- [Section 3 The Evolution History of OS](./lec1/p3-oshistory.html)
+- [Section 4 Architecture of OS](./lec1/p4-osarchitecture.html)
+- [Section 5 Practice: Try UNIX/Linux](./lec1/p5-tryunix.html)
 
+<!--
 ---
-## 第二讲 实践与实验介绍
+## Lecture 2 Introduction to Practice and Experiments
 
-- [第一节 实践与实验简要分析](./lec2/p1-labintro.html)
-- [第二节 Compiler与OS](./lec2/p2-compiling.html)
-- [第三节 硬件启动与软件启动](./lec2/p3-boot.html)
-- [第四节 实践：裸机程序 -- LibOS](./lec2/p4-lab1.html)
-
----
-
-## 第三讲 基于特权级的隔离与批处理
-- [第一节 从 OS 角度看计算机系统](./lec3/p1-osviewarch.html)
-- [第二节 从 OS 角度看RISC-V](./lec3/p2-osviewrv.html)
-- [第三节 实践：批处理操作系统](./lec3/p3-batchos.html)
+- [Section 1 Brief Analysis of Practice and Experiment](./lec2/p1-labintro.html)
+- [Section 2 Compiler and OS](./lec2/p2-compiling.html)
+- [Section 3 Hardware Boot and Software Boot](./lec2/p3-boot.html)
+- [Section 4 Practice: Bare Metal Program -- LibOS](./lec2/p4-lab1.html)
 
 ---
 
-## 第四讲 多道程序与分时多任务
-- [第一节 相关背景与基本概念](./lec4/p1-multiprog.html)
-- [第二节 实践：多道程序与分时多任务操作系统](./lec4/p2-labs.html)
+## Lecture 3 Isolation and batch processing based on privilege level
+- [Section 1 Viewing computer systems from the perspective of OS](./lec3/p1-osviewarch.html)
+- [Section 2 RISC-V from the perspective of OS](./lec3/p2-osviewrv.html)
+- [Section III Practice: Batch Operating System](./lec3/p3-batchos.html)
 
 ---
 
-## 第五讲 地址空间-物理内存管理
-- [第一节 地址空间](./lec5/p1-memintro.html)
-- [第二节 内存分配](./lec5/p2-memalloc.html)
-- [第三节 实践：建立地址空间的操作系统](./lec5/p3-labs.html)
+## Lecture 4 Multiprogramming and time-sharing multitasking
+- [Section 1 Related Background and Basic Concepts](./lec4/p1-multiprog.html)
+- [Section 2 Practice: Multiprogramming and Time-sharing Multitasking Operating System](./lec4/p2-labs.html)
 
 ---
-## 第六讲  地址空间-虚拟存储管理
-- [第一节  虚拟存储的基本概念](./lec6/p1-vmoverview.html)
-- [第二节 页面置换算法 -- 局部页面置换算法](./lec6/p2-pagereplace-1.html)
-- [第三节 页面置换算法 -- 全局页面置换算法](./lec6/p2-pagereplace-2.html)
+
+## Lecture 5 Address Space - Physical Memory Management
+- [Section 1 Address Space](./lec5/p1-memintro.html)
+- [Section 2 Memory Allocation](./lec5/p2-memalloc.html)
+- [Section III Practice: Establishing an Operating System for Address Space](./lec5/p3-labs.html)
 
 ---
-## 第七讲  进程管理与单处理器调度
-- [第一节 进程管理](./lec7/p1-process-overview.html)
-- [第二节 单处理器调度](./lec7/p2-sched.html)
-- [第三节 实时管理与调度](./lec7/p3-realtime.html)
-- [第四节 实践：支持进程的操作系统](./lec7/p4-labs.html)
+## Lecture 6 Address Space - Virtual Storage Management
+- [Section 1 Basic Concepts of Virtual Storage](./lec6/p1-vmoverview.html)
+- [Section 2 Page Replacement Algorithm -- Partial Page Replacement Algorithm](./lec6/p2-pagereplace-1.html)
+- [Section 3 Page Replacement Algorithm -- Global Page Replacement Algorithm](./lec6/p2-pagereplace-2.html)
 
 ---
-## 第八讲  多处理器调度
-- [第一节 对称多处理与多核架构](./lec8/p1-multiprocessor-overview.html)
-- [第二节 多处理器调度概述](./lec8/p2-multiprocessor-sched-overview.html)
-- [第三节 Linux O(1) 调度](./lec8/p3-linux-O1-sched.html)
-- [第四节 Linux CFS（Completely Fair Schduler） 调度](./lec8/p4-linux-cfs-sched.html)
-- [第五节 Linux/FreeBSD BFS 调度](./lec8/p5-linux-bfs-sched.html)
+## Lecture 7 Process Management and Single Processor Scheduling
+- [Section 1 Process Management](./lec7/p1-process-overview.html)
+- [Section 2 Single Processor Scheduling](./lec7/p2-sched.html)
+- [Section III Real-time Management and Scheduling](./lec7/p3-realtime.html)
+- [Section 4 Practice: Operating System Supporting Processes](./lec7/p4-labs.html)
 
 ---
-## 第九讲  文件系统
-- [第一节 文件系统概述](./lec9/p1-fsoverview.html)
-- [第二节 文件系统的设计与实现](./lec9/p2-fsimplement.html)
-- [第三节 支持崩溃一致性的文件系统](./lec9/p3-fsjournal.html)
-- [第四节 实践：支持文件的操作系统](./lec9/p4-fs-lab.html)
+## Lecture 8 Multiprocessor Scheduling
+- [Section 1 Symmetrical multiprocessing and multi-core architecture](./lec8/p1-multiprocessor-overview.html)
+- [Section 2 Multiprocessor Scheduling Overview](./lec8/p2-multiprocessor-sched-overview.html)
+- [Section 3 Linux O(1) Scheduling](./lec8/p3-linux-O1-sched.html)
+- [Section 4 Linux CFS (Completely Fair Schduler) Scheduling](./lec8/p4-linux-cfs-sched.html)
+- [Section 5 Linux/FreeBSD BFS Scheduling](./lec8/p5-linux-bfs-sched.html)
+
+---
+## Lecture 9 File System
+- [Section 1 File System Overview](./lec9/p1-fsoverview.html)
+- [Section 2 Design and Implementation of File System](./lec9/p2-fsimplement.html)
+- [Section 3 A File System Supporting Crash Consistency](./lec9/p3-fsjournal.html)
+- [Section 4 Practice: Operating System Supporting Files](./lec9/p4-fs-lab.html)
 
 
 ---
-## 第十讲  线程与协程
-- [第一节 线程](./lec11/p1-thread.html)
-- [第二节 协程](./lec11/p2-coroutine.html)
-- [第三节 实践：支持线程/协程的OS(TCOS)](./lec11/p3-labs.html)
+## Lecture 10 Threads and coroutines
+- [Part 1 Thread](./lec11/p1-thread.html)
+- [Section 2 Coroutine](./lec11/p2-coroutine.html)
+- [Section 3 Practice: OS (TCOS) that supports threads/coroutines](./lec11/p3-labs.html)
 
 
 ---
-## 第十一讲  进程间通信
-- [第一节 进程间通信(IPC)概述](./lec10/p1-ipcoverview.html)
-- [第二节 实践：支持IPC的OS](./lec10/p2-ipclabs.html)
+## Lecture 11 Inter-process communication
+- [Section 1 Overview of Inter-Process Communication (IPC)](./lec10/p1-ipcoverview.html)
+- [Section 2 Practice: OS that supports IPC](./lec10/p2-ipclabs.html)
 
 ---
-## 第十二讲 同步互斥
-- [第一节 概述](./lec12/p1-syncmutex.html)
-- [第二节 信号量](./lec12/p2-semaphore.html)
-- [第三节 管程与条件变量](./lec12/p3-monitor-cond.html)
-- [第四节 同步互斥实例问题](./lec12/p4-instances.html)
-- [第五节 死锁](./lec12/p5-deadlock.html)
-- [第六节 实践：支持同步互斥的OS(SMOS)](./lec12/p6-labs.html)
+## Lecture 12 Synchronization Mutex
+- [Section 1 Overview](./lec12/p1-syncmutex.html)
+- [Section 2 Semaphore](./lec12/p2-semaphore.html)
+- [Section 3 Monitor and Condition Variables](./lec12/p3-monitor-cond.html)
+- [Section 4 Synchronization Mutex Instance Problems](./lec12/p4-instances.html)
+- [Section 5 Deadlock](./lec12/p5-deadlock.html)
+- [Section 6 Practice: OS(SMOS) Supporting Synchronous Mutex](./lec12/p6-labs.html)
 
 ---
-## 第十三讲 设备管理
-- [第一节 设备接口](./lec13/p1-devinterface.html)
-- [第二节 磁盘系统](./lec13/p2-disk.html)
-- [第三节 实践：支持device的OS（DOS）](./lec13/p3-labs.html)
+## Lecture Thirteen Device Management
+- [Section 1 Device Interface](./lec13/p1-devinterface.html)
+- [Section 2 Disk System](./lec13/p2-disk.html)
+- [Section 3 Practice: Support device OS (DOS)](./lec13/p3-labs.html)
+
+-->
 
 ---
-### OS课程介绍
-- [清华计算机系2023春季OS课程](./course-intro.html)
+### OS course introduction
+- [Tsinghua Computer Department 2023 Spring OS Course](./course-intro.html)
