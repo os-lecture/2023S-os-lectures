@@ -11,105 +11,106 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-## 第一讲 操作系统概述
-### 第二节 什么是操作系统
+## Lecture 1 Operating System Overview
+### Section 2 The Definition of Operating System
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
 
 <br>
 <br>
 
-2023年春季
+Spring 2023
 
 ---
 
-## 操作系统定义
+## The Definition of OS 
 
-没有公认的精确定义
+No common definition
 
-  操作系统是**管理硬件资源**、控制程序运行、改善人机界面和**为应用软件提供支持**的一种系统**软件**。[计算机百科全书]
+   OS is a kind of system **software** that **manages hardware resources**, controls the operation of programs, improves the computer-human interface, and **provides support for application software** [from Computer Encyclopaedia]
  
-![bg right 100%](./figs/os-position.png)
+<!--bg right 100%--> 
+![bg right:35% w:450](./figs/os-position.png)
 
-承上启下的操作系统
-
----
-
-## 操作系统是一个控制程序
-- 一个系统软件
-- 执行程序, 给程序**提供服务**
-- 控制程序执行过程, **防止错误**
-- **方便用户使用**计算机系统
-
-![bg right 100%](./figs/os-position.png)
+A bridge between user/app and machine
 
 ---
 
-## 操作系统是一个资源管理程序
-- 应用与硬件之间的**中间层**
-- **管理**各种软硬件资源
-- 访问软硬件资源的**服务**
-- **解决访问冲突**, 确保公平使用
+## OS is a control program
+- A system software
+- Execute the program, **provide services to the program**
+- Control the program execution process for **error prevention**
+- Provide **friendly human-computer interface**
 
-![bg right 100%](./figs/os-position.png)
+![bg right:35% w:450](./figs/os-position.png)
+
+---
+
+## OS is a resource management program
+- **Middle layer** between application and hardware
+- **Manage** various hardware and software resources
+- **Service** for accessing hardware and software resources
+- **Resolve resource contention** to ensure fair usage
+
+![bg right:25% w:380](./figs/os-position.png)
 
 ---
 
-## 操作系统中的软件分类
+## Software classification in OS
 
-- Shell – 命令行接口
-- GUI – 图形用户接口
-- Kernel – 操作系统的内部
+- Shell - Command-line interface
+- GUI – Graphical User Interface
+- Kernel – The key components of OS
 
-![bg right 100%](./figs/sort-of-os.png)
-
----
-## uCore/rCore 教学操作系统内核
-
-![w:800](./figs/ucorearch.png)
-
+![bg right:45% w:600](./figs/sort-of-os.png)
 
 ---
-## 操作系统内核的抽象
+## uCore/rCore: a simple OS kernel for teaching
+
+![w:700](./figs/ucorearch.png)
+
+
+---
+## Abstraction of OS kernel
 
 ![w:800](./figs/os-abstract.png)
 
 
 ---
-## 操作系统内核的抽象
+## Abstraction of OS kernel
 
 ![w:700](./figs/run-app.png)
 
 ---
-## 操作系统内核的特征
+## Characteristics of OS kernel
 
-- **并发**：计算机系统中同时存在多个运行程序
-- **共享**：程序间“同时”访问互斥共享各种资源
-- **虚拟**：每个程序” 独占” 一台完整的计算机
-- **异步**：服务的完成时间不确定，也可能失败 
-
----
-## 你对操作系统内核的理解
-
-###  用户/应用对操作系统的需求？
+- **Concurrency**: multiple running programs in the computer system at the same time
+- **Sharing**: "simultaneous" accesses to various shared resources that are mutually exclusive
+- **Virtualization**: each program seems to "own" the entire computer
+- **Asynchronization**: the completion time of a service is uncertain, sometimes the execution of the service may fail
 
 ---
-## 你对操作系统内核的理解
+## Your understanding of OS kernel
 
-###  用户/应用对操作系统的需求？
-- 高效 -- 易用 ?
-- 强大的操作系统服务 -- 简单的接口 ?
-- 灵活性 -- 安全性 ?
+### User/application requirements on OS?
+
+---
+## Your understanding of OS kernel
+
+### User/application requirements on OS?
+- Efficient -- Easy to use ?
+- Powerful OS services -- Simple interface?
+- Flexibility -- Security ?
 
 
 ---
-## 为什么要学习这门课程
+## Why study this course?
 
-- 可以了解计算机机壳后面的软硬件运行原理
-- 可以学习软硬件基础架构
-- 可以发现和修复难对付的bug
+- Understand how the software and hardware work inside the computer 
+- Learn the infrastructures of software and hardware 
+- Find and fix challenging bugs
 
 <!-- 如果你花费大量时间来开发，维护并调试应用程序，你最终还是要知道大量操作系统的知识 -->

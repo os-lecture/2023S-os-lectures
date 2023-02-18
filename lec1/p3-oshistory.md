@@ -12,167 +12,185 @@ backgroundColor: white
 <!-- page_number: true -->
 <!-- _class: lead -->
 
-## 第一讲 操作系统概述
+## Lecture 1 Operating System Overview
 
-### 第三节 操作系统历史演化
-
-<br>
-<br>
-
-向勇 陈渝 李国良 任炬 
+### Section 3 The Evolution History of OS 
 
 <br>
 <br>
 
-2023年春季
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
+
+<br>
+<br>
+
+Spring 2023
 
 ---
 
-## 单用户系统
+## Single User System
 
-单用户系统 (1945-1955)
+Single User System (1945-1955)
 
-- **手动**连线/纸带传输进行程序输入
-- 机器成本远大于人力**成本**
-- **操作系统 = 装载器 + 程序库**
-- 问题：昂贵组件的**低利用率**
+- Manual wire/using tape for program input
+- Machine cost is much greater than the labor cost
+- **OS = loader + libraries**
+- Problem: **Low utilization** of the expensive components
 
-![bg right 100%](./figs/history-single-user-system.png)
-
----
-
-## 批处理系统
-
-批处理系统 (1955-1965)
-
-- **磁带/磁盘传输**进行程序输入
-- 机器成本大于人力成本
-- 操作系统 = 装载器 + **程序控制器 + 输出处理器**
-- 问题：相比以前利用率提高
-
-![bg right 90%](./figs/history-batch-processing.png)
+![bg right:40% width:520](./figs/history-single-user-system.png)
 
 ---
 
-## 批处理系统
+## Batch processing system
 
-**批处理**系统 (1955-1965)
+Batch processing system (1955-1965)
 
-- 磁带/磁盘传输进行程序输入
-- 机器成本大于人力成本
-- 操作系统 = 装载器 + 程序控制器 + 输出处理器
-- 问题：相比以前利用率提高
+- Using **TAPE/DISK** for program input
+- Machine cost is greater than labor cost
+- OS = loader + **program controller + output processor**
+- Evolution: Increased utilization than before
 
-![bg right 100%](./figs/history-batch-process-graph.png)
-
----
-
-## 多道程序系统
-
-**多道**程序系统 (1955-1980)
-
-- 多个程序驻留**内存**中
-- 多个程序轮流使用 **CPU**
-- 操作系统 = 装载器 + **程序调度 + 内存管理** + 输出管理
-- 演变：相比以前利用率提高
-
-![bg right 100%](./figs/history-multiprogramming.png)
+![bg right:35% 100%](./figs/history-batch-processing.png)
 
 ---
 
-## 分时系统
+## Batch processing system
 
-分时系统 (1970- 至今)  
-- 多个程序驻留内存中  
-- 多个程序分时使用 CPU  
-- 操作系统 = 装载器 + 程序调度 + 内存管理 + **中断处理** +...  
-- 演变：相比以前利用率提高、与外界**交互延时**缩短
+Batch processing system (1955-1965)
 
-![bg right 100%](./figs/history-timesharing.png)
+- Using **TAPE/DISK** for program input
+- Machine cost is greater than labor cost
+- OS = loader + **program controller + output processor**
+- Evolution: Increased utilization than before
+
+![bg right:35% 100%](./figs/history-batch-process-graph.png)
 
 ---
-## Multics OS
+
+## Multiprogramming system
+
+Multiprogramming system (1955-1980)
+
+- multiple programs reside in **memory**
+- Multiple programs take **CPU** in turn
+- OS = loader + **program scheduler + memory management** + output management
+- Evolution: Further increased utilization
+
+![bg right:35% 100%](./figs/history-multiprogramming.png)
+
+---
+
+## Time Sharing System
+
+Time Sharing System (1970-present)
+- Multiple programs reside in memory
+- Multiple programs use the CPU in a time-sharing way
+- OS = loader + program scheduler + memory management + **interrupt handling** +...
+- Evolution: high utilization, reduced interaction delay 
+
+![bg right:35% 100%](./figs/history-timesharing.png)
+
+---
+## MULTICS
 
 ![](./figs/history-multics.png)
 
 ---
-## Multics OS
+## MULTICS
 
-![](./figs/multics-intro.png)
+-The project of MULTICS started in 1964, led by MIT, along with General Electric and Bell Labs.
 
----
-## 开放的UNIX
+-It is an influential early time-sharing OS built on GE 645 computer, and a multi-user and multi-task OS based on the concept of a single-level memory.
 
-![bg 50%](./figs/unix-family.png)
+-Innovations: PL/I, time-sharing scheduling, virtual memory, segemented memory, shared memory multiprocessor
 
-
----
-## Linux家族
-
-![bg 70%](./figs/linux-family.png)
+-Although it failed, it had significant influence on modern OSes, especially on Unix.
 
 ---
-## 个人电脑
+## UNIX
 
-个人电脑 (1981- )
-- 单用户
-- **计算机成本下降**使CPU利用率不再是最重要的关注点
-- 重点是**用户界面和多媒体功能**
-- 操作系统 = 装载器 + 程序调度 + 内存管理 + 中断处理 +...
-- 演变：**走向大众**，老的服务和功能不存在，越来越多的安全问题
+- Developed by Ken Thompson and Dennis Ritchie (AT&T's Bell Labs) in 1969. 
 
-![bg right:35% 100%](./figs/history-pc.png)
+- Orginally in  assembly language, rewritten in C by Dennis in 1973.
+
+- AT&T licensed Unix to outside parties in the late 1970s, bringing many Unix variants from vendors.
+
+![bg right:40% 100%](./figs/unix-family.png)
+
 
 ---
-## MacOS家族
+## Linux
+
+- Developed by Linus Torvalds and first released on 1991
+
+- Open-source and free
+
+- inspried by MINIX, a teaching OS kernel developed by Andrew S. Tanenbaum in the University of Helsinki
+
+![bg right:45% 100%](./figs/linux-family.png)
+
+---
+## Personal computer
+
+Personal computer (1981- )
+- Single user
+- **The computer cost drops** so that CPU utilization is no longer a key concern
+- Focus on **user interface and multimedia supports**
+- OS = loader + program scheduler + memory management + interrupt handling +...
+- Evolution: **to the public**, more security issues
+
+![bg right:20% 100%](./figs/history-pc.png)
+
+---
+## MacOS Family
 
 ![bg 55%](./figs/macos-family.png)
 
 ---
-## MacOS家族
+## MacOS Family
 
 ![bg 55%](./figs/macos-family-history.png)
 
 ---
-## Windows家族
+## Windows family
 
 ![bg 70%](./figs/windows-family.png)
 
 ---
-## 分布式系统
+## Distributed System
 
-**分布式**系统 (1990- )
-- 分布式多用户
-- 分布式系统利用率是关注点
-- 重点是网络/存储/计算的效率
-- 操作系统 = 分布式（装载器 + 程序/OS 调度 + 内存管理）
-- 演变：走向大众，走向**网络**，新的挑战 (不可靠/不确定)
+Distributed System (1990- )
+- Distributed multiple users
+- Resource utilization is a key concern
+- The focus is on the efficiency of network/storage/computation
+- OS = distributed (loader + program/OS scheduler + memory management)
+- Evolution: to the public, towards **Internet**, new challenges (unreliable/uncertain)
 
-![bg right:40% 100%](./figs/history-ds.png)
+![bg right:30% 100%](./figs/history-ds.png)
 
 ---
-## Android操作系统
-- 跨平台：支持Java应用程序
-- 运行时(runtime)：Android虚拟机
-- 应用框架：简化应用程序开发
+## Android OS
+- Cross-platform: support Java applications
+- Runtime: Android virtual machine
+- Application Framework: Simplified application development framework
 
 
 ![bg right 80%](./figs/android-system-architecture.png)
 
 ---
-## AIoT操作系统
+## AIoT operating system
 
-AIoT 系统 (2000- )
-- 分布式**多设备**
-- 分布式系统利用率/可用性是关注点
-- 重点是网络/存储/计算的效率
-- 操作系统 = 分布式（程序/OS 调度 + 内存管理 + 安全/更新）
-- 演变：走向设备，走向网络，新的挑战 (不可靠/大数据)
+AIoT system (2000- )
+- Distributed multiple devices
+- Utilization/availability is a key concern
+- The focus is on the efficiency of network/storage/compute 
+- OS = distributed (program/OS scheduler + memory management + security/updates)
+- Evolution: towards device, towards network, new challenges (unreliable/big data)
 
 
-![bg right:40% 100%](./figs/history-aiot.png)
+![bg right:28% 100%](./figs/history-aiot.png)
 
 ---
-## Fuchsia操作系统
+## Fuchsia OS
 
-![bg 75%](./figs/fuchsia-os-intro.png)
+![bg 65%](./figs/fuchsia-os-intro.png)
