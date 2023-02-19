@@ -11,7 +11,7 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# Tsinghua University Computer Department Operating System Course
+# Operating System
 
 <br>
 <br>
