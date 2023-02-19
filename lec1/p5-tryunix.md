@@ -189,7 +189,7 @@ It reads bytes from input, and writes them to output
 
 <style scoped>
 {
-  font-size: 25px
+  font-size: 33px
 }
 </style>
 
@@ -206,7 +206,7 @@ Note: read() can read less, but not more
 
 File access mode: open -> read/write -> close
 
-![bg right:45% 100%](../lec7/figs/fork.png)
+
 
 <!--eg "man 2 open".
 man 1 is a shell command such as ls; man 2 is a system call such as open; man 3 is a function description-->
