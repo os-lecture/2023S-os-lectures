@@ -46,6 +46,14 @@ Spring 2023
 
 ----
 
+## About Me
+
+- E-mail: renju@tsinghua.edu.cn
+- Homepage: https://juren1987.github.io
+- Research Interests: Internet-of-Things, Edge Computing & Edge Intelligence, Operating System
+
+- First author of 《openEuler操作系统》
+----
 ## Preliminary knowledge
 
 ### Programming Languages (Assembly, C, and Rust)
@@ -207,7 +215,7 @@ Spring 2023
 </style>
 ## Survey
 
-[Course Selection Questionnaire for 2022 Fall Semester Operating System Course](http://oscourse2019.mikecrm.com/fPozIRL) (Access password: XxW21Ur1CF)
+[Questions for 2023 Spring OS Course](http://oscourse2019.mikecrm.com/k2KiFjA) (Access password: 8VC7x2Yxk)
 
 - Why do you want to take this course?
 - How are you going to take this course?
