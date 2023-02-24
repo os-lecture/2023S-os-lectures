@@ -33,7 +33,7 @@ backgroundColor: white
 - [Section 4 Architecture of OS](./lec1/p4-osarchitecture.html)
 - [Section 5 Practice: Try UNIX/Linux](./lec1/p5-tryunix.html)
 
-<!--
+
 ---
 ## Lecture 2 Introduction to Practice and Experiments
 
@@ -42,6 +42,7 @@ backgroundColor: white
 - [Section 3 Hardware Boot and Software Boot](./lec2/p3-boot.html)
 - [Section 4 Practice: Bare Metal Program -- LibOS](./lec2/p4-lab1.html)
 
+<!--
 ---
 
 ## Lecture 3 Isolation and batch processing based on privilege level
