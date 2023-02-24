@@ -11,86 +11,86 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第二讲 实践与实验介绍
-## 第二节 Compiler与OS
+# Lecture 2 Introduction to Practice and Experiments
+## Section 2 Compiler and OS
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
 <br>
 <br>
 
-2023年春季
+Spring 2023
 
 ---
-提纲
+Outline
 
-### 1. 硬件环境
-2. 应用程序执行环境
-3. 操作系统执行环境
+### 1. Hardware environment
+2. Application execution environment
+3. Operating system execution environment
 
 ---
 
-#### 开发的硬件环境
+#### Development hardware environment
 ![bg right:67% 85%](figs/x86.png)
 
 ---
 
-#### 目标硬件环境
+#### Target hardware environment
 ![bg right:70% 85%](figs/rv.png)
 
 ---
-提纲
+Outline
 
-1. 硬件环境
-### 2. 应用程序执行环境
-3. 操作系统执行环境
+1. Hardware environment
+### 2. Application execution environment
+3. Operating system execution environment
 
 ---
 
-#### 编译器工作
-- 源码-->汇编码
+#### Compiler
+- Source code --> assembly code
 ![bg right:55% 100%](figs/app-software-stack.png)
 ---
 
-#### Assembler工作
-- 汇编码 --> 机器码
+#### Assembler
+- Assembly code --> machine code
 ![bg right:55% 100%](figs/app-software-stack.png)
 ---
-#### linker（链接器）工作
-- 多个机器码目标文件 --> 单个机器码执行文件
+#### Linker
+- Multiple object files in machine code --> single executable file in machine code
 ![bg right:55% 100%](figs/app-software-stack.png)
 
 ---
 
-#### OS工作
-- 加载/执行/管理机器码执行文件
+#### OS
+- Load/execute/manage execution files in machine code
 ![bg right:50% 100%](figs/app-software-stack.png)
 
 
 ---
-提纲
+Outline
 
-1. 硬件环境
-2. 应用程序执行环境
-### 3. 操作系统执行环境
-
----
-
-#### 编译器/汇编器/链接器工作
-- 源码 ---> 汇编码 ---> 机器码 --->执行程序
-- Bootloader加载OS执行
-
-![bg right:50% 100%](figs/os-software-stack.png)
-
+1. Hardware environment
+2. Application execution environment
+### 3. Operating system execution environment
 
 ---
 
-#### 可执行文件格式
-三元组
-* CPU 架构/厂商/操作系统
+#### Compiler/Assembler/Linker Workflow
+- Source code ---> Assembly code ---> Machine code ---> Executable program
+- Bootloader loads OS for execution
+
+![bg right:45% 100%](figs/os-software-stack.png)
+
+
+---
+
+#### Executable file format
+Triad:
+* CPU Architecture/Vendor/OS
 ```
 rustc --print target-list | grep riscv
 riscv32gc-unknown-linux-gnu
@@ -100,28 +100,38 @@ riscv64imac-unknown-none-elf
 ```
 * ELF: Executable and Linkable Format
 
-![bg right:50% 100%](figs/os-software-stack.png)
+![bg right:45% 100%](figs/os-software-stack.png)
 
 
 ---
 
-#### 链接和执行
+#### Link and Execution
 
 ![bg 70%](figs/link.png)
 
 ---
-#### 函数库
-- 标准库：依赖操作系统
-  - Rust: std 标准库
-  - C：glibc, musl libc 
-- 核心库：与操作系统无关
-  - Rust: core 库
-  - C: Linux/BSD kernel libc
-![bg right:50% 100%](figs/os-software-stack.png)
+#### Function library
+- Standard library: depends on the operating system
+   - Rust: std standard library
+   - C: glibc, musl libc
+- Core library: OS independent
+   - Rust: core library
+   - C: Linux/BSD kernel libc
+![bg right:45% 100%](figs/os-software-stack.png)
 
 ---
-#### 裸机程序
-与操作系统无关的OS类型的程序（Bare Metal program, 裸机程序）
+
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
+
+#### Bare metal program
+OS-type programs that have no relationship with OS(Bare Metal program)
+
+
+
 ```
 // os/src/main.rs
 #![no_std]
@@ -134,64 +144,64 @@ use core::panic::PanicInfo;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+     loop {}
 }
 ```
 
 ---
-#### ELF文件格式
+#### ELF file format
 
-文件格式
+File format
 ```
 file target/riscv64gc-unknown-none-elf/debug/os
-target/riscv64gc-unknown-none-elf/debug/os: ELF 64-bit LSB executable, UCB RISC-V, ......
+target/riscv64gc-unknown-none-elf/debug/os: ELF 64-bit LSB executable, UCB RISC-V,  …
 ```
-[ELF文件格式](https://wiki.osdev.org/ELF) Executable and Linkable Format
+[ELF file format](https://wiki.osdev.org/ELF) Executable and Linkable Format
 
 ---
-#### ELF文件格式
+#### ELF file format
 
 ![bg 55%](figs/elf.png)
 
 ---
-#### 文件头信息
+#### File header information
 
-文件头信息
+File header information
 ```
 rust-readobj -h target/riscv64gc-unknown-none-elf/debug/os
-   File: target/riscv64gc-unknown-none-elf/debug/os
-   Format: elf64-littleriscv
-   Arch: riscv64
-   AddressSize: 64bit
-   ......
-   Type: Executable (0x2)
-   Machine: EM_RISCV (0xF3)
-   Version: 1
-   Entry: 0x0
-   ......
-   }
+    File: target/riscv64gc-unknown-none-elf/debug/os
+    Format: elf64-littleriscv
+    Arch: riscv64
+    AddressSize: 64bit
+     …
+    Type: Executable (0x2)
+    Machine: EM_RISCV (0xF3)
+    Version: 1
+    Entry: 0x0
+     …
+    }
 ```
 
 ---
-#### 导出汇编程序
+#### Export assembly code
 
 
-反汇编导出汇编程序
+Disassemble toi export assembly code
 ```
 rust-objdump -S target/riscv64gc-unknown-none-elf/debug/os
-   target/riscv64gc-unknown-none-elf/debug/os:       file format elf64-littleriscv
+    target/riscv64gc-unknown-none-elf/debug/os: file format elf64-littleriscv
 ```
-代码中移除了 main 函数并将项目设置为 #![no_main] 
- - 没有一个传统意义上的入口点（即程序首条被执行的指令所在的位置）
- - Rust 编译器会生成一个空程序
- - 这是一个**面向操作系统开发**的程序
+The main function is removed in the code and the item is set to #![no_main]
+  - There is no entry point in the traditional sense (entry point: the location of the first executed instruction of the program)
+  - The Rust compiler generates an empty program
+  - This is a program for **OS development**
 
 ---
-#### App/OS内存布局
-- .text: 数据段
-- .rodata：已初始化数据段，只读的全局数据（常数或者是常量字符串）
-- .data：可修改的全局数据
-- .bss：未初始化数据段
-- 堆 （heap）向高地址增长
-- 栈 （stack）向低地址增长
-![bg right:52% 140%](figs/memlayout.png)
+#### App/OS Memory Layout
+- .text: data segment
+- .rodata: initialized data segment, read-only global data (constant number or constant string)
+- .data: modifiable global data
+- .bss: Uninitialized data segment
+- The heap grows towards higher addresses
+- The stack grows towards lower addresses
+![bg right:45% 130%](figs/memlayout.png)
