@@ -11,286 +11,322 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第二讲 实践与实验介绍
-## 第一节 实践与实验简要分析
+# Lecture 2 Experiment Introduction
+## Section Introduction of Basic Experiments
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
 
 <br>
 <br>
 
-2023年春季
+Spring 2023
 
 ---
-提纲
+Outline
 
-### 1. 原理、实践与实验介绍
-2. 循续渐进的操作系统实验
-3. 实验安排
+### 1. Principle, Practice and Experiments
+2. Step-by-step OS Experiments
+3. Experiment Schedule
 
 ---
 
-##### 满足应用逐渐增加的需求
+##### Meet the increasing demands of applications
 * LibOS
-* 批处理OS
-* 多道程序与分时多任务OS
+* Batch Processing OS
+* Multiprogramming and time-sharing multi-task OS
 
 ---
 
-##### 逐步体现操作系统的概念抽象
+##### Gradually show the conceptual abstraction of OS
 
-* 地址空间抽象的OS
-* 进程抽象的OS
-* 文件抽象的OS
+* OS with the abstraction of address space  
+* OS with the abstraction of process 
+* OS with the abstraction of file system
 ---
 
-##### 逐步体现操作系统的关键能力
+##### Gradually show the key capabilities of OS
 
-* 可进程间通信的OS
-* 可并发的OS
-* 管理I/O设备的OS
+* OS with inter-process communication
+* OS with concurrent processing
+* OS with I/O device management
 ---
-提纲
+Outline
 
-1. 原理、实践与实验介绍
-### 2. 循续渐进的操作系统实验
-3. 实验安排
+1. Principles, Practice and Experiments
+### 2. Step-by-step OS Experiments
+3. Experiment Schedule
 
 ---
+
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
 
 #### LibOS
 
-- 远古操作系统雏形
-- 现代简单嵌入式操作系统
+- A prototype of ancient OS
+- A modern and simple embedded OS
 
-##### 相关知识点
-- 函数调用: 编译器与操作系统的配合
-- 硬件启动和软件启动
-- 编写/调试裸机程序
+##### Related Knowledge Points
+- Function call: cooperation of the compiler and the OS
+- Hardware start and software start
+- Write/debug bare metal programs
 
-裸机程序(Bare Metal Program)：与操作系统无关的OS类型的程序
+Bare Metal Program: an OS-type program that cannot be regarded as OS
 
-![bg right:45% 100%](figs/os-as-lib.png)
+![bg right:35% 100%](figs/os-as-lib.png)
 
---- 
+---
 
-#### 批处理OS
-- 支持系统调用
+#### Batch OS
+- Support system calls
 
-##### 相关知识点
+##### Related Knowledge Points
 
-- 特权级/特权操作
-- RISC-V特权级/特权操作
-- 系统调用/异常
-- 加载&执行&切换应用程序
-- 特权级切换
+- Privilege level / privileged operation
+- RISC-V privilege level/privileged operation
+- system calls/exceptions
+- Load & Execute & Switch Apps
+- Privilege level switching
 
-![bg right:53% 100%](figs/batch-os.png)
+![bg right:45% 100%](figs/batch-os.png)
 
---- 
+---
 
-#### 多道程序OS
-- 支持多个程序**同时驻留内存**
-- 支持多个程序**依次执行**
-##### 相关知识点
-- 内存空间划分与管理
-- 协作式调度
+#### Multiprogramming OS
+- Support multiple programs **residing in the memory at the same time**
+- Support multiple programs **executing in a sequential way**
+##### Related Knowledge Points
+- Memory division and management
+- Collaborative Scheduling
 
-![bg right:51% 100%](figs/multiprog-os.png)
+![bg right:46% 100%](figs/multiprog-os.png)
 
---- 
+---
 
-#### 分时多任务OS
-- 支持多个程序**轮流执行**
+#### Time-sharing multitasking OS
+- Support multiple programs **execute in turn**
 
-##### 相关知识点
-- **中断处理**
-- 上下文切换
-- 抢占式调度
+##### Related Knowledge Points
+- **Interrupt handling**
+- context switching
+- Preemptive scheduling
 
-![bg right:57% 100%](figs/timesharing-os.png)
+![bg right:45% 100%](figs/timesharing-os.png)
 
---- 
-#### OS的地址空间抽象
-- 支持程序间**内存空间隔离**
+---
+#### Address Space Abstraction
+- Support **memory space isolation** between programs
 
-##### 相关知识点
-- 地址空间抽象
-- 静态内存分配
-- 动态内存分配
-- 页式存储管理
+##### Related Knowledge Points
+- Address space abstraction
+- Static memory allocation
+- Dynamic memory allocation
+- Paged memory management
 
-![bg right:54% 100%](figs/address-space-os.png)
+![bg right:48% 100%](figs/address-space-os.png)
 
---- 
-#### OS的地址空间抽象
-- **超越物理内存**的虚拟存储
-##### 相关知识点
-- 局部性原理
-- 缺页异常
-- 虚拟页式存储
-- 置换算法
-![bg right:50% 100%](figs/address-space-os.png)
+---
+#### Address Space Abstraction
+- **Virtual Memory**
+##### Related Knowledge Points
+- Principle of locality
+- Page fault
+- Virtual page storage
+- Page Replacement algorithm
+![bg right:48% 100%](figs/address-space-os.png)
 
---- 
+---
 
-#### OS的进程抽象
+#### Process Abstraction
 
-- 支持**动态创建**程序执行
+- Support **dynamic creation and execution** for programs
 
-##### 相关知识点
+##### Related Knowledge Points
 
-- 进程抽象
-- 进程管理
-- 调度机制
+- Process abstraction
+- Process management
+- Scheduling mechanisms
   
-![bg right:57% 100%](figs/process-os.png)
+![bg right:48% 100%](figs/process-os.png)
 
---- 
+---
 
-#### OS的进程抽象
+#### Process Abstraction
 
-- 支持多处理器**并行**
+- Support **parallel processing** among multiple processors 
 
-##### 相关知识点
-- 多处理器/多核架构
-- 多处理器调度
-- 实际OS调度
+##### Related Knowledge Points
+- Multi-processor/multi-core architecture
+- Multi-processor scheduling
+- Scheduling implementation in OS
   
-![bg right:62% 100%](figs/process-os.png)
+![bg right:48% 100%](figs/process-os.png)
 
---- 
-#### OS的文件抽象
-- 处理数据的**便捷持久存储**
+---
+#### File Abstraction
+- **Convenient persistent storage** for data processing
 
-##### 相关知识点
-- 文件抽象
-- 文件组织结构
-- 文件系统设计与实现
+##### Related Knowledge Points
+- File abstraction
+- File architecture
+- File system design and implementation
 
-![bg right:54% 100%](figs/fs-os.png)
+![bg right:50% 100%](figs/fs-os.png)
 
---- 
-#### 可进程间通信的OS
-- 进程间可显式/隐式**交互**信息
-##### 相关知识点
-- 信号、管道
-- 消息队列、共享内存
-- I/O重定向
+---
+
+<style scoped>
+{
+  font-size: 33px
+}
+</style>
+
+
+#### OS with Interprocess Communication
+- Explicit/implicit **information exchange**  between processes
+##### Related Knowledge Points
+- Signal, pipe
+- Message queue, shared memory
+- I/O redirection
 
 ![bg right:50% 100%](figs/ipc-os.png)
 
 
---- 
-#### 可并发的OS
-- 提升CPU的**利用率**
-##### 相关知识点
-- 线程：用户/内核线程
-- 协程
-- 进程、线程和协程的关系
+---
+#### OS with Concurrent Processing
+- Improve CPU **utilization**
+##### Related Knowledge Points
+- Thread: user/kernel thread
+- Coroutine
+- The relationship of process, thread and coroutine
 
-![bg right:54% 100%](figs/sync-os.png)
+![bg right:50% 100%](figs/sync-os.png)
 
---- 
-#### 可并发的OS
-- 合理**共享资源**
-- 同步与互斥
-##### 相关知识点
-- 同步互斥的机制
-- 同步互斥解决并发问题
-- 死锁等问题
-![bg right:57% 100%](figs/sync-os.png)
---- 
-#### 管理I/O设备的OS
-- 支持各种外设
-##### 相关知识点
-- 设备抽象
-- 设备执行模型
-- 同步/异步 I/O
-- I/O设备管理
+---
+
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
+
+
+#### OS with Concurrent Processing
+- **Resources sharing**
+- Synchronization and mutual exclusion
+##### Related Knowledge Points
+- Mechanisms of synchronization and mutual exclusion
+- How to solve concurrency problems, such as deadlock
+![bg right:45% 100%](figs/sync-os.png)
+---
+#### OS with I/O management
+- Support various peripherals
+##### Related Knowledge Points
+- Device abstraction
+- Device Execution Model
+- Synchronous/Asynchronous I/O
+- I/O device management
 ![bg right:50% 100%](figs/io-os.png)
 
 
 ---
-提纲
+Outline
 
-1. 原理、实践与实验介绍
-2. 循续渐进的操作系统实验
-### 3. 实验安排
-
----
-
-#### 实验一：操作系统的基本支持
-##### 覆盖内容
-* LibOS、 批处理OS、 多道程序与分时多任务OS
-##### 知识点：特权级和切换
-- 计算机/OS启动
-- 特权级切换、系统调用、特权级相关异常、任务切换
-- 应用程序/库/内核的关系
+1. Principles, Practice and Experiments
+2. Step-by-step OS Experiments
+### 3. Experiment Schedule
 
 ---
 
-#### 实验二：地址空间
-##### 覆盖内容
-* 地址空间抽象的OS
-##### 知识点：页表
-- 地址空间
-- 应用与内核之间在不同地址空间的数据交互/控制交互
-- 内存/地址相关异常（如缺页异常）
+#### Experiment 1: Basic support of the operating system
+##### Covered Knowledge
+* LibOS, batch OS, multiprogramming and time-sharing multitasking OS
+##### Knowledge Point: Privilege Level and Switching
+- Computer/OS startup
+- Privilege level switching, system calls, privilege level related exceptions, task switching
+- Relationship among application, library and OS kernel 
 
 ---
 
-#### 实验三：进程管理与调度
-##### 覆盖内容
-* 进程抽象的OS
-##### 知识点：进程控制块PCB
-- 进程管理
-- 调度算法
+#### Experiment 2: Address Space
+##### Covered Knowledge
+* Address Space Abstraction
+##### Knowledge point: page table
+- Address space
+- Data exchange/control interaction between application and kernel in different address spaces
+- Memory/address-related exceptions (e.g., page fault)
 
 ---
 
-#### 实验四：文件系统与进程间通信
-##### 覆盖内容
-* 文件抽象的OS、可进程间通信的OS
-##### 知识点：文件
-- 文件系统实现
-- 进程间通信机制
-
----
-#### 实验五：同步互斥
-##### 覆盖内容
-* 可并发的OS
-##### 知识点
-- 线程
-- 同步互斥的机制、解决同步互斥问题、死锁问题
-- 优先级反转问题
+#### Experiment 3: Process Management and Scheduling
+##### Covered content
+* Process abstraction
+##### Knowledge point: process control block (PCB)
+- Process management
+- Process scheduling algorithms
 
 ---
 
-#### 教学实验的参考实现
+#### Experiment 4: File System and Inter-process Communication
+##### Covered content
+* File abstraction, inter-process communication
+##### Knowledge point: File
+- Implementation of File system 
+- Inter-process communication mechanisms
 
-* 参考实现
-    * [uCore](https://github.com/uCore-RV-64/uCore-RV-64-answer)
-    * [rCore](https://github.com/zflcs/rCore)
-    * [Modular rCore](https://github.com/YdrMaster/rCore-Tutorial-in-single-workspace/)
-* 实验报告内容建议
-    * 实验开始时间、完成时间和代码提交次数
-    * 你在实验中遇到的主要问题和解决方法
-    * 你的回答与参考实现有什么不同？
+---
+#### Experiment 5: Synchronization & Mutex
+##### Covered content
+* Concurrent processing
+##### Knowledge points
+- Thread
+- The mechanism of synchronization & mutex, solving the problem of synchronization & mutex, solving the deadlock problem
+- Priority inversion problem
 
 ---
 
-#### 扩展实验（即大实验，课程设计）
+<style scoped>
+{
+  font-size: 33px
+}
+</style>
 
-4周内完成基础实验1~5后，与老师协商：选择完成扩展实验来代替考试
 
-**早完成基础实验，可早开展扩展实验**
+#### Reference implementation of teaching experiments
 
-实现新feature（多核、新外设、新处理器、新功能）的支持
+* Reference implementation
+     * [uCore](https://github.com/uCore-RV-64/uCore-RV-64-answer)
+     * [rCore](https://github.com/zflcs/rCore)
 
-如支持游戏、树莓派/SiFive、网络、USB、AI等
+* Suggestions for preparing the experiment reports
+     * Start time, completion time and the number of code submissions
+     * The main problems and solutions you encountered in the experiment
+     * How does your answer differ from the reference implementation?
 
-参加全国大学生OS比赛
+---
+
+<style scoped>
+{
+  font-size: 33px
+}
+</style>
+
+
+#### Extended experiment (ie big experiment, course design)
+
+After completing the basic experiment 1~5 within 4 weeks, negotiate with the teacher: choose to complete the extended experiment instead of the exam
+
+**Complete the basic experiment early, and start the extended experiment earlier**
+
+Implement support for new features (multi-core, new peripherals, new processors, new functions)
+
+Such as supporting games, Raspberry Pi/SiFive, network, USB, AI, etc.
+
+Participate in the National Undergraduate OS Competition
