@@ -280,7 +280,7 @@ Example: [redirect.c](https://pdos.csail.mit.edu/6.828/2021/lec/l-overview/redir
 - By default, FD=1 means the standard output (screen)
 - open() always uses the minimum unused FD
 - Set the FD of "output.txt" as 1 by using close(1) + open(...)
-- exec() reserves the FDs, the ouput will be redirected to "output.txt" by execute "echo"
+- exec() reserves the FDs, the ouput will be redirected to "output.txt" by executing "echo"
 
        $ redirect
        $ cat output.txt
