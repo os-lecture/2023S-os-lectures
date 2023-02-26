@@ -498,7 +498,7 @@ auipc (add upper immediate to pc): used to construct a PC-relative address by ad
 #### Function Call Jump Instructions
 ![w:1000](figs/fun-call-in-rv.png)
 
-The pseudo-instruction, **ret**, is translated as jalr x0, 0(x1), which means jumping to the address saved by the register ra (x1).
+The pseudo-instruction, **ret**, is translated as jalr x0, 0(x1), which means jumping to the address saved by the register ra (i.e., x1).
 *[Documentation of RISC-V Assembly](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md)*
 
 
