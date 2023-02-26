@@ -256,7 +256,7 @@ argument-array stores the command line arguments and passes to main() by exec.
 exec() replaces the current process with an executable file
 - Discard the instruction and data memory
 - Load instructions and memory from the file
-- File descriptors are preserved
+- In default, file descriptors are preserved
 
 ---
 ## Some UNIX/Linux applications
