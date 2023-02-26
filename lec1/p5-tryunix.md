@@ -93,7 +93,7 @@ table {
 | ``int fork()`` | Create a process, return child's PID. |
 | ``int exit(int status)`` | Terminate the current process; status reported to wait(). No return. |
 | ``int wait(int *status)`` | Wait for a child to exit; exit status in *status; returns child PID. |
-| ``int kill (int pid)`` | Terminate process PID. Returns 0, or -1 for error. |
+| ``int kill (int pid)`` | Terminate process PID. Returns 0 for success, or -1 for error. |
 | ``int getpid()`` | Return the current process's PID. |
 
 ---
@@ -127,7 +127,7 @@ table {
 | ``int read(int fd, char *buf, int n)`` | Read n bytes into buf; returns number read; or 0 if end of file. |
 | ``int close(int fd)`` | Release open file fd. |
 | ``int dup(int fd)`` | Return a new file descriptor referring to the same file as fd.|
-| ``int pipe(int p[])`` | Create a pipe, put read/write file descriptors in pl0] and p[1]. |
+| ``int pipe(int p[])`` | Create a pipe, put read/write file descriptors in p[0] and p[1]. |
 | ``int chdir(char *dir)`` | Change the current directory. |
 
 ---
@@ -145,7 +145,7 @@ table {
 | ``int mknod(char *file, int, int)`` | Create a device file. |
 | ``int fstat(int fd, struct stat *st)`` | Place info about an open file into *st. |
 | ``int stat(char *file, struct stat *st)`` | Place info about a named file into *st. |
-| ``int link(char *file1, char *file2)`` | Create another name (file2) for the file filel. |
+| ``int link(char *file1, char *file2)`` | Create another name (file2) for the file file1. |
 | ``int unlink(char *file)`` | Remove a file. |
 
 
