@@ -54,7 +54,7 @@ Bare Metal Program: an OS-type program that is independent on OS
 
 - Build execution environment for applications
    - Keep applications isolated from hardware
-   - Simplifiey the difficulty and complexity of applications accessing hardware
+   - Simplify the difficulty and complexity of applications accessing hardware
 - Execution Environment: A multi-level **software and hardware system** responsible for providing corresponding functions and resources for applications. 
  
 ![bg right:30% 100%](figs/os-as-lib.png)
