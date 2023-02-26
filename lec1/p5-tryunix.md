@@ -55,7 +55,7 @@ Spring 2023
    * Document content
    * File name, directory
    * Access Control (Security)
-   * Many others: user, IPC, network, time, endpoint
+   * Many others: user, IPC, network, time
 
 
 ---
