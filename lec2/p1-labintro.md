@@ -299,16 +299,16 @@ Outline
 </style>
 
 
-#### Reference implementation of teaching experiments
+#### Reference Implementation
 
-* Reference implementation
+* Reference Implementation
      * [uCore](https://github.com/uCore-RV-64/uCore-RV-64-answer)
      * [rCore](https://github.com/zflcs/rCore)
 
 * Suggestions for preparing the experiment reports
      * Start time, completion time and the number of code submissions
-     * The main problems and solutions you encountered in the experiment
-     * How does your answer differ from the reference implementation?
+     * The main problems and solutions you faced in the experiments
+     * How does your solution differ from the reference implementation?
 
 ---
 
@@ -319,14 +319,13 @@ Outline
 </style>
 
 
-#### Extended experiment (ie big experiment, course design)
+#### Course Project
 
-After completing the basic experiment 1~5 within 4 weeks, negotiate with the teacher: choose to complete the extended experiment instead of the exam
+After completing the basic experiment 1~5 within 4 weeks, discuss with your teacher to choose a project.
 
-**Complete the basic experiment early, and start the extended experiment earlier**
 
 Implement support for new features (multi-core, new peripherals, new processors, new functions)
 
 Such as supporting games, Raspberry Pi/SiFive, network, USB, AI, etc.
 
-Participate in the National Undergraduate OS Competition
+National OS Development Competition for Undergraduates
