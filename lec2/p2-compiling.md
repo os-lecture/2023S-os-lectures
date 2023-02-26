@@ -29,24 +29,24 @@ Outline
 
 ### 1. Hardware environment
 2. Application execution environment
-3. Operating system execution environment
+3. OS execution environment
 
 ---
 
-#### Development hardware environment
-![bg right:67% 85%](figs/x86.png)
+#### Hardware Environment for Development
+![bg right:60% 80%](figs/x86.png)
 
 ---
 
-#### Target hardware environment
-![bg right:70% 85%](figs/rv.png)
+#### Hardware Environment for Deployment
+![bg right:60% 85%](figs/rv.png)
 
 ---
 Outline
 
 1. Hardware environment
 ### 2. Application execution environment
-3. Operating system execution environment
+3. OS execution environment
 
 ---
 
@@ -60,7 +60,7 @@ Outline
 ![bg right:55% 100%](figs/app-software-stack.png)
 ---
 #### Linker
-- Multiple object files in machine code --> single executable file in machine code
+- Multiple object files in machine code --> a single executable file in machine code
 ![bg right:55% 100%](figs/app-software-stack.png)
 
 ---
@@ -75,7 +75,7 @@ Outline
 
 1. Hardware environment
 2. Application execution environment
-### 3. Operating system execution environment
+### 3. OS execution environment
 
 ---
 
@@ -89,7 +89,7 @@ Outline
 ---
 
 #### Executable file format
-Triad:
+Triplet:
 * CPU Architecture/Vendor/OS
 ```
 rustc --print target-list | grep riscv
@@ -107,14 +107,14 @@ riscv64imac-unknown-none-elf
 
 #### Link and Execution
 
-![bg 70%](figs/link.png)
+![bg 60%](figs/link.png)
 
 ---
 #### Function library
-- Standard library: depends on the operating system
+- Standard library: OS dependent
    - Rust: std standard library
    - C: glibc, musl libc
-- Core library: OS independent
+- Core library: OS independent 
    - Rust: core library
    - C: Linux/BSD kernel libc
 ![bg right:45% 100%](figs/os-software-stack.png)
@@ -128,7 +128,7 @@ riscv64imac-unknown-none-elf
 </style>
 
 #### Bare metal program
-OS-type programs that have no relationship with OS(Bare Metal program)
+OS-type programs that are independent on OS (Bare Metal program)
 
 
 
@@ -186,13 +186,13 @@ rust-readobj -h target/riscv64gc-unknown-none-elf/debug/os
 #### Export assembly code
 
 
-Disassemble toi export assembly code
+Disassemble to export assembly code
 ```
 rust-objdump -S target/riscv64gc-unknown-none-elf/debug/os
     target/riscv64gc-unknown-none-elf/debug/os: file format elf64-littleriscv
 ```
-The main function is removed in the code and the item is set to #![no_main]
-  - There is no entry point in the traditional sense (entry point: the location of the first executed instruction of the program)
+The main function is removed in the code and the project is set to #![no_main]
+  - There is no traditional entry point (entry point: the location of the first executed instruction of the program)
   - The Rust compiler generates an empty program
   - This is a program for **OS development**
 
@@ -201,7 +201,7 @@ The main function is removed in the code and the item is set to #![no_main]
 - .text: data segment
 - .rodata: initialized data segment, read-only global data (constant number or constant string)
 - .data: modifiable global data
-- .bss: Uninitialized data segment
-- The heap grows towards higher addresses
-- The stack grows towards lower addresses
+- .bss: uninitialized data segment
+- The heap grows towards higher address
+- The stack grows towards lower address
 ![bg right:45% 130%](figs/memlayout.png)
