@@ -246,12 +246,9 @@ Therefore, the "fork() returns" of [fork.c](https://pdos.csail.mit.edu/6.828/202
 How can we run a new program in this process?
 
 Example: [exec.c](https://pdos.csail.mit.edu/6.828/2021/lec/l-overview/exec.c), replace the calling process with an executable file.
-How the shell runs a program? Such as
 
-     $ echo a b c
-
-A program is stored in a file: the instructions and initial memory, is created by the compiler and linker.
-So there is a file called echo, containing the command of the `exec` system call.
+exec(filename, argument-array)
+argument-array stores the command line arguments and passes to main() by exec.
 
 ---
 ## Some UNIX/Linux applications
