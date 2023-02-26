@@ -67,15 +67,15 @@ Spring 2023
 
 ## The application/kernel interface provided by the Linux kernel?
 
-   * "System call"
-   * Examples, in C, from UNIX (e.g. Linux, macOS, FreeBSD).
+   - "System call"
+   - Examples, in C, from UNIX (e.g. Linux, macOS, FreeBSD).
 
              fd = open("out", 1);
              write(fd, "hello\n", 6);
              pid = fork()
 
-  * These look like function calls, but they are not
-  * The number of core system calls is not large (about 20)
+  - These look like function calls, but they are not
+  - The number of core system calls is not large (about 20)
 
 ![bg right:45% 100%](./figs/linux-syscall.png)
 
@@ -323,9 +323,9 @@ The design of UNIX works well, but we'll see other designs.
 ## Summary
 
 
-   * We have studied UNIX's abstractions of I/O, file system and process.
-   * These interfaces are very simple, only with integers and I/O buffers.
-   * These abstractions combine well, for example, I/O redirection.
+   - We have studied UNIX's abstractions of I/O, file system and process.
+   - These interfaces are very simple, only with integers and I/O buffers.
+   - These abstractions combine well, for example, I/O redirection.
 
 ## Practice
 
