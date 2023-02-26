@@ -220,9 +220,9 @@ Bare Metal Program: an OS-type program that cannot be regarded as OS
 
 #### OS with Concurrent Processing
 - **Resources sharing**
-- Synchronization and mutual exclusion
+- Synchronization & mutex
 ##### Related Knowledge Points
-- Mechanisms of synchronization and mutual exclusion
+- Mechanisms of synchronization & mutex
 - How to solve concurrency problems, such as deadlock
 ![bg right:45% 100%](figs/sync-os.png)
 ---
