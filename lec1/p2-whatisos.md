@@ -91,7 +91,7 @@ A bridge between user/app and machine
 - **Sharing**: "simultaneous" accesses to various shared resources that are mutually exclusive
 - **Virtualization**: each program seems to "own" the entire computer
 - **Asynchronization**: the completion time of a service is uncertain, sometimes the execution of the service may fail
-
+- **Persistency**: read/store data from/to I/O devices (such as disk) to/from memory via file system
 ---
 ## Your understanding of OS kernel
 
