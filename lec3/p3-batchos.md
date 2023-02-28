@@ -11,7 +11,7 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# Lecture 3 Isolation and batch processing based on privilege level
+# Lecture 3 Privilege based Isolation and Batch Processing
 ## Section 3 Practice: Batch Operating System
 
 <br>
@@ -27,8 +27,8 @@ Spring 2023
 ---
 **Outline**
 
-### 1. Experimental objectives
-2. Pratical Steps
+### 1. Lab objectives
+2. Lab steps
 3. Software Architecture
 4. Related hardware
 5. Application Design
@@ -40,29 +40,29 @@ Spring 2023
 ![w:750](figs/batch-os-detail.png)
 
    <!-- - Construct & Load OS&APP
-   - Protect OS based on RV privilege level mechanism
+   - Protect OS based on RV privilege mechanism
    - System call support
-   - Privilege level switching -->
+   - privilege switching -->
 
 
 ---
 #### Batch OS targets
 - Isolate APP from OS
 - Automatically load and run multiple programs
-   - **Batch processing (batch)**
+   - **Batch processing**
 
 LibOS target
 - Isolate applications from hardware
-- Simplifies the difficulty and complexity of accessing hardware for applications
+- Simplifies the difficulty and complexity of accessing hardware from applications
   
 ![bg right:35% 95%](figs/batch-os.png)
 
 ---
-#### Experiment Requirements
+#### Lab Requirements
 - Understand software that runs other software
-- Understand privilege level and privilege level switching
+- Understand privileges and privilege switching
 - Understand system calls
-- Can write ``Dunkleosteus`` batch operating system
+- Can write ``Dunkleosteus`` batch OS
 
 Dunkleosteus:  An ocean overlord with a sturdy shield in the Devonian
 ![bg right:45% 90%](figs/dunkleosteus.png)
@@ -72,8 +72,8 @@ Dunkleosteus:  An ocean overlord with a sturdy shield in the Devonian
 - Compilation: Compile applications and kernel **independently**, merged into one image
 - Construction: system call service request interface, application **management and initialization**
 - Execution: OS **executes applications** one by one
-- Execution: the application issues a **system call** request, and OS completes the system call
-- Execution: **Privilege level switching** between application and OS based on hardware privilege level mechanism
+- Execution: Application issue **system call** requests, and OS completes the system calls.
+- Execution: Hardware privilege mechanism based **privilege switching** (between application and OS). 
 
 
 
@@ -82,7 +82,7 @@ Dunkleosteus:  An ocean overlord with a sturdy shield in the Devonian
 - GM-NAA I/O System(1956)
    - Inspiration: Automobile production line
 - MULTICS OS (1969, MIT/GE/AT&T)
-   - GE(General Electric) 645 has a protection ring with 8-level  hardware support
+   - GE(General Electric) 645 has a protection ring with 8-level hardware support
   GM-NAA (General Motors and North American Aviation);
 
 ![bg right:38% 95%](figs/deng-fish.png)
@@ -92,8 +92,8 @@ Dunkleosteus:  An ocean overlord with a sturdy shield in the Devonian
 ---
 **Outline**
 
-1. Experimental objectives
-### 2. Practical steps
+1. Lab objectives
+### 2. Lab steps
 3. Software Architecture
 4. Related hardware
 5. Application Design
@@ -103,10 +103,10 @@ Dunkleosteus:  An ocean overlord with a sturdy shield in the Devonian
 
 #### Steps
 - Construct a **single execution image** containing OS and multiple APPs
-- Support automatic loading and execution of multiple **APPs via batch processing**
-- Use the hardware privilege level mechanism to realize the **protection** of the operating system itself
-- Support **system calls** across privilege levels
-- Realize privilege level **crossing**
+- Support automatic loading and execution of **multiple APPs via batch processing**
+- Use the hardware privilege mechanism to achieve the **protection** of OS
+- Support **system calls** for crossing privilegea
+- Achieve privileges **crossing**
 
 ![bg right:35% 100%](figs/batch-os.png)
 
@@ -143,8 +143,8 @@ Hello, world!
 ---
 **Outline**
 
-1. Experimental objectives
-2. Practical steps
+1. Lab objectives
+2. Lab steps
 ### 3. Software Architecture
 4. Related hardware
 5. Application Design
@@ -153,7 +153,7 @@ Hello, world!
 ---
 
 #### Building the application
-Combine multiple applications together with the OS to form a binary image
+Combine multiple applications together with OS to form a binary image
 ```
 ├── os
 │ ├── build.rs (new: generate link_app.S to link the application to the kernel as a data segment)
@@ -166,16 +166,16 @@ Combine multiple applications together with the OS to form a binary image
 
 ---
 #### Improve OS
-Load and execute programs, privileged context switching
+Load and execute programs, privileges/context switching
 ```
 ├── os
 │ └── src
 │ ├── batch.rs (new: implement a simple batch processing system)
 │ ├── main.rs (modification: the main function needs to initialize Trap processing and load/execute the application)
 
-│ └── trap (new: Trap related submodule trap)
-│ ├── context.rs (contains Trap context TrapContext)
-│ ├── mod.rs (including trap_handler)
+│ └── trap (new: Trap related submodule "trap")
+│ ├── context.rs (contains Trap context "TrapContext")
+│ ├── mod.rs (includes "trap_handler")
 │ └── trap.S (contains the assembly code for saving and restoring the Trap context)
 ```
 
@@ -186,21 +186,21 @@ Load and execute programs, privileged context switching
 ├── os
 │ └── src
 │ ├── syscall (new: system call submodule "syscall")
-│ │ ├── fs.rs (containing file I/O related syscalls)
-│ │ ├── mod.rs (provide syscall method to distribute different syscall IDs)
-│ │ └── process.rs (containing task execution related syscalls)
+│ │ ├── fs.rs (contains file I/O related syscalls)
+│ │ ├── mod.rs (provides "syscall" method to distribute different syscall IDs)
+│ │ └── process.rs (contains task execution related syscalls)
 ```
 
 ---
 #### Add Application
-Batch OS will load and execute them sequentially according to the order of file name's numbers
+Batch OS will load and execute them sequentially according to the order of numbers in the file names
 ```
-└── user (new: test cases are saved in the user directory)
+└── user (new: test cases are saved in the "user" directory)
     └── src
-       ├── bin (Applications developed based on the user library user_lib, each application is placed in a source file)
+       ├── bin (Applications developed based on "user_lib", each application is placed in a separate source file)
        │ ├── 00hello_world.rs # Application to display strings
        │ ├── 01store_fault.rs # Application of illegal write operation
-       │ ├── 02power.rs # Computing/IO frequently switching applications
+       │ ├── 02power.rs # Application where computing/IO frequently switch
        │ ├── 03priv_inst.rs # Application to execute privileged instructions
        │ └── 04priv_csr.rs # Application to execute CSR operation instructions
 ```
@@ -210,11 +210,11 @@ Application library and application compilation support
 ```
 └── user (new: application test cases are saved in the user directory)
     └── src
-       ├── console.rs # Functions and macros to support println!
-       ├── lang_items.rs # Support panic_handler function
-       ├── lib.rs(user library user_lib) # The underlying support library for the application calling function
-       ├── linker.ld # application link script
-       └── syscall.rs (contains actual assembly instructions generated for system calls,
+       ├── console.rs # Functions and macros to support "println!"
+       ├── lang_items.rs # Support "panic_handler" function
+       ├── lib.rs(user library user_lib) # The underlying support library for applications
+       ├── linker.ld # Application link script
+       └── syscall.rs (contains assembly instructions generated for system calls,
                       each specific syscall is implemented through "syscall")
 ```
 
@@ -222,8 +222,8 @@ Application library and application compilation support
 ---
 **Outline**
 
-1. Experimental objectives
-2. Practical steps
+1. Lab objectives
+2. Lab steps
 3. Software Architecture
 ### 4. Related hardware
 5. Application Design
@@ -233,12 +233,12 @@ Application library and application compilation support
 
 #### RISC-V Trap instructions
 
-- ecall: Trigger different traps depending on the CPU's current privilege level
-- ebreak: Trigger a breakpoint and fall into an exception
+- ecall: Trigger different traps depending on the CPU's current privilege
+- ebreak: Trigger a breakpoint trap
 
 **RISC-V Privileged Instructions**
 
-- sret: Trigger different traps depending on the CPU's current privilege level
+- sret: Trigger different traps depending on the CPU's current privilege
   
 ![bg right:40% 120%](figs/EnvironmentCallFlow.png)
 
@@ -285,8 +285,8 @@ Application library and application compilation support
 ---
 **Outline**
 
-1. Experimental objectives
-2. Practical steps
+1. Lab objectives
+2. Lab steps
 ...
 ### 5. Application Design
 - project structure
@@ -301,10 +301,10 @@ Application library and application compilation support
 ```
 └── user (application and underlying support library)
     └── src
-       ├── bin (this directory places applications developed from user_lib)
-       ├── lib.rs(user library user_lib) # The underlying support library of library functions
+       ├── bin (this directory places applications developed based on "user_lib")
+       ├── lib.rs(user library user_lib) # The underlying library functions
        ├── ...... # Support library related files
-       └── linker.ld # application link script
+       └── linker.ld # Application link script
 ```
 
 ---
@@ -332,7 +332,7 @@ pub extern "C" fn _start() -> ! {
 ---
 **Outline**
 
-1. Experimental objectives
+1. Lab objectives
 
 ...
 
@@ -344,7 +344,7 @@ pub extern "C" fn _start() -> ! {
 
 ---
 
-####  Memory layout of application
+####  Memory layout of applications
 
 ![bg 70%](figs/memlayout.png)
 
@@ -357,17 +357,17 @@ pub extern "C" fn _start() -> ! {
 #### Design support library
 `user/src/linker.ld`
 
-- Adjust the starting physical address of the program to 0x80400000, and the application program will be loaded to run on this physical address;
-- Put the .text.entry where _start is located at the beginning of the entire program, that is to say, as long as the batch processing system jumps to 0x80400000 after loading, it has entered the entry point of the user library and will jump to the application after initialization Program main logic;
-- Provides the start and end addresses of the .bss section of the final executable file, which is convenient for the clear_bss function to use.
+- Set the starting physical address of the program to 0x80400000, and the program will be loaded to this address to run;
+- Put the .text.entry (where _start is located at) to the beginning of the entire program. As long as the batch processing system jumps to 0x80400000 after loading, it has entered the entry point of the user library and will jump to the application. The system will jump to application main logic after initialization;
+- Provides the start and end addresses of the .bss section of the final executable file, which is used by clear_bss function.
 
-The rest is the same as before
+The rest is the same as before.
 
 
 ---
 **Outline**
 
-1. Experimental objectives
+1. Lab objectives
 
 ...
 
@@ -387,17 +387,17 @@ The rest is the same as before
 
 #### System call execution flow of the application
 
-- In the submodule "syscall", the application calls the interface provided by the batch system through ecall
+- In the submodule "syscall", the application calls the interface provided by the batch system through "ecall"
 - The ``ecall`` instruction triggers an exception, named Environment call from U-mode
-- Trap falls into the S mode to execute the service code specially provided by the batch processing system for this exception
+- Trap falls into the S-Mode to execute exception handler code.
 - a0~a6 save the parameters of the system call, a0 saves the return value, and a7 is used to pass the syscall ID
 ---
 #### Support library for System Call
 ```rust--
-/// Function: Write the data in memory buffer to the file.
-/// Parameter: `fd` indicates the file descriptor to be written to the file;
-/// `buf` indicates the starting address of the buffer in memory;
-/// `len` indicates the length of the buffer in memory.
+/// Function: Dump the data in memory buffer into the file.
+/// Parameter: `fd` indicates the file descriptor of the target file to be written into;
+/// `buf` indicates the starting address of the memory buffer;
+/// `len` indicates the length of the memory buffer.
 /// Return value: Returns the length that has been written successfully.
 /// syscall ID: 64
 fn sys_write(fd: usize, buf: *const u8, len: usize) -> isize;
@@ -468,10 +468,10 @@ impl Write for Stdout {
 5. Application Design
 ### 6. Kernel programming
 - Application management and loading
-- Privilege level switching
+- Privilege switching
 - Trap context
 - Trap processing flow
-- Execution of application
+- Execution of applications
 
 ---
 
@@ -495,7 +495,7 @@ app_0_end:
 
 
 ---
-#### Application Management Data Structures
+#### Auxiliary Data Structures for Application Management 
 
 ```rust
 // os/src/batch.rs
@@ -560,8 +560,8 @@ Note: ``fence.i`` is an i-cache barrier instruction, a non-privileged instructio
 - fence.i : used to clear i-cache
 
 - Caches for physical memory include d-cache and i-cache
-- OS will modify the memory area that will be fetched by the CPU, which will make the i-cache contain inconsistent content with the memory
-- Here OS here must use fence.i to manually clear the i-cache to invalidate all the contents,so as to ensure the correctness of the CPU's access to memory data and codes.
+- OS may modify the memory area that will be fetched by the CPU, which will make the i-cache contain inconsistent content with the memory
+- Here OS must use fence.i to manually clear the i-cache to invalidate all the contents, to prevent CPU from reading inconsistent data from cache.
 
 
 
@@ -573,35 +573,35 @@ Note: ``fence.i`` is an i-cache barrier instruction, a non-privileged instructio
 5. Application Design
 6. Kernel programming
 - Application management and loading
-- **Privilege Level Switching**
+- **Privilege  Switching**
 - Trap context
 - Trap processing flow
-- execute the application
+- Execution of applications
 
 ---
 
-#### CSR for privilege level switching
+#### CSR for privilege  switching
 | CSR name | Trap-related function of this CSR |
 | ------- | ----------------------------------------- ------------------- |
-| sstatus | `SPP` will give the privilege level (S/U) before the Trap occurs |
-| sepc | Record the address of the last instruction executed before the Trap occurrs |
-|scause | Describe the reason for Trap |
-| stval | Give additional information about Trap |
-| stvec | Control the entry address of the Trap processing code |
+| sstatus | `SPP` will give the privilege  (S/U) before the Trap occurs |
+| sepc | Records the address of last instruction executed before the Trap occurrs |
+|scause | Describes the reason for the Trap |
+| stval | Gives additional information about the Trap |
+| stvec | Records the entry address of the Trap handler |
 
 ---
-#### Hardware logic after privilege level switching
+#### Hardware logic after privilege switching
 
-1. The SPP field of sstatus will be modified to the current privilege level of the CPU (U/S);
+1. SPP of sstatus will record the current CPU privilege(U/S);
 2. Set sepc to the return address after the Trap processing is completed(next instruction that will be executed);
-3. Scause/stval will be modified to the reason of this Trap and relevant additional information;
-4. The CPU sets the current privilege level to S, and jumps to the Trap handler entry address set by stvec.
+3. Scause/stval will record the source of this Trap and relevant additional information;
+4. CPU sets the current privilege to S, and jumps to the Trap handler entry address set by stvec.
 
 
 
 ---
-#### Privilege level switching and user stack and kernel stack
-Why use two different stacks?
+#### Privilege switching and user stack/kernel stack
+Why does OS use two different stacks?
 
 For safety!
 
@@ -614,7 +614,7 @@ static USER_STACK: UserStack = UserStack { data: [0; USER_STACK_SIZE] };
 ```
 
 ---
-#### Switch stack in privilege level switch
+#### Switch stack in privilege switching
 ```rust
 impl UserStack {
      fn get_sp(&self) -> usize {
@@ -633,14 +633,14 @@ RegSP = KERNEL_STACK.get_sp();
 5. Application Design
 6. Kernel programming
 - Application management and loading
-- Privilege level switching
+- Privilege switching
 - **Trap context**
 - Trap processing flow
-- execute the application
+- Execution of applications
 
 ---
 
-#### Trap context data structure
+#### Auxiliary data structure for Trap context 
 ```rust
 #[repr(C)]
 pub struct TrapContext {
@@ -649,12 +649,12 @@ pub struct TrapContext {
      pub sepc: usize,
 }
 ```
-- Application/kernel control flow runs at different privilege levels for general-purpose registers
-- When entering Trap, the hardware will immediately overwrite scause/stval/sstatus/sepc
+- Control flow of application/kernel runs at different privileges for general-purpose registers
+- When entering Trap, the hardware will immediately overwrite scause/stval/sstatus/sepc.
 
 
 ---
-#### Trap entry point after privilege level switching
+#### Trap entry point after privilege switching
 ```rust
 pub fn init() {
      extern "C" { fn __alltraps(); }
@@ -667,7 +667,7 @@ pub fn init() {
 
 ---
 #### Trap context processing during system calls
-1. When the application enters the kernel mode through ecall, OS saves the Trap context of the interrupted application;
+1. When the application enters the kernel mode through "ecall", OS saves the Trap context of the interrupted application;
 
 ![bg right:40% 100%](figs/kernel-stack.png)
 
@@ -675,7 +675,7 @@ pub fn init() {
 ---
 #### Trap context processing during system calls
 
-2. The operating system distributes and finishes system call services according to the Trap-related CSR register;
+2. OS distributes and finishes system call services according to the Trap-related CSR register;
 
 ![bg right:40% 100%](figs/kernel-stack.png)
 
@@ -683,14 +683,14 @@ pub fn init() {
 ---
 #### Trap context processing during system calls
 
-3. After OS completes the system call services, it needs to restore the Trap context of the interrupted application program, and let the application program continue to execute through the ``sret`` instruction.
+3. After OS completes system call services, it needs to restore the Trap context of the interrupted application, and let the application continue execution through the ``sret`` instruction.
 ![bg right:40% 100%](figs/kernel-stack.png)
 ---
 
 #### Switch from user stack to kernel stack
 **sscratch CSR:** An important transit register
 
-When the privilege level is switched, we need to save the Trap context on the kernel stack, so we need a register to temporarily store the kernel stack address, and use it as the base address pointer to save the contents of the Trap context.
+When the privilege is switched, we need to save the Trap context on the kernel stack, so we need a register to temporarily store the kernel stack address, and use it as the base address pointer to save the contents of the Trap context.
 
 But all general-purpose registers cannot be used as base address pointers, because they all need to be saved. Overwritting them will affect the execution of subsequent application control flow.
 
@@ -700,13 +700,13 @@ But all general-purpose registers cannot be used as base address pointers, becau
 **sscratch CSR:** An important transit register
 
 - Temporarily save the address of the kernel stack
-- As a transfer station, the value of sp (pointing to the address of the user stack) can be temporarily saved in sscratch
-- Only need one `csrrw sp, sscratch, sp // swap the two register contents of sp and sscratch`
+- As a transit station, the value of sp (pointing to the address of the user stack) can be temporarily saved in sscratch
+- Only need `csrrw sp, sscratch, sp // swap the two register contents of sp and sscratch`
 - Complete the switching of user stack --> kernel stack
 
 ---
 
-#### Save the general-purpose registers in the Trap context
+#### Save general-purpose registers in the Trap context
 
 Macros to save general-purpose registers
 ```
@@ -724,10 +724,10 @@ Macros to save general-purpose registers
 5. Application Design
 6. Kernel programming
 - Application management and loading
-- Privilege level switching
+- Privilege switching
 - Trap context
 - **Trap processing flow**
-- execute the application
+- Execution of applications
 
 ---
 
@@ -808,7 +808,7 @@ Let the register a0 point to the stack pointer of kernel stack, which is the add
 1. Most of them are reverse operations of saving registers;
 2. The last step is ``sret`` instruction //return from kernel mode to user mode
 
-Note: "Restore Trap Context" will be explained in more detail when "Executing Program" is explained later
+Note: We will talk about more details of "Restore Trap Context" later.
 
 
 ---
@@ -850,38 +850,38 @@ pub fn sys_exit(xstate: i32) -> ! {
 5. Application Design
 6. Kernel programming
 - Application management and loading
-- Privilege level switching
+- privilege switching
 - Trap context
 - Trap processing flow
-- **Execute the application**
+- **Execution of applications**
 
 ---
 
-#### Execution timing of the application
-- When the batch OS initialization is complete
-- An application terminated or an error occurred
+#### When to execute applications
+- After the batch OS initialization is complete
+- When an application terminates or an error occurrs
 
 ---
 
-#### Let the application execute
+#### Executions of applications
 Switch from kernel mode to user mode
-- Ready to apply the context ``Trap Context``
+- Ready to apply the saved context ``Trap Context``
 - Restore application related registers
-- especially pay attention to user stack pointer and execution address of the application
-- **Return to user mode to let the application execute**
+- especially pay attention to user stack pointer and previous execution address of the application
+- **Return to user mode to continue execute the application**
 
 ![bg right:35% 100%](figs/kernel-stack.png)
 
 ---
 
-#### Return to the user mode for the application to execute
+#### Return to user mode to continue execute the app
 
 - Switch from kernel mode to user mode
    - **hardware logic** of ``sret`` instruction:
-      - Response to interrupts/exceptions
+      - Resume the response to interrupts/exceptions(unmask interrupts)
       - Switch CPU Mode from S-Mode back to U-Mode
       - ``pc`` <-- ``spec`` CSR
-      - Continue running
+      - Continue execution
 
 ---
 <style scoped>
@@ -892,9 +892,9 @@ Switch from kernel mode to user mode
 
 #### Switch to the next application
 
-Call the run_next_app function to switch to the next application:
+Call the "run_next_app" function to switch to the next application:
 - Construct the Trap context for the application;
-- Through the `__restore` function, from the newly constructed Trap context, restore part of the registers executed by the application;
+- Through the `__restore` function, from the newly constructed Trap context, restore part of the registers of the application;
 - Set the content of the `sepc` CSR to the application entry point `0x80400000`;
 - switch `scratch` and `sp` registers, set `sp` to point to the application user stack;
 - Execute `sret` to switch from S-Mode to U-Mode.
@@ -919,7 +919,7 @@ impl TrapContext {
 
 
 ---
-#### Run the next program
+#### Run the next application
 ```rust
 ub fn run_next_app() -> ! {
      ...
@@ -937,7 +937,7 @@ ub fn run_next_app() -> ! {
 ```
 
 ---
-#### Run the next program
+#### Run the next application
 ```
 __restore:
      # case1: start running app by __restore
@@ -955,7 +955,7 @@ __restore:
 
 
 ---
-#### Run the next program
+#### Run the next application
 
 ```
 # restore general-purpuse registers except sp/tp
@@ -988,10 +988,10 @@ __restore:
 ### Summary
 - Relationship between OS and hardware
 - Relationship between OS and applications
-- isolation mechanism
-- Batch creation and execution of programs
-- Privilege level switching
+- Isolation mechanisms
+- Creation of batch system and execution of applications
+- Privilege switching
 - system calls
-- Able to write Dengshiyu OS
+- Be able to write Dengshiyu OS
 
 ![bg right:50% 95%](figs/batch-os-detail.png)
