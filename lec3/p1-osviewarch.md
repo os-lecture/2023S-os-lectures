@@ -11,9 +11,9 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# Lecture 3 Isolation and batch processing based on privilege level
-## Section 1 Computer Systems: OS's Perspective
-
+# Lecture 3 Privilege based Isolation and Batch Processing
+## Section 1 Computer Systems: An OS's Perspective
+<!-- CSAPP style-->
 <br>
 <br>
 
@@ -37,20 +37,21 @@ Spring 2023
 
 ![bg right:50% 100%](figs/computer-arch-app.png)
 
-Computer architecture is an **level of abstraction** designed to implement **information processing** applications that make use of **existing manufacturing technologies** efficiently.
+Computer architecture is the **design of the abstraction layers** that allow us to implement information processing applications efficiently using available manufacturing technologies.
 <br>
 -- cs-152 berkeley
- 
+ <!--Here I just find the original scentences from UCB CS-152 slide-->
+
 ---
 #### Abstraction Levels of Computer System
 
-**HARDWARE** SUPPORTED **OS** SUPPORTED **APPLICATIONS**
+**HARDWARE** SUPPORTS **OS**, and OS SUPPORTS **APPLICATIONS**
 
 
 ![bg right:35% 100%](figs/abstract-of-system.png)
 
-* The operating system is located between the hardware (HW) and applications (APP)
-* Understanding the relationship between OS and HW/APP can help you better master the OS
+* OS is located between the hardware (HW) and applications (APP)
+* Understanding the relationship between OS and HW/APP can help you better master OS
 
 ---
 #### Instruction Set Architecture(ISA): hardware and software interface
@@ -91,10 +92,10 @@ Computer architecture is an **level of abstraction** designed to implement **inf
 ![w:1100](figs/syscall-overview.png)
 
 ---
-#### Details of system call implementation
+#### Implementation details of system calls
 - What happens when we call `ssize_t read(int fd, void *buf, size_t count);`?
-- Can code in user space call functions in kernel space?
-- Can code in kernel space call functions in user space?
+- Can programs in user space call functions in kernel space?
+- Can programs in kernel space call functions in user space?
 
 
 ---
@@ -130,7 +131,7 @@ The address space (memory layout) of the process defines the **boundary** betwee
 ![w:530](figs/syscall-read.png)
 
 ---
-#### Kernel page table isolation (KPTI, kernel page-table isolation)
+#### Kernel page-table isolation (KPTI)
 ![w:800](figs/KPTI.png)
 
 ---
@@ -144,17 +145,17 @@ The address space (memory layout) of the process defines the **boundary** betwee
 * How to achieve isolation?
 
 ---
-#### Isolation can:
-- prevent program X from destroying or monitor program Y
+#### Isolation can solve the following problems:
+- prevent program X from destroying or monitoring program Y
    - read/write memory, 100% CPU usage, change file descriptors
 - Prevent processes from interfering with the operating system
 - Protection from malicious programs, viruses, trojans and bugs
-   - erroneous processes may try to trick the hardware or the kernel
+   - erroneous processes may try to trick the hardware or kernel
 
 ---
 #### What is Isolation?
 - **Definition** of isolation
-   - Applications can not **affect** (or disrupt) the normal **execution** of other applications/OS. There is no information **disclosure** in the whole system. 
+   - Applications can not **affect** (or disrupt) the normal **execution** of other applications/OS. There is no secret **leakage** in the whole system. 
 - The **Essence of Isolation**
    - Appears only when there is a need to exchange information or share resources
 - Isolation doesn't mean to forbid resource/information share
@@ -165,9 +166,9 @@ Isolation requires building boundary.
 - Boundaries determine protection domain of each process
    - Shared resources crossing protection domains may be **risky**
 - Mandatory isolation
-   - Avoid the safety impact of the faulty unit on the whole system
+   - Prevent the faulty part destroying the whole system
 - Isolated unit
-   - The running programs.
+   - Running programs.
 
 
 <!-- https://blog.csdn.net/ceshi986745/article/details/51787424
@@ -182,14 +183,14 @@ Ape Science~Six isolation techniques that programmers must know -->
    - **Network** based isolation
 ---
 
-#### Classification of OS isolation APP
-*  **Control** Isolation : Privileged Level Mechanism
+#### Classification of isolation
+*  **Control** Isolation : Privilege Mechanism
    * User Mode vs Kernel Mode
 *  **Data** Isolation : address space
    * User address space vs kernel address space
 *  **Time** Isolation : interrupt Handler
    * Interrupt the running App in user mode at any time
-* Handling of breaking isolation: **exception handling**
+* Handling of isolation violation: **exception handling**
    * OS handles the abnormal behavior of user-mode App in kernel mode timely
 
 
@@ -198,12 +199,12 @@ Ape Science~Six isolation techniques that programmers must know -->
 #### Data Isolation: Virtual Memory
 
 - Virtual Memory
-   - Security issues of reading and writing memory
+   - Security issues of memory read/write
    - Security issues of Inter-Process communication
    - The problem of memory space utilization
-   - The efficiency of memory read and write
+   - The efficiency of memory read/write
 - Address spaces
-   - A program can only access its own memory
+   - Any program can only access its own memory
    - **Any memory access request to other process's space will be denied** without permission
 
 
@@ -230,51 +231,51 @@ Ape Science~Six isolation techniques that programmers must know -->
 ![w:900](figs/arch-with-tlb-mmu.png) -->
 
 ---
-#### Control Isolation: Privileged Mode
-- Privileged mode in CPU hardware
+#### Control Isolation: Privilege Mode
+- Privilege mode in CPU hardware
    - Prevent applications from accessing device and sensitive CPU registers
      - Address Space Configuration Register
      - Shutdown related instrutions or registers
      - ...
 
 ---
-#### Privileged Mode
+#### Privilege Mode
 
-- CPU hardware supports different privileged modes
-   - Kernel Mode (kernel mode) vs User Mode (user mode)
+- CPU/hardware supports different privilege modes
+   - Kernel Mode vs User Mode
    - Kernel mode can perform privileged operations forbidden in user mode
      - Access to **Peripherals**
      - **configure** address space (virtual memory)
      - Read/write special **system-level registers**
-- The OS kernel runs in kernel mode
-- The application runs in user mode
+- OS kernel runs in kernel mode
+- Applications run in user mode
 - Every microprocessor has similar user/kernel mode flags
 
 ---
 #### Time Isolation: Interrupt/Exception Mechanism
 - CPU/hardware supports interrupt/exception handling
-- Response to and handle **abnormal behavior** of the application timely
-- Interrupt applications occupying CPU for long time.
-- interrupt occurs **asynchronously**,  as a result of signals from external I/O devices.
+- Response to and handle **abnormal behavior** of applications timely
+- Prevent applications occupying CPU for long time.
+- Interrupt occurs **asynchronously**,  as a result of signals from external I/O devices.
    - Asynchronous means that hardware interrupt is not caused by any dedicated CPU instruction.
 
 ---
 #### Interrupt handler
 
 - Interrupt handler:
-   1. I/O device sends a signal to a pin of the processor and places the exception number on the system bus to trigger interrupt;
-   2. After the current instruction is executed, the processor reads the exception number from system bus, saves context, and switches to **kernel mode**;
-   3. The interrupt handler is called. After it is finished, the CPU will begin to execute the next normal instruction in the program.
+   1. I/O device sends a signal to the processor and places the exception number on the system bus to trigger interrupt;
+   2. After finishing execution of the current instruction, the processor reads the exception number from system bus, saves context, and switches to **kernel mode**;
+   3. The interrupt handler is called. After it is finished, the CPU will begin to execute the next instruction in the program.
 
 ---
-#### Clock Interrupt
+#### Timer Interrupt
 - Timer can generate interrupts in a stable and regular manner
    - Prevent applications from occupying the CPU for long time
-   - Allow the OS kernel to manage resource periodically
+   - Allow OS kernel to manage resource periodically
 
 ---
 ### Summary
 
-- Understand the relationship between computer hardware and operating system: interface/boundary
-- Understand the relationship between operating system and applications: interfaces/boundaries
-- Understand how the operating system isolates and restricts applications
+- Understand the relationship between computer hardware and OS: interface/boundary
+- Understand the relationship between OS and applications: interface/boundary
+- Understand how OS achieves isolation for applications
