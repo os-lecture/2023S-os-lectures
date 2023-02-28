@@ -10,9 +10,10 @@ backgroundColor: white
 
 <!-- theme: gaia -->
 <!-- _class: lead -->
+<!-- In RISC-V mannual, privilege is used for "privilege level"-->
 
-# Lecture 3 Isolation and batch processing based on privilege level
-## Section2  looks at RISC-V from the perspective of OS
+# Lecture 3 Privilege based Isolation and Batch Processing
+## Section2  RISC-V : An OS's perspective
 
 <br>
 <br>
@@ -37,17 +38,17 @@ Spring 2023
 ---
 #### The main goal of this section
 
-- Understand RISC-V privilege levels and hardware isolation mechanisms.
+- Understand RISC-V privilege and hardware isolation mechanisms.
 - Understand the basic characteristics of RISC-V's M-Mode and S-Mode
 - Understand how  OS **accesses and controls** computer systems in M-Mode and S-Mode
 - Understand how different softwares **switch between M-Mode<–>S-Mode<–>U-Mode**
 ---
-#### Mainstream CPU Comparison
+#### Comparison for Mainstream Processors
 <!-- Mainly explain that x86, arm due to compatibility and historical reasons, lead to complex design and implementation, riscv is simple/flexible/extensible, easy to learn and master and used to write OS -->
 ![w:1150](figs/mainstream-isas.png)
 
 ---
-#### Mainstream CPU Comparison
+#### Comparison for Mainstream Processors
 * Due to compatibility and history reasons, the design and implementation of x86 and ARM are complicated
 * RISC-V is concise/flexible/extensible
 
@@ -59,8 +60,8 @@ Spring 2023
 
 1. Mainstream CPU Comparison
 ### 2. RISC-V system mode
-   - overview
-   - Privileged
+   - Overview
+   - Privilege
    - CSR register
 3. RISC-V system programming: user mode programming
 4. RISC-V system programming: M-Mode programming
@@ -91,7 +92,7 @@ Spring 2023
 - AEE/SEE/HEE:Application/Superv/Hyperv Execution Environment
 - HAL: Hardware Abstraction Layer
 - Hypervisor, virtual machine monitor (VMM)
-- RISC-V system mode: RISC-V mode related to system programming
+- RISC-V system modes:  modes related to system programming
 
 
 
@@ -116,15 +117,15 @@ Spring 2023
 }
 </style>
 
-#### RISC-V System Mode: Operating System Scenarios
+#### RISC-V System Mode: OS Scenario
 ![w:800](figs/rv-privil-arch.png)
-- A **traditional operating system** is added in the middle layer to support multi-tasking of multiple applications
-- Each application communicates with the OS via **ABI**
-- The RISC-V operating system communicates with SEE through **SBI**
-- SBI is the interface for the interaction between the OS kernel and SEE, and supports the ISA of the OS
+- A **traditional OS** is added in the middle layer to support multi-tasking of multiple applications
+- Each application communicates with OS via **ABI**
+- The RISC-V OS communicates with SEE through **SBI**
+- SBI is the interface for the interaction between the OS kernel and SEE, and supports the ISA of OS
 
 ---
-#### RISC-V system mode: virtual machine scenario
+#### RISC-V system mode: Virtual Machine Scenario
 ![w:800](figs/rv-privil-arch.png)
 - The virtual machine scene on the right can support **multiple operating systems**
 
