@@ -40,7 +40,7 @@ Spring 2023
 Computer architecture is the **design of the abstraction layers** that allow us to implement information processing applications efficiently using available manufacturing technologies.
 <br>
 -- cs-152 berkeley
- <!--Here I just find the original scentences from UCB CS-152 slide-->
+ <!--Here I just find original scentences from UCB CS-152 slide-->
 
 ---
 #### Abstraction Levels of Computer System
