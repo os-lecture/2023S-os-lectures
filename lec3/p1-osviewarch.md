@@ -310,14 +310,14 @@ Ape Science~Six isolation techniques that programmers must know -->
 
 
 ---
-#### Interrupt vs Exception vs System call
+#### 中断 vs 异常 vs 系统调用
 
-||Interrupt|Exception|System call|
+||中断|异常|系统调用|
 |----|----|---|---|
-|Initiator|Peripheral/Timer|Applications|Applications|
-|Response Mechinism|Asynchronous|Synchronous|Synchronous/Asynchronous|
-|Trigging Mechanism|Triggered passively|Internal Exception/Breakdown|Applications make requests|
-|Handling Mechanism|Continuously,Transparent to users|Kill or Re-execute|Wait,continuously|
+|发起者|外设、定时器|应用程序|应用程序
+|响应方式|异步|同步|同步、异步
+|触发机制|被动触发|内部异常、故障|自愿请求|
+|处理机制|持续，用户透明|杀死或重新执行|等待和持续|
 
 
 ---
