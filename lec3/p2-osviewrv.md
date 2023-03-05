@@ -68,18 +68,6 @@ Spring 2023
 5. RISC-V system programming: kernel programming
 
 ---
-
-#### RISC-V related terms
-- Application Execution Environment (AEE)
-- Application Binary Interface (ABI)
-- Supervisor Binary Interface (SBI)
-- Supervisor Execution Environment (SEE)
-- Hypervisor: virtual machine monitor
-- Hypervisor Binary interface (HBI)
-- Hypervisor Execution Environment (HEE)
-
-
----
 <style scoped>
 {
   font-size: 30px
@@ -93,6 +81,20 @@ Spring 2023
 - HAL: Hardware Abstraction Layer
 - Hypervisor, virtual machine monitor (VMM)
 - RISC-V system modes:  modes related to system programming
+
+---
+
+#### RISC-V related terms
+- Application Execution Environment (AEE)
+- Application Binary Interface (ABI)
+- Supervisor Binary Interface (SBI)
+- Supervisor Execution Environment (SEE)
+- Hypervisor: virtual machine monitor
+- Hypervisor Binary interface (HBI)
+- Hypervisor Execution Environment (HEE)
+
+
+
 
 
 
@@ -280,11 +282,20 @@ Mandatory isolation to avoid availability/reliability/security impact on the ent
 OS ensures the safety and reliability of the computer through hardware isolation.
 - Set CSR to achieve isolation
    -  Access Control: Prevent applications from accessing system-control registers
-      - **ADDRESS SPACE CONFIGURATION** register: mstatus/sstatus CSR
+      - **ADDRESS SPACE CONFIGURATION** register: mstatus/sstatus CSR(Interrupt and status)
    - Time Management: Prevent apps from occupying 100% CPU for long time
-     - **interrupt configuration** register: sstatus/stvec CSR
+     - **Interrupt configuration** register: sstatus/stvec CSR(Address of the interrupt handler)
    - Data Protection: Prevent app from destroying or stealing data
-     - **Address space related** registers: sstatus/satp/stvec CSR
+     - **Address space related** registers: sstatus/satp/stvec CSR(Paging system)
+
+---
+#### Functionality of CSR
+- Information Store： Get id of current chips and CPU cores.
+- Trap Setup： CSR used to set interrupt/exception.
+- Trap Handling：CSR used to handle interrupt/exception. 
+- Memory Protection： Like mpu of conterx-m
+
+```Interrupt and exception in Risc-V are named Trap```
 
 <!---
 ## RISC-V 系统模式：控制状态寄存器CSR
@@ -423,6 +434,47 @@ Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction,
    - **Synchronous exception**: generated during instruction execution, i.e. accessing an invalid register address, or executing an instruction with an invalid opcode
    - **Asynchronous Interrupt**: Asynchronous external events or interrupts, such as timer interrupts
 - RISC-V requires the implementation of **precise exception**: to ensure that all instructions before the exception are fully executed, and subsequent instructions have not started to execute
+
+#### Hardware's response to Interrupt/Exception 
+1. The PC of the **exception/interrupt instruction** is saved in sepc, and PC is set to stvec.
+2. Set scause according to **interrupt/exception source**, and set stval to error address or other related information.
+3. Set sstatus[SIE bit] to zero to **mask interrupts** and **save previous SIE value** into SPIE
+4. **Save the privilege mode before the exception occurred** into SPP of sstatus, and then **change the privilege mode** to S. 
+5. **Jump** to the address set by stvec CSR 
+- Heap & Stack：Save context；Switch page table.
+
+---
+#### Software Handling for S-Mode Interrupt/Exception 
+
+
+- **Initialization**
+   - Write interrupt/exception handler (such as trap_handler)
+   - Set trap_handler address to stvec
+- Software execution
+   1. The processor jumps to **trap_handler**
+   2. trap_handler **handles** interrupt/exception/system call, etc.
+   3. **Return** to the previous instruction and previous privilege to continue execution
+
+
+   
+---
+#### Hardware/Software's response to Interrupt/Exception 
+- Hardware
+  - Set interrupt flag.
+  - Call corresponding Interrupt Service according to Interrupt vector. 
+- Software
+  - Save context
+  - Execute the program that causes interrupt.
+  - Clear interrupt flag. 
+  - Resume saved context.
+- Interrupt Vector：Interrupt--Interrupt Service，Exception--Exception Service，System call
+---
+#### Overhead of Interrupt/Exception
+1. Overhead of setting up corresponding sevice to Interrupt/Exception/System calls.
+2. Overhead of setting up of kernel stack.
+3. Overhead of checking validity of syscall parameters.
+4. Overhead of copying kernel data to user mode. 
+5. Change of kernel state(Overhead of cache/TLB flushing)
 
 ---
 <style scoped>
@@ -799,7 +851,7 @@ The hart accepts the interrupt/exception and needs to delegate them to S-Mode, t
 - Virtual addresses divide memory into **fixed-size pages** for **address translation** and **content protection**.
 - satp (Supervisor Address Translation and Protection)  **controls paging**. satp has three fields:
    - The MODE field can **turn on paging** and select the number of page table levels
-   - ASID (Address Space Identifier) field is optional, it can be used to reduce the overhead of context switching
+   - ASID (Address Space Identifier) field is optional. It can avoid TLB flushing when switching processes, which can reduce the overhead of context switching
    - The PPN field records the physical page number of the **root page table**
 ![w:900](figs/satp.png)
 
@@ -811,7 +863,7 @@ The hart accepts the interrupt/exception and needs to delegate them to S-Mode, t
 - Handle memory access **Exception**
 
 
-![bg right:50% 100%](figs/riscv_pagetable.svg)
+![bg right:55% 85%](figs/riscv_pagetable.svg)
 
 ---
 <style scoped>

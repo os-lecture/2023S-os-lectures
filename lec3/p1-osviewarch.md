@@ -254,8 +254,8 @@ Ape Science~Six isolation techniques that programmers must know -->
 ---
 #### Time Isolation: Interrupt/Exception Mechanism
 - CPU/hardware supports interrupt/exception handling
-- Response to and handle **abnormal behavior** of applications timely
-- Prevent applications occupying CPU for long time.
+- Exception: Response to and handle **abnormal behavior** of applications timely
+- Interrupt: Prevent applications occupying CPU for long time.
 - Interrupt occurs **asynchronously**,  as a result of signals from external I/O devices.
    - Asynchronous means that hardware interrupt is not caused by any dedicated CPU instruction.
 
@@ -272,6 +272,58 @@ Ape Science~Six isolation techniques that programmers must know -->
 - Timer can generate interrupts in a stable and regular manner
    - Prevent applications from occupying the CPU for long time
    - Allow OS kernel to manage resource periodically
+
+---
+#### 中断处理例程
+- 触发中断
+- 保存现场，切换到内核态
+- 返回，恢复中断前下一条指令
+![bg right:62% 100%](figs/interrupt.png)
+
+
+<!---
+#### 异常处理例程![w:900](figs/interrupt.png)
+![w:650](figs/exception.png)-->
+
+---
+#### 异常处理例程
+- 根据异常编号去查询处理程序
+- 保存现场
+- 异常处理：杀死产生异常的程序；重新执行异常指令
+- 恢复现场
+![bg right:52% 100%](figs/exception.png)
+
+
+<!---
+#### 系统调用处理例程
+![w:800](figs/syscall.png)-->
+
+---
+#### 系统调用处理例程
+- 查找系统调用程序
+- 用户态切换到内核态
+- 栈切换，上下文保存
+- 执行内核态
+- 返回用户态
+
+![bg right:52% 100%](figs/syscall.png)
+
+
+---
+#### 中断 vs 异常 vs 系统调用
+
+||中断|异常|系统调用|
+|----|----|---|---|
+|发起者|外设、定时器|应用程序|应用程序
+|响应方式|异步|同步|同步、异步
+|触发机制|被动触发|内部异常、故障|自愿请求|
+|处理机制|持续，用户透明|杀死或重新执行|等待和持续|
+
+
+---
+#### 进程切换 vs 函数切换
+![w:500](figs/context-switch.png) ![w:600](figs/function-call.png)
+
 
 ---
 ### Summary
