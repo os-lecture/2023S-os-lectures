@@ -42,7 +42,7 @@ backgroundColor: white
 - [Section 3 Hardware Boot and Software Boot](./lec2/p3-boot.html)
 - [Section 4 Practice: Bare Metal Program -- LibOS](./lec2/p4-lab1.html)
 
-<!--
+
 ---
 
 ## Lecture 3 Isolation and batch processing based on privilege level
@@ -50,6 +50,7 @@ backgroundColor: white
 - [Section 2 RISC-V from the perspective of OS](./lec3/p2-osviewrv.html)
 - [Section III Practice: Batch Operating System](./lec3/p3-batchos.html)
 
+<!--
 ---
 
 ## Lecture 4 Multiprogramming and time-sharing multitasking
