@@ -274,10 +274,10 @@ Ape Science~Six isolation techniques that programmers must know -->
    - Allow OS kernel to manage resource periodically
 
 ---
-#### 中断处理例程
-- 触发中断
-- 保存现场，切换到内核态
-- 返回，恢复中断前下一条指令
+#### Interrupt Handler
+- Trigger interrupt
+- Save context, switch to kernel mode.
+- Return to next instruction before interrupt occurs, resume context.
 ![bg right:62% 100%](figs/interrupt.png)
 
 
@@ -286,11 +286,11 @@ Ape Science~Six isolation techniques that programmers must know -->
 ![w:650](figs/exception.png)-->
 
 ---
-#### 异常处理例程
-- 根据异常编号去查询处理程序
-- 保存现场
-- 异常处理：杀死产生异常的程序；重新执行异常指令
-- 恢复现场
+#### Exception Handler
+- Get exception handling service according to the exception id
+- Save context
+- Process: Kill the program which causes exception, re-execute the exception instruction.
+- Resume context
 ![bg right:52% 100%](figs/exception.png)
 
 
@@ -299,30 +299,30 @@ Ape Science~Six isolation techniques that programmers must know -->
 ![w:800](figs/syscall.png)-->
 
 ---
-#### 系统调用处理例程
-- 查找系统调用程序
-- 用户态切换到内核态
-- 栈切换，上下文保存
-- 执行内核态
-- 返回用户态
+#### System call Handler
+-  Get system call service program.
+-  Switch from User Mode to Kernel Mode
+-  Switch stack, save context
+-  Execute in Kernel Mode
+-  Return to User Mode
 
 ![bg right:52% 100%](figs/syscall.png)
 
 
 ---
-#### 中断 vs 异常 vs 系统调用
+#### Interrupt vs Exception vs System call
 
-||中断|异常|系统调用|
+||Interrupt|Exception|System call|
 |----|----|---|---|
-|发起者|外设、定时器|应用程序|应用程序
-|响应方式|异步|同步|同步、异步
-|触发机制|被动触发|内部异常、故障|自愿请求|
-|处理机制|持续，用户透明|杀死或重新执行|等待和持续|
+|Initiator|Peripheral/Timer|Applications|Applications|
+|Response Mechinism|Asynchronous|Synchronous|Synchronous/Asynchronous|
+|Trigging Mechanism|Triggered passively|Internal Exception/Breakdown|Applications make requests|
+|Handling Mechanism|Continuously,Transparent to users|Kill or Re-execute|Wait,continuously|
 
 
 ---
-#### 进程切换 vs 函数切换
-![w:500](figs/context-switch.png) ![w:600](figs/function-call.png)
+#### Process Switching vs Function Switching
+![w:500](figs/context-switch2.png) ![w:600](figs/function-call.png)
 
 
 ---
