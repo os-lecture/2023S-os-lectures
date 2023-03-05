@@ -62,10 +62,22 @@ Spring 2023
 ### 2. RISC-V system mode
    - Overview
    - Privilege
-   - CSR register
+   - CSR Registers
 3. RISC-V system programming: user mode programming
 4. RISC-V system programming: M-Mode programming
 5. RISC-V system programming: kernel programming
+
+---
+
+#### RISC-V related terms
+- Application Execution Environment (AEE)
+- Application Binary Interface (ABI)
+- Supervisor Binary Interface (SBI)
+- Supervisor Execution Environment (SEE)
+- Hypervisor: virtual machine monitor
+- Hypervisor Binary interface (HBI)
+- Hypervisor Execution Environment (HEE)
+
 
 ---
 <style scoped>
@@ -82,20 +94,6 @@ Spring 2023
 - Hypervisor, virtual machine monitor (VMM)
 - RISC-V system modes:  modes related to system programming
 
----
-
-#### RISC-V related terms
-- Application Execution Environment (AEE)
-- Application Binary Interface (ABI)
-- Supervisor Binary Interface (SBI)
-- Supervisor Execution Environment (SEE)
-- Hypervisor: virtual machine monitor
-- Hypervisor Binary interface (HBI)
-- Hypervisor Execution Environment (HEE)
-
-
-
-
 
 
 ---
@@ -110,7 +108,7 @@ Spring 2023
 - Different software layers have clear privilege-level hardware isolation support
 - The **single app** on the left is encoded to run on the ABI
 - ABI is the interface for interaction between user-level ISA (Instruction Set Architecture) and AEE
-- ABI hides details of AEE to the application, making AEE more flexible
+- ABI hides the details of AEE to apps, making AEE more flexible
 
 ---
 <style scoped>
@@ -136,8 +134,8 @@ Spring 2023
 ---
 #### RISC-V System Mode: Application Scenarios
 ![w:800](figs/rv-privil-arch.png)
-- M Mode: small devices (bluetooth headsets, etc.)
-- U+M Mode: Embedded device ( credit card machine, etc.)
+- M Mode: small devices (e.g., bluetooth earphones)
+- U+M Mode: Embedded devices (e.g., credit card machine)
 - U+S+M Mode: mobile phone
 - U+S+H+M Mode: data center
 
@@ -150,8 +148,8 @@ Spring 2023
 
 #### RISC-V System Mode: Hardware Threading
 ![w:800](figs/rv-privil-arch.png)
-- Privilege is a protection mechanism provided for different software stacks.
-- **Hardware thread** (hart, ie CPU core) is running at one specific privilege (CSR configuration)
+- Privilege is a protection mechanism for different parts in the software stack.
+- **Hardware thread** (hart, i.e., CPU core) is running at a specific privilege (CSR configurations)
 - When processor performs a forbidden operation in current privilege, an **exception** will be generated. These exceptions usually generate traps, which causes the **lower-level execution environment to take over control right**
 
 ---
@@ -159,9 +157,9 @@ Spring 2023
 
 1. Comparison for Mainstream Processors
 2. RISC-V system mode
-   - overview
+   - Overview
    - **Privilege**
-   - CSR register
+   - CSR registers
 3. RISC-V system programming: user mode programming
 4. RISC-V system programming: M-Mode programming
 5. RISC-V system programming: kernel programming
@@ -187,14 +185,14 @@ Why **4 modes**? What are their **differences and connections**?
 | VMM | 10 | Hypervisor | --- |
 | BIOS | 11 | Machine | ``ecall`` ``mret`` |
 
-- Hardware system consisting of M, S, U modes is suitable for running UNIX-like OS
+- Hardware system containing M, S, U modes is suitable for running UNIX-like OS
 
 
 ---
 #### RISC-V system mode: Flexible combination of privileges
 ![w:800](figs/rv-privil-arch.png)
-- **Flexible** and **combinable** hardware structures are required as **requirements of applications change**  
-- Therefore, the above four modes appeared. Meanwhile, with the combination of four modes, the hardware design will be flexible.
+- **Flexible** and **combinable** hardware structures are required to meet the various **requirements of applications**  
+- Therefore, the above 4 modes, as well as a flexible hardware design with different combinations of 4 modes, appeared.
 
 ---
 #### RISC-V system mode: user mode
@@ -215,8 +213,8 @@ Why **4 modes**? What are their **differences and connections**?
 ![w:800](figs/rv-privil-arch.png)
 - S-Mode (Supervisor Mode, Kernel Mode)
    - OS in the S-Mode has sufficient **hardware control capability**
-   - Privileged Mode: **Limit execution and memory access of APPs** 
-   - S-Mode is the CPU execution mode when **operating system is running**
+   - Privileged Mode: **Limit the execution and memory access of apps** 
+   - S-Mode is the CPU execution mode when **OS is running**
    - Can execute kernel-mode privileged instructions, can directly **affect application program execution**
 
 ---
@@ -229,7 +227,7 @@ Why **4 modes**? What are their **differences and connections**?
 ![w:800](figs/rv-privil-arch.png)
 - H-Mode (Hypervisor Mode, Virtual Machine Mode)
    - Privileged mode: **Limit the memory space accessed by the OS**
-   - H-Mode is the CPU execution mode of **virtual machine monitor operation**, which can execute privileged instructions for H-Mode and affect OS execution directly**
+   - H-Mode is the CPU execution mode of **Virtual Machine Monitor**, which can execute the privileged instructions of H-Mode and affect OS execution directly
 
 
 ---
@@ -250,9 +248,9 @@ Why **4 modes**? What are their **differences and connections**?
 
 1. Comparison for Mainstream Processors
 2. RISC-V system mode
-   - overview
+   - Overview
    - Privilege
-   - **CSR register**
+   - **CSR registers**
 3. RISC-V system programming: user mode programming
 4. RISC-V system programming: M-Mode programming
 5. RISC-V system programming: kernel programming
@@ -263,10 +261,10 @@ Why **4 modes**? What are their **differences and connections**?
 
 - **General purpose registers** x0-x31
    - Accessed by general instructions
-   - The lowest but fastest storage level that unprivilege instructions can get access to.
+   - The fastest storage units that unprivileged instructions can get access to.
 - **Control and Status Registers** (CSR)
-   - Accessed via the **Control Status Register Instruction**, there can be 4096 CSRs at most
-   - Applications running in **User Mode** cannot access most of the CSR registers
+   - Accessed via the **CSR Instructions**, there can be 4096 CSRs
+   - Apps running in **User Mode** cannot access most CSR registers
    - OS running in **kernel mode** controls the computer by accessing the CSR register
 
 <!---
@@ -281,22 +279,21 @@ Mandatory isolation to avoid availability/reliability/security impact on the ent
 #### Isolation via CSR register
 OS ensures the safety and reliability of the computer through hardware isolation.
 - Set CSR to achieve isolation
-   -  Access Control: Prevent applications from accessing system-control registers
-      - **ADDRESS SPACE CONFIGURATION** register: mstatus/sstatus CSR(Interrupt and status)
+   -  Access Control: Prevent apps from accessing system-control registers
+      - **ADDRESS SPACE CONFIGURATION** register: mstatus/sstatus CSR
    - Time Management: Prevent apps from occupying 100% CPU for long time
-     - **Interrupt configuration** register: sstatus/stvec CSR(Address of the interrupt handler)
-   - Data Protection: Prevent app from destroying or stealing data
-     - **Address space related** registers: sstatus/satp/stvec CSR(Paging system)
+     - **interrupt configuration** register: sstatus/stvec CSR
+   - Data Protection: Prevent apps from destroying or stealing data
+     - **Address space related** registers: sstatus/satp/stvec CSR
 
 ---
-#### Functionality of CSR
-- Information Store： Get id of current chips and CPU cores.
-- Trap Setup： CSR used to set interrupt/exception.
-- Trap Handling：CSR used to handle interrupt/exception. 
-- Memory Protection： Like mpu of conterx-m
+## Functionalities of different CSR Registers
+- Information Registers: extract the current system information, such as chip ID and cpu core ID
+- Trap Setting Registers: setting interrupt and exception 
+- Trap Handling Registers: handling interrupt and exception 
+- Memory Protection Registers: similar to the functionalities of mpu in cortex-m
 
-```Interrupt and exception in Risc-V are named Trap```
-
+Interrupts and exceptions are called traps in RISC-V
 <!---
 ## RISC-V 系统模式：控制状态寄存器CSR
 
@@ -339,7 +336,7 @@ OS ensures the safety and reliability of the computer through hardware isolation
 1. Comparison for Mainstream Processors
 2. RISC-V system mode
 ### 3. RISC-V system programming: user mode programming
-   - brief description
+   - Brief introduction
    - U-Mode programming: system calls
    - Privileged operations
 4. RISC-V system programming: M-Mode programming
@@ -348,20 +345,20 @@ OS ensures the safety and reliability of the computer through hardware isolation
 ---
 
 #### System Programming
-- System programming needs to understand the **privilege architecture** of the processor, and be familiar with the allowed register resources, memory resources and peripheral resources of each privilege.
-- **Write kernel-level code**, construct OS, and support application execution
+- System programming needs to understand the **privilege architecture** of the processor, and be familiar with the allowed register, memory and peripheral resources of each privilege.
+- **Write kernel-level code**, construct OS, and support app execution
    - Memory management, process scheduling
    - Exception handling, interrupt handling
    - System calls, Peripheral control
-- System programming is usually **not** supported by extensive user **programming libraries** and convenient dynamic **debugging tools**
-- System programming of this course mainly focuses on S-Mode and U-Mode of RISC-V, involving some understanding of M-Mode
+- There is usually no extensive **libs** and convenient **debugging tools**
+- In this course, we mainly focus on S-Mode and U-Mode of RISC-V, and should understand some codes in M-Mode
 
 ---
-#### RISC-V U-Mode programming: using system calls
-- Applications under U-Mode cannot directly use physical resources of the computer
-- Environment call exception: Occurs when executing ``ecall``, which is equivalent to a system call
-- OS can access physical resources directly
-- What to do if the application needs to use hardware resources?
+#### RISC-V U-Mode programming: Using System Calls
+- Apps in U-Mode cannot directly use the hardware resources
+- Environment call exception: occurs when executing ``ecall``, which is equivalent to a system call
+- OS can access hardware resources directly
+- What to do if an app needs to use hardware resources?
    - print "hello world" to the screen
    - read data from file
 - Obtain services from OS through system calls
@@ -383,7 +380,7 @@ OS ensures the safety and reliability of the computer through hardware isolation
 
 ---
 #### Example 2: Execute privileged instructions in user mode
-[Start and execution flow of executing privileged instructions in user mode](https://github.com/chyyuu/os_kernel_lab/blob/v4-illegal-priv-code-csr-in-u-mode-app-v2/os/src/ main.rs#L306)
+[Start and execution flow of executing privileged instructions in user mode](https://github.com/chyyuu/os_kernel_lab/blob/v4-illegal-priv-code-csr-in-u-mode-app-v2/os/src/main.rs#L306)
 
 ![w:1000](figs/boot-priv-code-app.png)
 
@@ -391,13 +388,9 @@ OS ensures the safety and reliability of the computer through hardware isolation
 <!-- Zifencei extension https://www.cnblogs.com/mikewolf2002/p/11191254.html -->
 ---
 #### Privileged Operations
-- Privileged operations: Privileged instructions and CSR read/write operations
+- Privileged operations: privileged instructions and CSR read/write operations
 - Very few instructions:
-   - ``mret`` return from M-Mode
-   - ``sret`` return from S-Mode
-   - ``wfi`` wait for interrupt
-   - ``sfence.vma`` virtual address barrier instruction, used for invalidate virtual memory or data synchronization
-  
+   - ``mret`` return from M-Mode, ``sret`` return from S-Mode, ``wfi`` wait for interrupt, ``sfence.vma`` virtual address barrier instruction for invalidating virtual memory or data synchronization
 - Many other system management functions are implemented by reading/writing CSR
 Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction, which belongs to the "Zifencei" extended specification. It is used to maintain consistency of i-cache and d-cache.
 
@@ -418,7 +411,7 @@ Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction,
 ### 4. RISC-V system programming: M-Mode programming
    - Interrupt mechanism and exception mechanism
    - Hardware response to interrupt/exception
-   - Handover of control for interrupt/exception handling
+   - Control shift for interrupt/exception handling
 5. RISC-V system programming: kernel programming
 
 ---
@@ -431,21 +424,21 @@ Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction,
 - M-Mode is the **highest privilege mode** of hart (hardware thread) in RISC-V
 - Hart can **fully access to the underlying functions of the computer system** under M-Mode.
 - The most important feature of M-Mode is **intercept and handle interrupt/exception**
-   - **Synchronous exception**: generated during instruction execution, i.e. accessing an invalid register address, or executing an instruction with an invalid opcode
-   - **Asynchronous Interrupt**: Asynchronous external events or interrupts, such as timer interrupts
+   - **Synchronous exceptions**: generated during instruction execution, i.e. accessing an invalid register address, or executing an instruction with an invalid opcode
+   - **Asynchronous interrupts**: Asynchronous external events or interrupts, such as timer interrupts
 - RISC-V requires the implementation of **precise exception**: to ensure that all instructions before the exception are fully executed, and subsequent instructions have not started to execute
+---
 
-#### Hardware's response to Interrupt/Exception 
+#### How hardware handles Interrupt/Exception 
 1. The PC of the **exception/interrupt instruction** is saved in sepc, and PC is set to stvec.
 2. Set scause according to **interrupt/exception source**, and set stval to error address or other related information.
 3. Set sstatus[SIE bit] to zero to **mask interrupts** and **save previous SIE value** into SPIE
 4. **Save the privilege mode before the exception occurred** into SPP of sstatus, and then **change the privilege mode** to S. 
 5. **Jump** to the address set by stvec CSR 
-- Heap & Stack：Save context；Switch page table.
+   - Heap & Stack：Save context；Switch page table.
 
 ---
-#### Software Handling for S-Mode Interrupt/Exception 
-
+<!--#### How software handles S-Mode Interrupt/Exception 
 
 - **Initialization**
    - Write interrupt/exception handler (such as trap_handler)
@@ -454,28 +447,25 @@ Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction,
    1. The processor jumps to **trap_handler**
    2. trap_handler **handles** interrupt/exception/system call, etc.
    3. **Return** to the previous instruction and previous privilege to continue execution
+-->
 
-
-   
----
-#### Hardware/Software's response to Interrupt/Exception 
+#### How hardware handles Interrupt/Exception 
 - Hardware
-  - Set interrupt flag.
-  - Call corresponding Interrupt Service according to Interrupt vector. 
+  - Set interrupt flag
+  - Call corresponding service according to Interrupt vector
 - Software
   - Save context
-  - Execute the program that causes interrupt.
-  - Clear interrupt flag. 
-  - Resume saved context.
+  - Execute the interrupt service
+  - Clear interrupt flag
+  - Resume saved context
 - Interrupt Vector：Interrupt--Interrupt Service，Exception--Exception Service，System call
 ---
 #### Overhead of Interrupt/Exception
-1. Overhead of setting up corresponding sevice to Interrupt/Exception/System calls.
-2. Overhead of setting up of kernel stack.
-3. Overhead of checking validity of syscall parameters.
-4. Overhead of copying kernel data to user mode. 
-5. Change of kernel state(Overhead of cache/TLB flushing)
-
+1. Finding corresponding services for Interrupt/Exception/System calls
+2. Creating the kernel heap & stack
+3. Checking the validity of syscall parameters
+4. Copying kernel data to user mode. 
+5. Change kernel status (overhead of cache/TLB flushing)
 ---
 <style scoped>
 {
@@ -505,19 +495,17 @@ Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction,
 - mstatus(Machine Status) saves global interrupts and other **status**
    - SIE controls the global interrupt in S-Mode, and MIE controls the global interrupt in M-Mode.
    - SPIE, MPIE saves old values of MIE and SIE before the interrupt occurrs.
-   - SPP(1 bit) indicates the previous privilege is S-Mode or U-Mode (1->S-Mode, 0->U-Mode)
-   - MPP(2 bits) indicates the previous privilege is S-Mode, U-Mode or M-Mode
-   <br>
+   - SPP indicates the previous privilege is S-Mode or U-Mode (1->S-Mode, 0->U-Mode)
+   - MPP indicates the previous privilege is S-Mode, U-Mode or M-Mode
+   
    PP: Previous Privilege
-
-
 ![w:1000](figs/mstatus.png)
 
 
 ---
 #### Mcause register
 
-When an exception occurs, mcause CSR will record a code indicating **the event type**. If the event is caused by an interrupt, the ``Interrupt`` bit is set. ``Exception Code`` field contains the code indicating the type of last exception.
+When an exception occurs, mcause CSR will record a code indicating **the event type**. If the event is caused by an interrupt, the ``Interrupt`` bit will be set. ``Exception Code`` field contains the code indicating the type of the last exception.
 
 ![w:1150](figs/rv-cause.png)
 
@@ -525,10 +513,10 @@ When an exception occurs, mcause CSR will record a code indicating **the event t
 #### M-Mode Timer Interrupt
 - Interrupts happen asynchronously
    - Signals from external I/O devices 
-- Timer can generate interrupts in a stable and regular manner
-   - Prevent the application program from occupying the CPU for a long time, so that the OS Kernel can get time slice for execution...
-   - **Software in high privilege mode** can control CPU
-   - Software in high privilege mode can **authorize** softwares in low privilege mode to handle interrupts
+- Timer can generate interrupts in a stable and periodical manner
+   - Prevent apps from occupying CPU for a long time, so that the OS Kernel can get control periodically...
+   - **Software in higher privilege mode** can control CPU
+   - Software in higher privilege mode can **authorize** softwares in lower privilege mode to handle interrupts
 
 ---
 #### RISC-V processor FU540 module diagram
@@ -547,8 +535,8 @@ When an exception occurs, mcause CSR will record a code indicating **the event t
 3. RISC-V system programming: user mode programming
 4. RISC-V system programming: M-Mode programming
    - Interrupt mechanism and exception mechanism
-### hardware response to interrupt/exception
-   - Handover of control for interrupt/exception handling
+   - ### hardware response to interrupt/exception
+   - control shift for interrupt/exception handling
 5. RISC-V system programming: kernel programming
 
 ---
@@ -557,13 +545,13 @@ When an exception occurs, mcause CSR will record a code indicating **the event t
   font-size: 25px
 }
 </style>
-#### Hardware's response to M-Mode interrupt
+#### How hardware does for handling M-Mode interrupts
 - The PC of the **exception/interrupt instruction** is saved in mepc, and PC is set to mtvec.
    - For synchronous exceptions, mepc points to the instruction that caused the exception;
-   - For interrupts(asynchronous), mepc points to the location where execution should be resumed after interrupt handling.
+   - For asynchronous interrupts, mepc points to the location where execution should be resumed after interrupt handling.
 - Set mcause according to **interrupt/exception source**, and set mtval to error address or other reserved information word.
-- Set mstatus[MIE bit] to zero to **disable interrupts** and **save previous MIE value** into MPIE
-     - SIE controls the global interrupt under S-Mode, MIE controls the global interrupt under M-Mode;
+- Set mstatus [MIE bit] to zero to **disable interrupts** and **save previous MIE value** into MPIE
+     - SIE controls the global interrupt of S-Mode, MIE controls the global interrupt of M-Mode;
      - SPIE records the value(before interruprt) of SIE, and MPIE records the previous value of MIE
 - **Save the privilege mode before the exception occurred** into MPP of mstatus, and then **change the privilege mode** to M. (MPP indicates that the previous privilege is S, M or U mode)
 
@@ -611,14 +599,14 @@ Column 1(all 0) represents exceptions, column 2 represents exception IDs, and co
 ![bg right:45% 100%](figs/rv-exception.png)
 
 ---
-#### Hardware response to M-Mode interrupts/exceptions 
+#### How hardware does for handling M-Mode interrupts
 - The PC of the interrupt/exception instruction is stored in mepc, and the PC is set to mtvec.
     - For exceptions, mepc points to the instruction caused the exception
     - For interrupts, mepc points to where execution should be resumed after finishing handling interrupt
 - Set mcause based on the **interrupt/exception source** and set mtval to the address of the error or other reserved information word.
 
 ---
-#### Hardware response to M-Mode interrupts/exceptions
+#### How hardware does for handling M-Mode interrupts
 - Set mstatus[MIE bit] to zero to **disable interrupts** and **save previous MIE value** into MPIE
      - SIE controls the global interrupt under S-Mode, MIE controls the global interrupt under M-Mode;
      - SPIE records the value(before interruprt) of SIE, and MPIE records the previous value of MIE
@@ -639,7 +627,7 @@ Column 1(all 0) represents exceptions, column 2 represents exception IDs, and co
 4. RISC-V system programming: M-Mode programming
    - Interrupt mechanism and exception mechanism
    - Interrupt/exception hardware response
-###  Handover of control for interrupt/exception handling
+   - ### Control shift for interrupt/exception handling
 5. RISC-V system programming: kernel programming
 
 
@@ -689,7 +677,7 @@ Column 1(all 0) represents exceptions, column 2 represents exception IDs, and co
 <!-- , is a subset of mie and mip. These two registers have the same layout as in M-Mode. In sie and sip, only bits corresponding to interrupts delegated by mideleg can be read and written, and bits corresponding to interrupts not delegated are always 0 -->
 
 ---
-#### Handover control for interrupt/exception handling under M-Mode
+#### Control shift for interrupt/exception handling
 
 
 - When an interrupt/exception occurs, CPU control **usually** will not be delegated to a lower-level privileged mode
@@ -702,7 +690,7 @@ Column 1(all 0) represents exceptions, column 2 represents exception IDs, and co
 
 
 ---
-#### Thinking questions
+#### Questions
 
 - How to implement the breakpoint debugging through the breakpoint exception?
 - How to implement single-stepping tracking?
@@ -851,7 +839,7 @@ The hart accepts the interrupt/exception and needs to delegate them to S-Mode, t
 - Virtual addresses divide memory into **fixed-size pages** for **address translation** and **content protection**.
 - satp (Supervisor Address Translation and Protection)  **controls paging**. satp has three fields:
    - The MODE field can **turn on paging** and select the number of page table levels
-   - ASID (Address Space Identifier) field is optional. It can avoid TLB flushing when switching processes, which can reduce the overhead of context switching
+   - ASID (Address Space Identifier) field is optional, it can be used to reduce the overhead of context switching
    - The PPN field records the physical page number of the **root page table**
 ![w:900](figs/satp.png)
 
@@ -863,7 +851,7 @@ The hart accepts the interrupt/exception and needs to delegate them to S-Mode, t
 - Handle memory access **Exception**
 
 
-![bg right:55% 85%](figs/riscv_pagetable.svg)
+![bg right:50% 100%](figs/riscv_pagetable.svg)
 
 ---
 <style scoped>
