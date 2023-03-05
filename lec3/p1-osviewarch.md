@@ -254,8 +254,8 @@ Ape Science~Six isolation techniques that programmers must know -->
 ---
 #### Time Isolation: Interrupt/Exception Mechanism
 - CPU/hardware supports interrupt/exception handling
-- Response to and handle **abnormal behavior** of applications timely
-- Prevent applications occupying CPU for long time.
+- Exception: Response to and handle **abnormal behavior** of applications timely
+- Interrupt: Prevent applications occupying CPU for long time.
 - Interrupt occurs **asynchronously**,  as a result of signals from external I/O devices.
    - Asynchronous means that hardware interrupt is not caused by any dedicated CPU instruction.
 
@@ -272,6 +272,58 @@ Ape Science~Six isolation techniques that programmers must know -->
 - Timer can generate interrupts in a stable and regular manner
    - Prevent applications from occupying the CPU for long time
    - Allow OS kernel to manage resource periodically
+
+---
+#### Interrupt Handler
+- Trigger interrupt
+- Save context, switch to kernel mode.
+- Return to next instruction before interrupt occurs, resume context.
+![bg right:62% 100%](figs/interrupt.png)
+
+
+<!---
+#### 异常处理例程![w:900](figs/interrupt.png)
+![w:650](figs/exception.png)-->
+
+---
+#### Exception Handler
+- Get exception handling service according to the exception id
+- Save context
+- Process: Kill the program which causes exception, re-execute the exception instruction.
+- Resume context
+![bg right:52% 100%](figs/exception.png)
+
+
+<!---
+#### 系统调用处理例程
+![w:800](figs/syscall.png)-->
+
+---
+#### System call Handler
+-  Get system call service program.
+-  Switch from User Mode to Kernel Mode
+-  Switch stack, save context
+-  Execute in Kernel Mode
+-  Return to User Mode
+
+![bg right:52% 100%](figs/syscall.png)
+
+
+---
+#### Interrupt vs Exception vs System call
+
+||Interrupt|Exception|System call|
+|----|----|---|---|
+|Initiator|Peripheral/Timer|Applications|Applications|
+|Response Mechinism|Asynchronous|Synchronous|Synchronous/Asynchronous|
+|Trigging Mechanism|Triggered passively|Internal Exception/Breakdown|Applications make requests|
+|Handling Mechanism|Continuously,Transparent to users|Kill or Re-execute|Wait,continuously|
+
+
+---
+#### Process Switching vs Function Switching
+![w:500](figs/context-switch2.png) ![w:600](figs/function-call.png)
+
 
 ---
 ### Summary
