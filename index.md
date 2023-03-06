@@ -45,10 +45,10 @@ backgroundColor: white
 
 ---
 
-## Lecture 3 Isolation and batch processing based on privilege level
-- [Section 1 Viewing computer systems from the perspective of OS](./lec3/p1-osviewarch.html)
-- [Section 2 RISC-V from the perspective of OS](./lec3/p2-osviewrv.html)
-- [Section III Practice: Batch Operating System](./lec3/p3-batchos.html)
+## Lecture 3 Privilege based Isolation and Batch Processing
+- [Section 1 Computer System: An OS's Perspective](./lec3/p1-osviewarch.html)
+- [Section 2 RISC-V : An OS's perspective](./lec3/p2-osviewrv.html)
+- [Section III Practice: Batch OS](./lec3/p3-batchos.html)
 
 <!--
 ---
