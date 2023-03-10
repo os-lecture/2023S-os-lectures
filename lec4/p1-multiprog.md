@@ -11,7 +11,7 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# Lecture 4 Multiprogramming and time-sharing multitasking
+# Lecture 4 Multiprogramming and Time-sharing Multi-task
 ## Section 1 Process and Process Model
 <br>
 <br>
@@ -27,7 +27,7 @@ Spring 2023
 **Outline**
 
 ### 1. Multiprogramming and Cooperative Scheduling
-2. Time-sharing Multitask and Preemptive Scheduling
+2. Time-sharing Multi-task and Preemptive Scheduling
 3. The Concept of Process
 4. Process Model
 
@@ -67,14 +67,14 @@ Terms appeared in history: Job, Multiprogramming
 **Outline**
 
 1. Multiprogramming and Cooperative Scheduling
-### 2. Time-sharing Multitask and Preemptive Scheduling
+### 2. Time-sharing Multi-task and Preemptive Scheduling
 3. The Concept of Process
 4. Process Model
 
 ---
 #### History
 
-The widespread use of minicomputers led to a demand for time-sharing and multitasking capabilities, resulting in the development of time-sharing multi-user OS.
+The widespread use of minicomputers led to a demand for time-sharing and multi-task capabilities, resulting in the development of time-sharing multi-user OS.
 
 - Widely use of DEC's PDP and VAX minicomputers
 - DEC's VMX operating system
@@ -82,9 +82,9 @@ The widespread use of minicomputers led to a demand for time-sharing and multita
 - AT&T's UNIX operating system
 
 ---
-#### Time-sharing multitask from user's perspective
+#### Time-sharing Multi-task from user's perspective
 
-Time sharing multitask: from user's perspective
+Time-sharing Multi-task: from user's perspective
 
 - Multiple executable programs residing in memory
 - Each executable program takes the processor in a time-sharing way
@@ -93,7 +93,7 @@ Time sharing multitask: from user's perspective
 
 
 ---
-#### Time sharing multitask from the perspective of OS
+#### Time-sharing Multi-task from the perspective of OS
 
 
 
@@ -123,7 +123,7 @@ Reference: [Difference between Job, Task and Process](https://www.geeksforgeeks.
 **Outline**
 
 1. Multiprogramming and Cooperative Scheduling
-2. Time-sharing Multitask and Preemptive Scheduling
+2. Time-sharing Multi-task and Preemptive Scheduling
 ### 3. The Concept of Process
 4. Process Model
 
@@ -234,7 +234,7 @@ The core data structure of OS for managing tasks, also known as process control 
 **Outline**
 
 1. Multiprogramming and Cooperative Scheduling
-2. Time-sharing Multitask and Preemptive Scheduling
+2. Time-sharing Multi-task and Preemptive Scheduling
 3. The Concept of Process
 ### 4. Process Model
 
