@@ -11,134 +11,140 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第四讲 多道程序与分时多任务
-## 第二节 实践：多道程序与分时多任务操作系统
+# Lecture 4 Multiprogramming and time-sharing multitasking
+## Section 2 Practice: Multiprogramming and time-sharing multitasking operating system
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
 <br>
 <br>
 
-2023年春季
+Spring 2023
 
 ---
-**提纲**
+**Outline**
 
-### 1. 实验目标和步骤
-- 实验目标
-- 实践步骤
-2. 多道批处理操作系统设计
-3. 应用程序设计
-4. 锯齿螈OS：支持应用程序加载
-5. 始初龙OS：支持多道程序协作调度
-6. 腔骨龙OS：分时多任务OS
+### 1. Lab objectives and steps
+- Lab objectives
+- Lab steps
+2. Multiprogramming batch OS design
+3. Application Design
+4. Sawtooth OS: Support application loading
+5. Eoraptor OS: Support multiprogramming with cooperative scheduling  
+6. Coelophysis OS: Time-sharing multitask OS
+<!--get some concept from https://www.tutorialandexample.com/types-of-operating-system  -->
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### Lab objectives
+
+![bg right:43% 90%](figs/multiprog-os-detail.png)
+
+- Goal of MultiprogOS
+     - Further improve the overall performance and efficiency of multiple applications in the system
+- Goal of BatchOS target
+     - Isolate APP from OS to improve system security and efficiency
+- Goal of LibOS
+     - Isolate applications from hardwares, simplify the difficulty and complexity to access hardware from application side
 
 ---
 
-#### 实验目标
+#### Lab Requirements
+- Understand
+     - Cooperative scheduling and preemptive scheduling
+     - Tasks and task switching
+- Be able to finish
+     - Multiprogramming OS
+     - Time-sharing multitask OS
 
-![bg right:53% 90%](figs/multiprog-os-detail.png)
+<!-- Sawtooth Archosaurus Coelophysis -->
 
-- MultiprogOS目标
-    - 进一步提高系统中多个应用的总体性能和效率
-- BatchOS目标
-    - 让APP与OS隔离，提高系统的安全性和效率
-- LibOS目标
-    - 让应用与硬件隔离，简化应用访问硬件的难度和复杂性
-
----
-#### 实验要求
-- 理解
-    - 协作式调度和抢占式调度
-    - 任务和任务切换
-- 会写
-    - 多道程序操作系统
-    - 分时多任务操作系统
-
-<!-- 锯齿螈  始初龙  腔骨龙 -->
-
-![bg right:51% 70%](figs/ch3-oses.png)
+![bg right:45% 70%](figs/ch3-oses.png)
 
 ---
-#### 多道程序系统的结构
+#### Structure of Multiprogramming systems
 
 ![bg 55%](figs/multiprog-os-detail.png)
 
 ---
-#### 总体思路
-- 编译：应用程序和内核独立编译，合并为一个镜像
-- 编译：应用程序需要各自的起始地址
-- 构造：系统调用服务请求接口，进程的管理与初始化
-- 构造：进程控制块，进程上下文/状态管理
-- 运行：特权级切换，进程与OS相互切换
-- 运行：进程通过系统调用/中断实现主动/被动切换
+#### General idea
+- Compilation: The application and kernel will be compiled independently and merged into one image
+- Compilation: Different applications require different start addresses
+- Construction: System call service request interface, process management and initialization
+- Construction: Process Control Block, process context/state management
+- Run: Privilege switching, process and OS switching
+- Run: Switch the process actively/passively through system calls/interrupts
 
 ---
-#### 历史背景
+#### History & Background
 
-- 1961年英国 Leo III 计算机
-- 支持在计算机内存中**加载**多个不同的程序，并从第一个开始**依次运行**
-<!-- - J. Lyons & Co.用于商业事务处理
+- 1961 British Leo III computer
+- Supports **loading** multiple different programs into memory and running **sequentially** from the first one
+<!-- - J. Lyons & Co. for commercial transactions
 
-J. Lyons & Co.是一家成立于1884年的英国连锁餐厅，食品制造业和酒店集团。 -->
+J. Lyons & Co. is a British restaurant chain, food manufacturing and hotel group founded in 1884. -->
 
 <!-- https://baike.baidu.com/item/EDSAC/7639053
-电子延迟存储自动计算器（英文：Electronic Delay Storage Automatic Calculator、EDSAC）是英国的早期计算机。1946年,英国剑桥大学数学实验室的莫里斯·威尔克斯教授和他的团队受冯·诺伊曼的First Draft of a Report on the EDVAC的启发，以EDVAC为蓝本，设计和建造EDSAC，1949年5月6日正式运行，是世界上第一台实际运行的存储程序式电子计算机。
-是EDSAC在工程实施中同样遇到了困难：不是技术，而是资金缺乏。在关键时刻，威尔克斯成功地说服了伦敦一家面包公司J．Lyons&Co。．的老板投资该项目，终于使计划绝处逢生。1949年5月6日，EDSAC首次试运行成功，它从带上读人一个生成平方表的程序并执行，正确地打印出结果。作为对投资的回报，LyOHS公司取得了批量生产EDSAC的权利，这就是于1951年正式投入市场的LEO计算机(Lyons Electronic Office)，这通常被认为是世界上第一个商品化的计算机型号，因此这也成了计算机发展史上的一件趣事：第一家生产出商品化计算机的厂商原先竟是面包房。Lyons公司后来成为英国著名的“国际计算机有限公司”即ICL的一部分。
+Electronic Delay Storage Automatic Calculator (English: Electronic Delay Storage Automatic Calculator, EDSAC) is an early British computer. In 1946, Professor Maurice Wilkes of the Mathematics Laboratory of the University of Cambridge and his team were inspired by von Neumann's First Draft of a Report on the EDVAC, and designed and built EDSAC based on EDVAC. It was officially put into operation on May 6, 1949. It is the world's first stored-program electronic computer that actually runs.
+It was EDSAC that also encountered difficulties in project implementation: not technology, but lack of funds. At the crucial moment, Wilkes successfully persuaded J. Lyons & Co. ． The boss invested in the project and finally brought the plan back to life. On May 6, 1949, EDSAC was successfully tested for the first time. It read a program to generate a square table from the tape and executed it, and printed the result correctly. In return for the investment, LyOHS obtained the right to mass-produce EDSAC, which is the LEO computer (Lyons Electronic Office) that was officially put on the market in 1951, which is generally considered to be the first commercialized computer model in the world, so This has also become an interesting fact in the history of computer development: the first manufacturer to produce a commercial computer turned out to be a bakery. Lyons company later became part of the famous "International Computer Co., Ltd.", or ICL, in the UK.
 -->
 
 ![bg right 100%](figs/multiprog-os.png)
 
 ---
-**提纲**
+**Outline**
 
-1. 实验目标和步骤
-- 实验目标
-### 实践步骤
-2. 多道批处理操作系统设计
-3. 应用程序设计
-4. 锯齿螈OS：支持应用程序加载
-5. 始初龙OS：支持多道程序协作调度
-6. 腔骨龙OS：分时多任务OS
+1. Lab objectives and steps
+- Lab objectives
+- **Lab steps**
+2. Multiprogramming batch OS design
+3. Application Design
+4. Sawtooth OS: Support application loading
+5. Eoraptor OS: Support multiprogramming with cooperative scheduling  
+6. Coelophysis OS: Time-sharing multitask OS
 
 ---
 
-#### 实践步骤（基于BatchOS）
-- 修改APP的链接脚本(定制起始地址)
-- 加载&执行应用
-- 切换任务
+#### Lab steps (based on BatchOS)
+- Modify the link script of APPs (custom start address)
+- Load & execute applications
+- Switch tasks
 
 ![bg right 100%](figs/multiprog-os.png)
 
 ---
 
-#### 三个应用程序交替执行
+#### Three applications are executed alternately
 ```
 git clone https://github.com/rcore-os/rCore-Tutorial-v3.git
 cd rCore-Tutorial-v3
 git checkout ch3-coop
 ```
-包含三个应用程序，大家谦让着**交替执行**
+Contains three applications, everyone humbly **executes alternately**
 ```
 user/src/bin/
-├── 00write_a.rs # 5次显示 AAAAAAAAAA 字符串
-├── 01write_b.rs # 2次显示 BBBBBBBBBB 字符串
-└── 02write_c.rs # 3次显示 CCCCCCCCCC 字符串
+├── 00write_a.rs # Display AAAAAAAAAA string 5 times
+├── 01write_b.rs # Display BBBBBBBBBB string twice
+└── 02write_c.rs # Display CCCCCCCCCC string 3 times
 ```
 
 ---
 
-#### 运行结果
+#### Execution result
 ```
 [RustSBI output]
 [kernel] Hello, world!
-AAAAAAAAAA [1/5]
+AAAAAAAAAAA [1/5]
 BBBBBBBBBB [1/2]
 ....
 CCCCCCCCCC [2/3]
-AAAAAAAAAA [3/5]
+AAAAAAAAAAA [3/5]
 Test write_b OK!
 [kernel] Application exited with code 0
 CCCCCCCCCC [3/3]
@@ -149,260 +155,261 @@ CCCCCCCCCC [3/3]
 
 
 ---
-**提纲**
+**Outline**
 
-1. 实验目标和步骤
-### 2. 多道批处理操作系统设计
-3. 应用程序设计
-4. 锯齿螈OS：支持应用程序加载
-5. 始初龙OS：支持多道程序协作调度
-6. 腔骨龙OS：分时多任务OS
-
----
-
-#### 软件架构
-
-![bg 70%](figs/multiprog-os-detail.png)
+1. Lab objectives and steps
+### 2. Multiprogramming batch OS design
+3. Application Design
+4. Sawtooth OS: Support application loading
+5. Eoraptor OS: Support multiprogramming with cooperative scheduling  
+6. Coelophysis OS: Time-sharing multitask OS
 
 ---
 
-#### 代码结构：应用程序
-构建应用
+#### Software Architecture
+
+![bg 55%](figs/multiprog-os-detail.png)
+
+---
+
+#### Code Structure: Application
+Build application
 ```
 └── user
-    ├── build.py(新增：使用 build.py 构建应用使得它们占用的物理地址区间不相交)
-    ├── Makefile(修改：使用 build.py 构建应用)
-    └── src (各种应用程序)    
+     ├── build.py (Add: use build.py to build applications so that the physical address space they occupy are disjoint)
+     ├── Makefile (Modify: use build.py to build applications)
+     └── src (various applications)
 ```
 
 
 ---
 
-#### 代码结构：完善任务管理功能
+#### Code structure: Complete task management
 
-改进OS：``Loader``模块加载和执行程序
+Improve OS: ``Loader`` module loads and executes programs
 ```
 ├── os
-│   └── src
-│       ├── batch.rs(移除：功能分别拆分到 loader 和 task 两个子模块)
-│       ├── config.rs(新增：保存内核的一些配置)
-│       ├── loader.rs(新增：将应用加载到内存并进行管理)
-│       ├── main.rs(修改：主函数进行了修改)
-│       ├── syscall(修改：新增若干 syscall)
+│ └── src
+│ ├── batch.rs (Delete: This is divided into two submodules, loader and task)
+│ ├── config.rs (Add: Save some kernel configurations)
+│ ├── loader.rs (Add: Load the application into memory and manage it)
+│ ├── main.rs (Modify: Modify the main function)
+│ ├── syscall (Modify: Add some syscalls)
 ```
 
 ---
 
-#### 代码结构：进程切换
+#### Code structure: Process switching
 
-改进OS：`TaskManager`模块管理/切换程序的执行
+Improve OS: `TaskManager` module manages/switches execution of programs
 ```
 ├── os
-│   └── src
-│       ├── task(新增：task 子模块，主要负责任务管理)
-│       │   ├── context.rs(引入 Task 上下文 TaskContext)
-│       │   ├── mod.rs(全局任务管理器和提供给其他模块的接口)
-│       │   ├── switch.rs(将任务切换的汇编代码解释为 Rust 接口 __switch)
-│       │   ├── switch.S(任务切换的汇编代码)
-│       │   └── task.rs(任务控制块 TaskControlBlock 和任务状态 TaskStatus 的定义)
+│ └── src
+│ ├── task (Add: task sub-module is mainly responsible for task management)
+│ │ ├── context.rs (Introduce Task context  `TaskContext` )
+│ │ ├── mod.rs (Global task manager and provides some interfaces to other modules)
+│ │ ├── switch.rs (Interprets the assembly code of task switching as the Rust interface __switch)
+│ │ ├── switch.S (Assembly code for task switching)
+│ │ └── task.rs (Definition of task control block `TaskControlBlock` and task status `TaskStatus`)
 ```
 
 ---
 
-**提纲**
+**Outline**
 
-1. 实验目标和步骤
-2. 多道批处理操作系统设计
-### 3. 应用程序设计
-4. 锯齿螈OS：支持应用程序加载
-5. 始初龙OS：支持多道程序协作调度
-6. 腔骨龙OS：分时多任务OS
+1. Lab objectives and steps
+2. Multiprogramming batch OS design
+### 3. Application Design
+4. Sawtooth OS: Support application loading
+5. Eoraptor OS: Support multiprogramming with cooperative scheduling  
+6. Coelophysis OS: Time-sharing multitask OS
 
 ---
 
-#### 应用程序项目结构
+#### Application Project Structure
 
-没有更新 应用名称有数字编号
+No updates.  There are id numbers in App names.
 
 ```
 user/src/bin/
-├── 00write_a.rs # 5次显示 AAAAAAAAAA 字符串
-├── 01write_b.rs # 2次显示 BBBBBBBBBB 字符串
-└── 02write_c.rs # 3次显示 CCCCCCCCCC 字符串
+├── 00write_a.rs # Display AAAAAAAAAA string 5 times
+├── 01write_b.rs # Display BBBBBBBBBB string twice
+└── 02write_c.rs # Display CCCCCCCCCC string 3 times
 ```
 ---
 
-#### 应用程序的内存布局
+#### Memory layout of applications
 
-- 由于每个应用被加载到的位置都不同，也就导致它们的链接脚本 linker.ld 中的 **``BASE_ADDRESS``** 都是不同的。
-- 写一个脚本定制工具 `build.py` ，为每个应用定制了各自的链接脚本
-   - **``应用起始地址 = 基址 + 数字编号 * 0x20000``**  
+- Since different applications will be loaded to different locations, the **``BASE_ADDRESS``** in their linker script linker.ld are all different.
+- Write a script customization tool `build.py`, which customizes its own link script for each application
+    - **``Application start address = base address + number * 0x20000``**
 
 ---
 
-#### yield系统调用
+#### Yield system call
 
 ```rust
 //00write_a.rs
 fn main() -> i32 {
-    for i in 0..HEIGHT {
-        for _ in 0..WIDTH {
-            print!("A");
-        }
-        println!(" [{}/{}]", i + 1, HEIGHT);
-        yield_(); //放弃处理器 
-    }
-    println!("Test write_a OK!");
-    0
+     for i in 0..HEIGHT {
+         for _ in 0..WIDTH {
+             print!("A");
+         }
+         println!(" [{}/{}]", i + 1, HEIGHT);
+         yield_(); //yield the CPU
+     }
+     println!("Test write_a OK!");
+     0
 }
 ```
 
 ---
 
-#### yield系统调用  
+#### Yield system call
 
-- 应用之间是**相互不知道**的
-- 应用需要**主动让出**处理器
-- 需要通过**新的系统调用**实现  
-  - **``const SYSCALL_YIELD: usize = 124;``**
+- Apps are **mutually unaware**
+- Application needs to **actively yield** the processor
+- Needs to be implemented via a **new syscall**
+   - **``const SYSCALL_YIELD: usize = 124;``**
 
 
 
 ---
 
-#### yield系统调用  
+#### Yield system call
 
 ``` Rust
 const SYSCALL_YIELD: usize = 124;
 pub fn sys_yield() -> isize {
-    syscall(SYSCALL_YIELD, [0, 0, 0])
+     syscall(SYSCALL_YIELD, [0, 0, 0])
 }
 pub fn yield_() -> isize {
-    sys_yield()
+     sys_yield()
 }
 ```
 
 
 ---
-**提纲**
+**Outline**
 
-1. 实验目标和步骤
-2. 多道批处理操作系统设计
-3. 应用程序设计
-### 4. 锯齿螈OS：支持应用程序加载
-5. 始初龙OS：支持多道程序协作调度
-6. 腔骨龙OS：分时多任务OS
+1. Lab objectives and steps
+2. Multiprogramming batch OS design
+3. Application Design
+### 4. Sawtooth OS: Support application loading
+5. Eoraptor OS: Support multiprogramming with cooperative scheduling  
+6. Coelophysis OS: Time-sharing multitask OS
 
 ---
-#### 锯齿螈OS：支持应用程序加载
+#### Sawtooth OS: Support application loading
 
-二叠纪“锯齿螈”操作系统支持在内存中驻留多个应用，形成多道程序操作系统 – Multiprog OS；
+The Permian "sawtooth OS" supports multiple applications residing in memory to form a multiprogramming operating system – Multiprog OS;
   
-![bg right:57% 100%](figs/multiprog-os-detail.png)
+![bg right:50% 100%](figs/multiprog-os-detail.png)
 
 ---
 
-#### 多道程序加载
-- 应用的加载方式有不同
-- 所有的应用在内核初始化的时候就一并被加载到内存中
-- 为了避免覆盖，它们自然需要被**加载到不同的物理地址**
+#### MultiProgramming Loading
+- Apps are loaded in different ways.
+- All applications are loaded into memory when kernel is being initialized
+- To avoid overwriting, they need to be **loaded to different physical addresses**
 
 
 ---
 
-#### 多道程序加载
+#### MultiProgramming Loading
 
 ```Rust
 fn get_base_i(app_id: usize) -> usize {
-    APP_BASE_ADDRESS + app_id * APP_SIZE_LIMIT
+     APP_BASE_ADDRESS + app_id * APP_SIZE_LIMIT
 }
 
 let base_i = get_base_i(i);
 // load app from data section to memory
 let src = (app_start[i]..app_start[i + 1]);
-let dst = (base_i.. base_i+src.len());
+let dst = (base_i.. base_i+src. len());
 dst.copy_from_slice(src);
 ```
 
 
 ---
 
-#### 执行程序
+#### Program execution
 
-- 执行时机
-  - 当多道程序的初始化放置工作完成
-  - 某个应用程序运行结束或出错的时
+- Execution timing
+   - When the initialization of the multiprogramming is complete
+   - When an application ends or an error occurs
 
-- 执行方式
-  - 调用 run_next_app 函数**切换**到第一个/下一个应用程序
+- How to switch?
+   - Call the run_next_app function to **switch** to the first/next application
   
 
 ---
 
-#### 切换下一个程序
+#### Switch to the next program
 
-  - 内核态到用户态
-  - 用户态到内核态
+   - From kernel mode to user mode
+   - From user mode to kernel mode
 
 
 ---
 
-#### 切换下一个程序
+#### Switch to the next program
 
-  - 跳转到编号i的应用程序编号i的入口点 `entry(i)`
-  - 将使用的栈切换到用户栈stack(i) 
+   - Jump to application i (The entry point of application i is `entry(i)`)
+   - Switch to the user stack stack(i)
 
 ![bg right:55% 90%](figs/kernel-stack.png)
 
 
 ---
 
-#### 执行程序
+#### Program Execution
 
-现在完成了支持**把应用都放到内存中**的锯齿螈OS
+Now we complete "Sawtooth OS", which supports **loading applications into memory**
 ![bg right:57% 95%](figs/jcy-multiprog-os-detail.png)
 
 ---
-**提纲**
+**Outline**
 
-... ...
+...
 
-4. 锯齿螈OS：支持应用程序加载
-### 5. 始初龙OS：支持多道程序协作调度
-* 任务切换
-* Trap控制流切换
-* 协作式调度
-6. 腔骨龙OS：分时多任务OS
-
----
-
-#### 支持多道程序协作式调度
-
-协作式多道程序：应用程序**主动放弃** CPU 并**切换**到另一个应用继续执行，从而提高系统整体执行效率；
-
-![bg right:54% 90%](figs/more-task-multiprog-os-detail.png)
+4. Sawtooth OS: Support application loading
+### 5. Eoraptor OS: Support multiprogramming with cooperative scheduling  
+* Task switching
+* Trap control flow switching
+* Cooperative Scheduling
+6. Coelophysis OS: Time-sharing multitask OS
 
 ---
 
-#### 任务切换
+#### Support multiprogramming cooperative scheduling
 
-![bg 70%](figs/more-task-multiprog-os-detail.png)
+Cooperative multi-programming: One application **actively yields** the CPU and **switches** to another application to continue execution, thereby improving the overall efficiency of the system;
+
+![bg right:50% 90%](figs/more-task-multiprog-os-detail.png)
 
 ---
 
-#### 进程
+#### Task switching
 
-- **进程(Process)** ：一个具有一定**独立功能**的程序在一个**数据集合**上的一次**动态执行**过程。也称为**任务(Task)**。
+![bg 60%](figs/more-task-multiprog-os-detail.png)
+
+---
+
+#### Process
+
+- **Process**: A **dynamic execution** process on a **data collection** of a program with certain **independent functions**. Also known as **Task**.
 ![bg right 100%](figs/task-multiprog-os-detail.png)
 
 
 ---
 
-#### 时间片（slice）
+#### Time slice
 
-- 应用执行过程中的一个时间片段上的执行片段或空闲片段，称为 “ 计算任务片 ” 或“ 空闲任务片 ”，统称**任务片**（task slice）
+- The execution/idle slice in a time slice of application execution is called "computing task slice" or "idle task slice", collectively called **task slice**
 ![bg right 100%](figs/task-multiprog-os-detail.png)
 
+<!--MZY finishes above -->
 
 
 ---
