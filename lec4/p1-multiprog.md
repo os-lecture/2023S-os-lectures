@@ -11,304 +11,316 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第四讲 多道程序与分时多任务
-## 第一节 进程和进程模型
+# Lecture 4 Multiprogramming and time-sharing multitasking
+## Section 1 Process and Process Model
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
 
 <br>
 <br>
 
-2023年春季
+Spring 2023
 
 ---
-**提纲**
+**Outline**
 
-### 1. 多道程序与协作式调度
-2. 分时多任务与抢占式调度
-3. 进程的概念
-4. 进程模型
-
----
-
-#### 历史
-
-操作系统的被广泛使用是从大型机向小型机（minicomputer）过渡的时期开始的。
-
-- OS/360是大型机（System/360）时代的多道批处理操作系统
-- 数字设备公司（DEC）的PDP系列小型计算机
-- 一个工作单位内的一群人可能拥有自己的计算机
-- 多道程序（multiprogramming）变得很普遍
+### 1. Multiprogramming and Cooperative Scheduling
+2. Time-sharing Multitask and Preemptive Scheduling
+3. The Concept of Process
+4. Process Model
 
 ---
 
-#### 多道程序（Multiprogramming）
+#### History
 
-- 在内存中存在多个可执行程序
-- 各个可执行程序共享处理器
+The widespread use of OS began during the transition from mainframes to minicomputers.
 
-作业(Job)
-- 应用的一次**执行过程**
-
-历史上出现过的术语：Job、Multiprogramming 
-- Job和Multiprogramming是IBM用于多道程序设计的概念。
+- OS/360 is a multiprogramming batch OS in the mainframe (System/360) era
+- PDP series minicomputers from DEC
+- Many companies may have their own computers
+- Multiprogramming becomes common
 
 ---
 
-#### 协作式调度（Cooperative scheduling）
+#### Multiprogramming
 
-- 可执行程序主动放弃处理器使用 
-- 操作系统不会打断正在执行的程序
-- 操作系统选择下一个执行程序使用处理器
+- Multiple executable programs in the memory
+- The programs share the processor
 
----
-**提纲**
+##### Job
+- One-time **execution process** of an application
 
-1. 多道程序与协作式调度
-### 2. 分时多任务与抢占式调度
-3. 进程的概念
-4. 进程模型
-
----
-#### 历史
-
-小型机（minicomputer）的普及和广泛使用推动了分时多任务的需求，形成了支持多用户的分时操作系统。
-
-- DEC公司的PDP、VAX小型机逐渐侵蚀大型机市场
-- DEC公司的VMX操作系统
-- MIT的CTSS操作系统
-- AT&T的UNIX操作系统
-
----
-#### 从用户的视角看分时多任务
-
-分时多任务（Time sharing multitask）：从用户的视角看
-
-- 在内存中存在多个可执行程序
-- 各个可执行程序分时共享处理器
-- 操作系统按时间片来给各个可执行程序分配CPU使用时间
-- **进程(Process)** ：应用的一次执行过程
-
-
----
-#### 从OS的视角看分时多任务（Time sharing multitask）
-
-
-
-- **进程(Process)** ：一个具有一定**独立功能**的程序在一个**数据集合**上的一次动态**执行过程**。也称为**任务(Task)**。
-- 从一个应用程序对应的进程切换到另外一个应用程序对应的进程，称为**进程切换**。
-
----
-#### 作业（Job）、任务（Task）和进程（Process）
-
-历史上出现过的术语：Job、Task、Process
-- Task、Process是Multics和UNIX等用于分时多任务提出的概念
-- 进程是一个应用程序的一次执行过程。在操作系统语境下，任务和进程是同义词
-- 作业（目标）是围绕一个共同目标由一组相互关联的程序执行过程（进程、任务）形成的一个整体
-
-参考：[Difference between Job, Task and Process](https://www.geeksforgeeks.org/difference-between-job-task-and-process/)
-
-
----
-#### 抢占式调度（Preemptive scheduling）
-
-- 进程被动地放弃处理器使用
-- 进程按时间片轮流使用处理器，是一种“暂停-继续”组合的执行过程
-- 基于时钟硬件中断机制，操作系统可随时打断正在执行的程序
-- 操作系统选择下一个执行程序使用处理器
-
----
-**提纲**
-
-1. 多道程序与协作式调度
-2. 分时多任务与抢占式调度
-### 3. 进程的概念
-4. 进程模型
+Terms appeared in history: Job, Multiprogramming
+- Job and Multiprogramming are concepts used by IBM for multiprogramming
 
 ---
 
-#### 进程切换
+#### Cooperative scheduling
+
+- Executables program voluntarily relinquish the processor
+- OS does not interrupt the running program
+- OS is responsible for selecting the next program to take the processor for execution
+
+---
+**Outline**
+
+1. Multiprogramming and Cooperative Scheduling
+### 2. Time-sharing Multitask and Preemptive Scheduling
+3. The Concept of Process
+4. Process Model
+
+---
+#### History
+
+The widespread use of minicomputers led to a demand for time-sharing and multitasking capabilities, resulting in the development of time-sharing multi-user OS.
+
+- Widely use of DEC's PDP and VAX minicomputers
+- DEC's VMX operating system
+- MIT's CTSS operating system
+- AT&T's UNIX operating system
+
+---
+#### Time-sharing multitask from user's perspective
+
+Time sharing multitask: from user's perspective
+
+- Multiple executable programs residing in memory
+- Each executable program takes the processor in a time-sharing way
+- The OS allocates CPU to each executable program by time slices
+- **Process**: one-time execution process of the application
+
+
+---
+#### Time sharing multitask from the perspective of OS
+
+
+
+- **Process**: A dynamic **execution process** of a program with certain **independent functions** on a **data collection**. Also known as **Task**.
+- **Process Switching**: switch from the process corresponding to one application to the process corresponding to another application.
+
+---
+#### Job, Task and Process
+
+Terms appeared in history: Job, Task, Process
+- Task and Process are concepts proposed by Multics and UNIX, respectively, for time-sharing multi-task
+- A process is one-time execution process of an application. In OS context, task and process are the same meaning
+- A job (goal) is a whole formed by a group of related program execution processes (processes, tasks) for the same goal
+
+Reference: [Difference between Job, Task and Process](https://www.geeksforgeeks.org/difference-between-job-task-and-process/)
+
+
+---
+#### Preemptive Scheduling
+
+- Process passively relinquishes processor
+- The process uses the processor in turn according to time slice, which is a "pause-continue" execution process
+- Based on the clock interrupt mechanism of hardware, OS can interrupt the running program at any time
+- The OS is responsible for selecting the next program to take the processor for execution
+
+---
+**Outline**
+
+1. Multiprogramming and Cooperative Scheduling
+2. Time-sharing Multitask and Preemptive Scheduling
+### 3. The Concept of Process
+4. Process Model
+
+---
+
+#### Process Switching
 
 ![w:1250](figs/task-features.png)
 
 ---
-#### 进程的特点
-- 动态性
-  - 开始执行-->暂停-->继续-->结束执行的过程
-- 并发性
-  - 一段时间内多个进程在执行
-- 有限度的独立性
-  - 进程之间不用感知对方的存在
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-目前还没具备更强大的特点
-- 隔离更彻底、任务间协同工作、任务创建任务...... 
+#### Process Features
+- Dynamic
+   - Execution starts --> Pause --> Continue --> Execution ends
+- Concurrency
+   - Multiple processes are executing during a time period
+- Limited independence
+   - Processes do not need to be aware of each other's existence in the system
+
+<!--More powerful features that need to be developed:
+- Stronger isolation, collaboration between tasks...
+-->
 
 ---
-#### 进程与程序的组成
+#### Composition of Process and Program
 
 ![bg w:1100](figs/task-prog.png)
 
 ---
-#### 进程与程序的组成
+#### Composition of Process and Program
 
-![bg w:700](figs/task-in-mem.png)
+![bg w:600](figs/task-in-mem.png)
 
 
 ---
-#### 进程与程序的对应关系
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-- 任务是操作系统处于执行状态程序的抽象
-  - 程序 = 文件 (静态的可执行文件)
-  - 任务 = 执行中的程序 = 程序 + 执行状态
+#### Relationship between Task (Process) and Program
+
+- A task is an abstraction of a program in the execution of OS
+   - program = file (static & executable)
+   - task = program in execution = program + execution status
  
-- 同一个程序的多次执行过程对应为不同任务
-  - 如命令“ls”的多次执行对应多个任务
+- Multiple executions of the same program lead to different tasks
+   - E.g., multiple executions of the command "ls" lead to multiple tasks
  
-- 任务执行需要的资源
-  - 内存：保存代码和数据
-  - CPU：执行指令
+- Resources required for task execution
+   - Memory: store code and data
+   - CPU: execute instructions
 
 
 ---
-#### 任务与程序的区别
+#### Differences between Task (Process) and Program
 
-- 任务是动态的，程序是静态的
-  - 程序是有序代码的集合
-  - 任务是程序的执行
-- 任务是暂时的，程序是永久的
-  - 任务是一个状态变化的过程
-  - 任务可长久保存
-- 任务与程序的组成不同
-  - 任务的组成包括程序、数据和进程控制块
-
-
----
-#### 进程状态
-进程包含了运行程序的所有状态信息
-- 任务执行的**控制流**
-  - 代码内容与代码的执行位置（代码段）
-- 任务访问的**数据**
-  - 被任务读写的内存（堆、栈、数据段）
-  - 被任务读写的寄存器
-    - 通用寄存器
-
----
-#### 进程状态
-进程包含了运行程序的所有状态信息
-- 操作系统管理任务的相关数据（任务的**上下文**）
-    - 任务切换所需的通用寄存器
-    - 任务切换所需的状态寄存器(PC等)
-    - 其他信息：任务的栈地址等
-    - 其他资源：...... 
-
----
-#### 任务控制块（TCB, Task Control Block）
-操作系统管理任务的核心数据结构，也称为进程控制块（PCB, Process Control Block）
-- 操作系统**管理控制进程运行**所用的信息集合
-- 操作系统用TCB来描述进程的基本情况以及运行变化的过程
-- TCB是进程存在的唯一标志
-- 每个任务都在操作系统中有一个对应的TCB
-
----
-#### 操作系统管理的进程控制块
-
-![bg w:900](figs/task-control-block.png)
+- Tasks are dynamic, programs are static
+   - A program is a collection of ordered codes
+   - A task is the execution of a program
+- Tasks are temporary, programs are permanent
+   - A task is a state-changing process
+   - Programs can be saved permanently
+- Tasks and programs have different compositions
+   - The task consists of program codes, data and process control blocks
 
 
 ---
-**提纲**
-
-1. 多道程序与协作式调度
-2. 分时多任务与抢占式调度
-3. 进程的概念
-### 4. 进程模型
+#### Process Status
+A process contains all status information about a running program
+- **Control Flow** for task execution
+   - Code content and code execution location (code segment)
+- **Data** accessed by the task
+   - Memory read and written by tasks (heap, stack, data segment)
+   - Registers read and written by tasks
+     - general-purpose registers
 
 ---
-#### 进程状态：创建和就绪
-- 创建 --> 就绪 
-  - 何时创建？
-  - 如何创建？
+#### Process Status
+A process contains all status information about a running program
+- OS manages the data related to the task (task **context** )
+     - General purpose registers required for task switching
+     - Status registers required for task switching (PC, etc.)
+     - Other information: the stack address of the task, etc.
+     - Other resources:  …
+
+---
+#### Task Control Block (TCB)
+The core data structure of OS for managing tasks, also known as process control block (PCB)
+- OS **manages and controls the information used by the process**
+- OS uses TCB to describe the basic information and changing status of the process 
+- TCB is the only symbol for a process
+- Each task has a corresponding TCB in OS
+
+---
+#### Process Control Block Managed by OS
+
+![bg w:800](figs/task-control-block.png)
+
+
+---
+**Outline**
+
+1. Multiprogramming and Cooperative Scheduling
+2. Time-sharing Multitask and Preemptive Scheduling
+3. The Concept of Process
+### 4. Process Model
+
+---
+#### Process State: Created and Ready
+- Created --> Ready
+   - When was it created?
+   - How to create?
 ![bg right:50% 60%](figs/task-create.png)
 
 ---
-#### 进程状态：运行
-- 创建-->就绪-->执行
-  - 内核选择一个就绪的任务
-  - 如何执行？
+#### Process State: Running
+- Created --> Ready --> Running
+   - The kernel selects a ready task
+   - How to run?
 
 ![bg right 70%](figs/task-run.png)
 
 
 ---
-#### 进程状态：等待
-- 创建-->就绪-->执行-->等待
-  - 任务进入等待的原因?
-    - 自身
-    - 外界  
+#### Process State: Waiting
+- Created --> Ready --> Running --> Waiting
+   - The reason why the task enters the waiting status
+     - Itself
+     - The outside world
 
 ![bg right 70%](figs/task-wait.png)
 
 
 ---
-#### 进程状态变迁：唤醒
-- 创建-->就绪-->执行--> 等待 -->唤醒
-  - 唤醒任务的原因？
-    - 自身：自然醒？
-    - 外界：被叫醒？
+#### Process State Transition: Waking up
+- Created --> Ready --> Running --> Waiting --> Waking up
+   - The reason for waking up the task
+     - Self: wake up naturally?
+     - Outside: be Woke up?
        
 ![bg right 70%](figs/task-wakeup.png)
 
 
 ---
-#### 进程状态变迁：抢占
-- 创建-->就绪-->执行--> 抢占
-  - 任务被抢占的原因？
+#### Process State Transition: Preempted
+- Created --> Ready --> Running --> Preempted
+   - Why is the task preempted?
   
 ![bg right 70%](figs/task-preempt.png)
 
 
 ---
-#### 进程状态：退出
-- 创建--> 就绪 --> 执行 --> ...... -->结束
-  - 任务退出的原因？
-    - 自愿？
-    - 被迫？
+#### Process State: Exited
+- Created --> Ready --> Running --> ...... --> Exited
+   - Why did the task exit?
+     - Voluntary?
+     - Forced?
 
 
 ![bg right 70%](figs/task-quit.png)
 
 
 ---
-#### 三状态进程模型
+#### Three-State Process Model
 ![w:700](figs/task-model.png)
 
 ---
-#### 进程状态变迁与系统调用
+#### Process State Transition and System Call
 
-- 创建--> 就绪 --> 执行 --> ...... -->结束
-- 抢占 等待  唤醒
+- Created --> Ready --> Running --> ...... --> Exited
+- Preempted, waiting, waking up
 
-涉及哪些系统调用？
-- exit
-- sleep
-- ......
+What system calls are involved?
+- exit, sleep
+- ...
 ![bg right 70%](figs/task-quit.png)
 
 
 ---
-#### 进程状态变迁与进程切换
+#### Process State Transition and Process Switching
 
-- 创建--> 就绪 --> 执行 --> ...... -->结束
-- 抢占 等待  唤醒
+- Created --> Ready --> Running --> ...... --> Exited
+- Preempted, waiting, waking up
 
-在任务的生命周期中，何时会进行任务切换？
+During the lifecycle of a task, when does a task switch occur?
 
 ![bg right 70%](figs/task-quit.png)
 
 
 ---
-#### 进程切换
+#### Process Switching
 
 ![](figs/task-switch.png)
