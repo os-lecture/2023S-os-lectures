@@ -50,13 +50,14 @@ backgroundColor: white
 - [Section 2 RISC-V : An OS's perspective](./lec3/p2-osviewrv.html)
 - [Section III Practice: Batch OS](./lec3/p3-batchos.html)
 
-<!--
+
 ---
 
 ## Lecture 4 Multiprogramming and time-sharing multitasking
 - [Section 1 Related Background and Basic Concepts](./lec4/p1-multiprog.html)
 - [Section 2 Practice: Multiprogramming and Time-sharing Multitasking Operating System](./lec4/p2-labs.html)
 
+<!--
 ---
 
 ## Lecture 5 Address Space - Physical Memory Management
