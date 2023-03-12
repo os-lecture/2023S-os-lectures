@@ -48,7 +48,7 @@ Spring 2023
 
 - Goal of MultiprogOS
      - Further improve the overall performance and efficiency of multiple applications in the system
-- Goal of BatchOS target
+- Goal of BatchOS 
      - Isolate APP from OS to improve system security and efficiency
 - Goal of LibOS
      - Isolate applications from hardwares, simplify the difficulty and complexity to access hardware from application side
