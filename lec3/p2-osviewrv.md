@@ -277,7 +277,7 @@ Mandatory isolation to avoid availability/reliability/security impact on the ent
 }
 </style>
 #### Isolation via CSR register
-OS ensures the safety and reliability of the computer through hardware isolation.
+OS ensures the security and reliability of the computer through hardware isolation.
 - Set CSR to achieve isolation
    -  Access Control: Prevent apps from accessing system-control registers
       - **ADDRESS SPACE CONFIGURATION** register: mstatus/sstatus CSR
