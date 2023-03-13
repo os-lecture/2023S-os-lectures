@@ -11,46 +11,51 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第五讲 物理内存管理
-## 第一节 地址空间
+# Lecture 5 Physical memory management
+## Section 1 Address Space
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
 
 <br>
 <br>
 
-2023年春季
+Spring 2023
 
 ---
-**提纲**
+**Outline**
 
-### 1. 计算机的存储层次
-2. 地址和地址空间
-3. 虚拟存储的作用
-
----
-
-#### 物理地址和逻辑地址
-
-- 物理地址(PA, Physical Address) ：用于内存芯片级的单元寻址，与处理器和CPU连接的**地址总线**相对应。 
-- 逻辑地址(LA, Logical Address) ：**CPU执行机器指令**时，用来指定一个操作数或者是一条指令的地址。也是用户编程时使用的地址。
-- 线性地址(linear address)或也叫虚拟地址(virtual address) ：跟逻辑地址类似，它也是一个不真实的地址。
-  - 逻辑地址指CPU在段式内存管理转换前的地址；
-  - 线性地址指CPU在页式内存管理转换前的地址。
+### 1. Storage Hierarchy of Computers
+2. Addresses and Address Space
+3. The Function of Virtual Memory
 
 ---
-#### 逻辑地址与物理地址的关系
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-- 逻辑地址到物理地址的转换
-  - 逻辑地址 -> 线性地址(虚拟地址) -> 物理地址
+#### Physical address and logical address
 
-- 在没有段式内存管理的情况下，逻辑地址与虚拟地址相同
-- 在没有页式内存管理的情况下，逻辑地址、虚拟地址和物理地址都相同
+- Physical Address (PA): Used for addressing units at the level of memory chips, corresponding to the **address bus** connected to the processor and CPU
+- Logical address (LA): Used to specify the address of an operand or an instruction when the **CPU executes machine instructions**. It is also the address used in user programming
+- Linear Address (or Virtual Address): Similar to a logical address, it is also an unreal address
+   - Logical Address refers to the address before CPU converts it to segment memory management
+   - Linear Address refers to the address before CPU converts it to page memory management
 
 ---
-#### 计算机的存储层次结构
+#### Relationship between Logical Address and Physical Address
+
+- Conversion from Logical Address to Physical Address
+   - Logical Address -> Linear Address (Virtual Address) -> Physical Address
+
+- The logical address is the same as the virtual address when there is no segment memory management
+- The logical address, virtual address, and physical address are all the same when there is no page memory management
+
+---
+#### Storage Hierarchy of Computers
 
 ![w:800](figs/computer.png)
 
@@ -58,130 +63,150 @@ backgroundColor: white
 
 ---
 
-#### 计算机的存储多层结构
+#### Multi-layer Storage Structure of Computers
 ![w:950](figs/mem-layers.png)
 
 
 ---
-#### 操作系统对内存资源的抽象
-![w:950](figs/os-mem-mgr.png)
+#### Abstraction of Memory Resources by an OS
+![w:850](figs/os-mem-mgr.png)
 
 
 
 ---
 
-#### 内存管理
+#### Memory Management
 
-- 操作系统中的**内存管理方式**
-  - 重定位(relocation)
-  - 分段(segmentation)
-  - 分页(paging)
-  - 虚拟存储(virtual memory/storage)
-- **操作系统的内存管理高度依赖硬件**
-  - 与计算机存储架构紧耦合
-  - MMU (内存管理单元): 处理CPU存储访问请求的硬件
+- **Memory management method** in the OS
+   - Relocation
+   - Segmentation
+   - Paging
+   - Virtual memory/storage
+- **The memory management of OS is highly dependent on the hardware**
+   - Tightly coupled with computer's storage architecture
+   - MMU (Memory Management Unit): hardware that handles storage access requests from the CPU
 
 
 ---
-**提纲**
+**Outline**
 
-1. 计算机的存储层次
-### 2. 地址和地址空间
-3. 虚拟存储的作用
-
----
-
-#### 地址空间的定义
-
-
-- 物理地址空间：物理内存的地址空间
-  - 起始地址$0$，直到 $MAX_{phy}$
-- 虚拟地址空间：虚拟内存的地址空间
-  - 起始地址$0$，直到 $MAX_{virt}$
-- 逻辑地址空间：程序执行的地址空间
-  - 起始地址$0$， 直到 $MAX_{prog}$
-
-三种地址空间的**视角不同**
+1. Storage Hierarchy of Computers
+### 2. Addresses and Address Space
+3. The Function of Virtual Memory
 
 ---
 
-#### 逻辑地址生成
+#### Definition of Address Space
+
+
+- Physical address space: the address space of physical memory
+   - It starts from address $0$ and goes up to $MAX_{phy}$
+- Virtual address space: the address space of virtual memory
+   - It starts from address $0$ and goes up to $MAX_{virt}$
+- Logical address space: the address space used by a program during execution
+   - It starts from address $0$ and goes up to $MAX_{prog}$
+
+The **perspectives of these three address spaces are different**
+
+---
+
+#### Generation of Logical Address 
 ![w:950](figs/create-logic-addr.png)
 
 
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 地址生成时机
+#### Timing of Address Generation
 
-- 编译时
-  - 假设起始地址**已知**
-  - 如果起始地址改变，必须重新编译
-- 加载时
-  - 如编译时起始地址**未知**，编译器需生成可重定位的代码 (relocatable code) 
-  - 加载时，位置可不固定，生成绝对（虚拟）地址
-- 执行时
-  - 执行时代码不可修改
-  - 需**地址转换(映射)硬件**支持
+- At compile time
+   - Assuming the starting address is **known**
+   - If the starting address changes, the program must be recompiled
+- At load time
+   - If the starting address is **unknown** during compilation, the compiler generates relocatable code
+   - At load time, the position may not be fixed, and absolute (virtual) addresses are generated
+- At execution time
+   - The code cannot be modified at execution time
+   - Requires **address translation (mapping) hardware** support
 
 
 ---
 
-#### 地址生成过程
+#### Address Generation Process
 - CPU
-  - ALU：需要**逻辑地址**的内存内容
-  - MMU：进行逻辑地址和物理地址的**转换**
-  - CPU控制逻辑：给总线发送**物理地址**请求
-- 内存
-  - 发送**物理地址**的内容给CPU
-  - 接收CPU数据到物理地址
-- 操作系统
-  - 建立逻辑地址LA和物理地址PA的映射
+   - ALU: memory content that requires **logical address**
+   - MMU: performs the **conversion** between logical and physical addresses
+   - CPU control logic: sends **Physical Address** request to the bus
+- Memory
+   - Sendd the content of **Physical Address** to the CPU
+   - Receives CPU data to the physical address
+- OS
+   - Establishes the mapping between logical address LA and physical address PA
 
 
 ---
 
-#### 地址检查
-![bg w:950](figs/addr-check-exp.png)
+#### Address Checking
+![bg w:850](figs/addr-check-exp.png)
 
 
 ---
-**提纲**
+**Outline**
 
-1. 计算机的存储层次
-2. 地址和地址空间
-### 3. 虚拟存储的作用
-
----
-
-#### 外存的缓存
-
-虚拟内存可作为外存的缓存
-
-- **常用数据**放在物理内存中
-- **不常用数据**放在外存 
-- 运行的程序**直接用虚存地址**，不用关注具体放在物理内存还是外存
-
-![bg right:49% 95%](figs/os-mem-mgr.png)
+1. Storage Hierarchy of Computers
+2. Addresses and Address Space
+### 3. The Function of Virtual Memory
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 简化应用编译和加载运行
+#### Cache of External Storage
 
-每个运行程序具有**独立的地址空间**，而不管代码和数据在物理内存的实际存放，从而简化：
-- 编译的执行程序链接过程
-- 操作系统的执行程序加载过程
-- 共享：动态链接库、共享内存 
-- 内存分配：物理不连续，虚拟连续
-![bg right:43% 100%](figs/os-mem-mgr.png)
+Virtual memory can be used as a cache for external storage
+
+- **Frequently used data** is stored in physical memory
+- **Infrequently used data** is stored in external storage
+- Running programs **use virtual memory address** without needing to be concerned with whether they are stored in physical memory or external storage
+
+![bg right:50% 95%](figs/os-mem-mgr.png)
+
+---
+<style scoped>
+{
+  font-size: 25px
+}
+</style>
+
+#### Simplify Application Compilation and Loading
+
+Each running program has its own **independent address space**, regardless of where the code and data are actually stored in physical memory. This simplifies:
+- The process of compiling and linking executable programs
+- The process of loading executable programs by the OS
+- Sharing: dynamic link libraries, shared memory
+- Memory allocation: physical memory is not contiguous, but appears contiguous in virtual memory
+![bg right:50% 95%](figs/os-mem-mgr.png)
 
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 保护数据
+#### Protect Data
 
-虚拟内存可保护数据
-- **独立的地址空间**使得区分不同进程各自内存变得容易
-- 地址转换机制可以进行可读/可写/可执行的检查
-- 地址转换机制可以进行特权级检查
-![bg right:49% 100%](figs/os-mem-mgr.png)
+Virtual memory can protect data
+- The **independent address space** makes it easy to distinguish the memory of different processes
+- The address translation mechanism can perform checks for read/write/execute permissions
+- The address translation mechanism can perform privilege level checks
+![bg right:50% 95%](figs/os-mem-mgr.png)
