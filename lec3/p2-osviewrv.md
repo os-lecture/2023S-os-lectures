@@ -429,7 +429,7 @@ Note: ``fence.i`` is an i-cache barrier instruction, a unprivileged instruction,
 - RISC-V requires the implementation of **precise exception**: to ensure that all instructions before the exception are fully executed, and subsequent instructions have not started to execute
 ---
 
-#### How hardware handles Interrupt/Exception 
+<!--#### How hardware handles Interrupt/Exception 
 1. The PC of the **exception/interrupt instruction** is saved in sepc, and PC is set to stvec.
 2. Set scause according to **interrupt/exception source**, and set stval to error address or other related information.
 3. Set sstatus[SIE bit] to zero to **mask interrupts** and **save previous SIE value** into SPIE
