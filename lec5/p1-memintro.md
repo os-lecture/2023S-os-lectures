@@ -46,7 +46,7 @@ Spring 2023
    - Linear Address refers to the address before CPU converts it to page memory management
 
 ---
-#### Relationship between Logical Address and Physical Address
+#### Relationship between logical address and physical address
 
 - Conversion from Logical Address to Physical Address
    - Logical Address -> Linear Address (Virtual Address) -> Physical Address
@@ -55,7 +55,7 @@ Spring 2023
 - The logical address, virtual address, and physical address are all the same when there is no page memory management
 
 ---
-#### Storage Hierarchy of Computers
+#### Storage hierarchy of computers
 
 ![w:800](figs/computer.png)
 
@@ -63,19 +63,19 @@ Spring 2023
 
 ---
 
-#### Multi-layer Storage Structure of Computers
+#### Multi-layer storage structure of computers
 ![w:950](figs/mem-layers.png)
 
 
 ---
-#### Abstraction of Memory Resources by an OS
+#### Abstraction of memory resources by an OS
 ![w:850](figs/os-mem-mgr.png)
 
 
 
 ---
 
-#### Memory Management
+#### Memory management
 
 - **Memory management method** in the OS
    - Relocation
@@ -96,7 +96,7 @@ Spring 2023
 
 ---
 
-#### Definition of Address Space
+#### Definition of address space
 
 
 - Physical address space: the address space of physical memory
@@ -110,7 +110,7 @@ The **perspectives of these three address spaces are different**
 
 ---
 
-#### Generation of Logical Address 
+#### Generation of logical address 
 ![w:950](figs/create-logic-addr.png)
 
 
@@ -122,7 +122,7 @@ The **perspectives of these three address spaces are different**
 }
 </style>
 
-#### Timing of Address Generation
+#### Timing of address generation
 
 - At compile time
    - Assuming the starting address is **known**
@@ -137,7 +137,7 @@ The **perspectives of these three address spaces are different**
 
 ---
 
-#### Address Generation Process
+#### Address generation process
 - CPU
    - ALU: memory content that requires **logical address**
    - MMU: performs the **conversion** between logical and physical addresses
@@ -151,7 +151,7 @@ The **perspectives of these three address spaces are different**
 
 ---
 
-#### Address Checking
+#### Address checking
 ![bg w:850](figs/addr-check-exp.png)
 
 
@@ -169,7 +169,7 @@ The **perspectives of these three address spaces are different**
 }
 </style>
 
-#### Cache of External Storage
+#### Cache of external storage
 
 Virtual memory can be used as a cache for external storage
 
@@ -186,7 +186,7 @@ Virtual memory can be used as a cache for external storage
 }
 </style>
 
-#### Simplify Application Compilation and Loading
+#### Simplify the compilation and loading of App
 
 Each running program has its own **independent address space**, regardless of where the code and data are actually stored in physical memory. This simplifies:
 - The process of compiling and linking executable programs
@@ -203,7 +203,7 @@ Each running program has its own **independent address space**, regardless of wh
 }
 </style>
 
-#### Protect Data
+#### Protect data
 
 Virtual memory can protect data
 - The **independent address space** makes it easy to distinguish the memory of different processes
