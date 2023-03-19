@@ -383,7 +383,7 @@ http://en.wikipedia.org/wiki/Buddy_memory_allocation -->
 }
 </style>
 
-#### Background for Discontiguous Memory Allocation: Fragment: large memory allocation
+#### Background for Discontiguous Memory Allocation: large memory allocation
 - When creating a process, we need to allocate **a relatively large memory space** for normal execution
 - When the program is running, it will dynamically apply for and release a relatively large memory space
     - Typically make the request through the user library
