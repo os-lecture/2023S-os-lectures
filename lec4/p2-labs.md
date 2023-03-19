@@ -890,4 +890,4 @@ In this way, we have realized the time-sharing and multi-task Coelophysis OS
 * LAB tasks
      * Chapter 3: Multiprogramming and time-sharing multitasking -> chapter3 practice -> get task information -> add a system call `sys_task_info()`
 * LAB submission requirements
-     * The 11th day after the task is assigned (October 16, 2022);
+     * Mar. 25, 2023;
