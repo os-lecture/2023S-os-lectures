@@ -63,7 +63,7 @@ backgroundColor: white
 ## Lecture 5 Address Space - Physical Memory Management
 - [Section 1 Address Space](./lec5/p1-memintro.html)
 - [Section 2 Memory Allocation](./lec5/p2-memalloc.html)
-- [Section III Practice: Establishing an Operating System for Address Space](./lec5/p3-labs.html)
+- [Section 3 Practice: Establishing an Operating System for Address Space](./lec5/p3-labs.html)
 
 <!--
 ---
