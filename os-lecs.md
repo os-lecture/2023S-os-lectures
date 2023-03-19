@@ -57,7 +57,7 @@ backgroundColor: white
 - [Section 1 Related Background and Basic Concepts](./lec4/p1-multiprog.html)
 - [Section 2 Practice: Multiprogramming and Time-sharing Multitasking Operating System](./lec4/p2-labs.html)
 
-<!--
+
 ---
 
 ## Lecture 5 Address Space - Physical Memory Management
@@ -65,6 +65,7 @@ backgroundColor: white
 - [Section 2 Memory Allocation](./lec5/p2-memalloc.html)
 - [Section III Practice: Establishing an Operating System for Address Space](./lec5/p3-labs.html)
 
+<!--
 ---
 ## Lecture 6 Address Space - Virtual Storage Management
 - [Section 1 Basic Concepts of Virtual Storage](./lec6/p1-vmoverview.html)
