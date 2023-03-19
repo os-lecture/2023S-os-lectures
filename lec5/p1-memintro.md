@@ -11,7 +11,7 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# Lecture 5 Physical memory management
+# Lecture 5 Address Space - Physical Memory Management
 ## Section 1 Address Space
 <br>
 <br>
@@ -26,8 +26,8 @@ Spring 2023
 ---
 **Outline**
 
-### 1. Storage Hierarchy of Computers
-2. Addresses and Address Space
+### 1. Storage Hierarchy of Computer
+2. Address and Address Space
 3. The Function of Virtual Memory
 
 ---
@@ -42,8 +42,8 @@ Spring 2023
 - Physical Address (PA): Used for addressing units at the level of memory chips, corresponding to the **address bus** connected to the processor and CPU
 - Logical address (LA): Used to specify the address of an operand or an instruction when the **CPU executes machine instructions**. It is also the address used in user programming
 - Linear Address (or Virtual Address): Similar to a logical address, it is also an unreal address
-   - Logical Address refers to the address before CPU converts it to segment memory management
-   - Linear Address refers to the address before CPU converts it to page memory management
+   - Logical Address refers to the address before CPU converts it to segmented memory management
+   - Linear Address refers to the address before CPU converts it to paged memory management
 
 ---
 #### Relationship between logical address and physical address
@@ -55,7 +55,7 @@ Spring 2023
 - The logical address, virtual address, and physical address are all the same when there is no page memory management
 
 ---
-#### Storage hierarchy of computers
+#### Storage hierarchy of computer
 
 ![w:800](figs/computer.png)
 
@@ -63,12 +63,12 @@ Spring 2023
 
 ---
 
-#### Multi-layer storage structure of computers
+#### Multi-layer storage structure of computer
 ![w:950](figs/mem-layers.png)
 
 
 ---
-#### Abstraction of memory resources by an OS
+#### Abstraction of memory resource by an OS
 ![w:850](figs/os-mem-mgr.png)
 
 
@@ -82,16 +82,16 @@ Spring 2023
    - Segmentation
    - Paging
    - Virtual memory/storage
-- **The memory management of OS is highly dependent on the hardware**
+- **The memory management of OS highly depends on the hardware**
    - Tightly coupled with computer's storage architecture
-   - MMU (Memory Management Unit): hardware that handles storage access requests from the CPU
+   - MMU (Memory Management Unit): the hardware that handles storage access requests of the CPU
 
 
 ---
 **Outline**
 
 1. Storage Hierarchy of Computers
-### 2. Addresses and Address Space
+### 2. Address and Address Space
 3. The Function of Virtual Memory
 
 ---
@@ -124,14 +124,14 @@ The **perspectives of these three address spaces are different**
 
 #### Timing of address generation
 
-- At compile time
+- At the compiling time
    - Assuming the starting address is **known**
    - If the starting address changes, the program must be recompiled
-- At load time
-   - If the starting address is **unknown** during compilation, the compiler generates relocatable code
-   - At load time, the position may not be fixed, and absolute (virtual) addresses are generated
-- At execution time
-   - The code cannot be modified at execution time
+- At the loading time
+   - If the starting address is **unknown** in compilation, the compiler should generate relocatable code
+   - At the loading time, the position may not be fixed, and absolute (virtual) addresses are generated
+- At the execution time
+   - The code cannot be modified during execution
    - Requires **address translation (mapping) hardware** support
 
 
@@ -139,14 +139,14 @@ The **perspectives of these three address spaces are different**
 
 #### Address generation process
 - CPU
-   - ALU: memory content that requires **logical address**
-   - MMU: performs the **conversion** between logical and physical addresses
+   - ALU: needs the content in **logical address**
+   - MMU: translates logical address to physical address
    - CPU control logic: sends **Physical Address** request to the bus
 - Memory
-   - Sendd the content of **Physical Address** to the CPU
+   - Send the content of **Physical Address** to the CPU
    - Receives CPU data to the physical address
 - OS
-   - Establishes the mapping between logical address LA and physical address PA
+   - Build the mapping between logical address and physical address
 
 
 ---
@@ -159,7 +159,7 @@ The **perspectives of these three address spaces are different**
 **Outline**
 
 1. Storage Hierarchy of Computers
-2. Addresses and Address Space
+2. Address and Address Space
 ### 3. The Function of Virtual Memory
 
 ---
@@ -175,7 +175,7 @@ Virtual memory can be used as a cache for external storage
 
 - **Frequently used data** is stored in physical memory
 - **Infrequently used data** is stored in external storage
-- Running programs **use virtual memory address** without needing to be concerned with whether they are stored in physical memory or external storage
+- Running programs **use virtual memory address**, no need to care about whether they are stored in physical memory or external storage
 
 ![bg right:50% 95%](figs/os-mem-mgr.png)
 
@@ -207,6 +207,6 @@ Each running program has its own **independent address space**, regardless of wh
 
 Virtual memory can protect data
 - The **independent address space** makes it easy to distinguish the memory of different processes
-- The address translation mechanism can perform checks for read/write/execute permissions
-- The address translation mechanism can perform privilege level checks
+- The address translation mechanism can perform check for read/write/execute permissions
+- The address translation mechanism can perform privilege level check
 ![bg right:50% 95%](figs/os-mem-mgr.png)
