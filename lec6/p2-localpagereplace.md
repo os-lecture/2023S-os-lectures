@@ -1,985 +1,998 @@
 ---
-marp: true
-theme: default
-paginate: true
-_paginate: false
-header: ''
-footer: ''
-backgroundColor: white
+marp : true
+theme : default
+paginate : true
+_paginate : false
+header : ''
+footer : ''
+backgroundColor : white
 ---
 
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第六讲 虚拟存储管理
-## 第二节 局部页面置换算法
+# Lecture 6 Virtual Memory Management
+## Section 2 Local Page Replacement Algorithm
 
-<br>
-<br>
 
-向勇 陈渝 李国良 任炬 
 
-2023年春季
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
+
+Spring 2023
 
 ---
 
-**提纲**
+**Outline**
 
-### 1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+### 1. Basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. Least recently used page replacement algorithm (LRU, least recently used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least frequently used algorithm (LFU, least frequently used)
+8. Belady phenomenon
 
---- 
+---
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
 
-#### 页面置换算法的功能与设计目标
+#### Function and design goals of the page replacement algorithm
 
-- 功能
-  - 出现缺页异常需调入新页面而内存已满时，置换算法**选择被置换的物理页面**
+- Function
+  - When a page fault exception occurs and a new page needs to be brought into memory but memory is full, the page replacement algorithm **selects a physical page to be replaced**
 
-- 设计目标
-  - 尽可能减少页面**缺页次数**、**换入/换出次数**
-  - 把未来不再访问或**短期内不访问**的页面调出
+- Design goals
+  - Minimize the **number of page faults and swap-in/swap-out times** 
+  - Evict pages that are unlikely to be accessed in the future or **have not been accessed for a short period of time**
 
-![bg right:50% 100%](figs/page-fault-handler.png)
+![ bg right:40% 100% ]( figs/page-fault-handler.png )
 
---- 
-#### 页面置换的时机
+---
+#### Timing of page replacement
 
-- **空闲内存**数量上限和下限
-- 到达下限，开始回收内存
-- 到达上限，暂停回收内存
+- Upper and lower limits of **free memory**
+- When reaching the lower limit, start reclaiming memory
+- When reaching the upper limit, pause memory reclamation
 
-![bg right:50% 100%](figs/reclaim-page.png)
+![ bg right:50% 100% ]( figs/reclaim-page.png )
 
---- 
+---
 
-#### 页面锁定(frame locking)/常驻内存
+#### Page locking/resident memory
 
-**必须常驻内存**的逻辑页面
-  - 操作系统的关键部分
-  - 要求响应速度的代码和数据
-  - 页表中的锁定标志位(lock bit)
+**Logical pages that must be resident in memory**
+- Critical parts of the OS
+- Code and data that require fast response times
+- Locking lock bit in the page table
 
-![bg right:53% 100%](figs/page-fault-handler.png)
+![ bg right:53% 100% ]( figs/page-fault-handler.png )
 
---- 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 页面置换算法的评价方法
+#### Evaluation method for page replacement algorithm
 
-- 评价方法
-  - 记录进程**访问内存页面的轨迹**，模拟置换行为，记录**缺页次数**；
-  - 更**少**的缺页, 更**好**的性能
-- 示例: 虚拟地址访问用(页号, 位移)表示
+- Evaluation method
+  - Record the **trace of memory page access by processes** , simulate the replacement behavior, and record the **number of page faults**
+  - **Fewer** page faults lead to ** better** performance
+- Example: use (page number, offset) to represent virtual address access
 ```
-(3,0),  (1,9),  (4,1),  (2,1),  (5,3),  (2,0),  (1,9),  (2,4),  (3,1),  (4,8)
+(3,0), (1,9), (4,1), (2,1), (5,3), (2,0), (1,9), (2,4), (3 ,1), (4,8)
 ```
-- 对应的页面轨迹
+- Corresponding page tracking
 ```
-3, 1, 4, 2, 5, 2, 1, 2, 3, 4 用数字表示 
-c, a, d, b, e, b, a, b, c, d 用字符表示
+3, 1, 4, 2, 5, 2, 1, 2, 3, 4 in numbers
+c, a, d, b, e, b, a, b, c, d in characters
 ```
 
---- 
+---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-#### 页面置换算法的分类
+#### Classification of page replacement algorithm
 
-- **局部**页面置换算法
-  - 置换页面的选择范围仅限于**当前进程**占用的物理页面内
-  - 最优算法、先进先出算法、最近最久未使用算法
-  - 时钟算法、最不常用算法
+- **Local** page replacement algorithm
+  - The selection range of the replacement page is limited to the physical page occupied by the **current process**
+  - Optimal algorithm, first-in-first-out algorithm, least recently used algorithm
+  - Clock algorithm, least frequently used algorithm
 
-- **全局**页面置换算法
-  - 置换页面的选择范围是**所有**可换出的物理页面
-  - 工作集算法、缺页率算法
+- **Global** page replacement algorithm
+  - The selection range of the replacement page is **all** swappable physical pages.
+  - Working set algorithm, page fault rate algorithm
 
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-### 2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+1. Basic concept of page replacement algorithm
+### 2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. Least recently used page replacement algorithm (LRU, least recently used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least frequently used algorithm (LFU, least frequently used)
+8. Belady phenomenon
 
---- 
+---
 
-#### 最优页面置换算法的工作原理
-- 基本思路
-  - 置换在**未来最长时间**不访问的页面
-- 算法实现
-  - 缺页时，计算内存中每个逻辑页面的**下一次访问时间**
-  - 选择未来最长时间不访问的页面
-  
+#### Working principle of optimal page replacement algorithm
+- Basic idea
+  - Replace the page that will not be accessed for the **longest time** in the future
+- Algorithm implementation
+  - When a page fault occurs, calculate the **next access time** for each logical page in memory
+  - Select the page with the longest future access time for replacement
 ---
-#### 最优页面置换算法特征
-  - 缺页最少，是**理想情况**
-  - 实际系统中**无法实现**
-  - **无法预知**每个页面在下次访问前的等待时间
-    - 在模拟器上运行某个程序，并记录每一次的页面访问情况
-    - 第二遍运行时使用最优算法
- 
-  
+#### Features of optimal page replacement algorithm 
+- Mininal page faults is **ideal**
+- **Unrealizable** in practical system
+- **Unpredictable** waiting time for each page before next visit
+  - Run a program on the emulator and record every page visit
+  - Use the optimal algorithm in the second run
 ---
 
-#### 最优页面置换算法示例
+#### Optimal page replacement algorithm example
 
-![w:1000](figs/opt-1.png)
-  
-  
+![ w:1000 ]( figs/opt-1.png )
+
 ---
 
-#### 最优页面置换算法示例
+#### Example of optimal page replacement algorithm
 
-![w:1000](figs/opt-2.png)
+![ w:1000 ]( figs/opt-2.png )
 
 ---
 
-#### 最优页面置换算法示例
+#### Example of optimal page replacement algorithm
 
-![w:1000](figs/opt-3.png) 
+![ w:1000 ]( figs/opt-3.png )
 
 ---
 
-#### 最优页面置换算法示例
+#### Example of optimal page replacement algorithm
 
-![w:1000](figs/opt-4.png)
+![ w:1000 ]( figs/opt-4.png )
 
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-### 3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+1. Basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+### 3. First in first out page replacement algorithm (FIFO)
+4. Least recently used page replacement algorithm (LRU, least recently used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least frequently used algorithm (LFU, least frequently used)
+8. Belady phenomenon
 
---- 
+---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-#### 先进先出算法的工作原理
-- 基本思路
-  - 选择在内存**驻留时间最长**的页面进行置换
-- 算法实现
-  - 维护一个记录所有**位于内存中的逻辑页面链表**
-  - 链表元素**按驻留内存的时间排序**，链首最长，链尾最短
-  - 出现缺页时，**选择**链首页面进行置换，新页面加到链尾
+#### Working principle of FIFO algorithm
+- Basic idea
+  - Select the page with the longest resident time in memory for replacement
+- Algorithm implementation
+  - Maintain a linked list that resords all logical pages **residing in memory**
+  - The the linked list elements are **sorted by the residence time in memory**, with the longest residence time at the head of the list and the shortest at the tail
+  - When a page fault occurs, **select** the page at the head of the list for replacement, and add the new page to the tail of the list
 
 ---
-#### 先进先出算法特征
+#### Features of FIFO algorithm
 
-  - 实现简单
-  - 性能较差，调出的页面可能是经常访问的
-  - 分配物理页面数增加时，缺页并不一定减少(Belady现象)
-  - 很少单独使用
+- Easy to implement
+- The performance is poor, and the pages that are frequently accessed may be called out 
+- When the number of allocated physical pages increases, the number of page faults may not  necessarily decrease (Belady phenomenon)
+- Rarely used alone
 
 ---
-
-#### 先进先出算法示例
 
-![w:900](figs/fifo-1.png)
+#### Example of FIFO algorithm
+![ w:900 ]( figs/fifo-1.png )
 
-  
 ---
 
-#### 先进先出算法示例
+#### Example of FIFO algorithm
 
-![w:900](figs/fifo-2.png)
+![ w:900 ]( figs/fifo-2.png )
 
-  
 ---
 
-#### 先进先出算法示例
+#### Example of FIFO algorithm
 
-![w:900](figs/fifo-3.png)
+![ w:900 ]( figs/fifo-3.png )
 
 ---
 
-#### 先进先出算法示例
+#### Example of FIFO algorithm
 
-![w:900](figs/fifo-4.png)
+![ w:900 ]( figs/fifo-4.png )
 
 ---
 
-#### 先进先出算法示例
+#### Example of FIFO algorithm
 
-![w:900](figs/fifo-5.png)
+![ w:900 ]( figs/fifo-5.png )
 
 ---
 
-#### 先进先出算法示例
+#### Example of FIFO algorithm
 
-![w:900](figs/fifo-6.png)
+![ w:900 ]( figs/fifo-6.png )
 
-  
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-### 4. 最近最久未使用算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+1. Basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+### 4. Least recently used page replacement algorithm (LRU, least recently used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least frequently used algorithm (LFU, least frequently used)
+8. Belady phenomenon
 
---- 
+---
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
 
-#### 最近最久未使用算法的工作原理
+#### Working principle of LRU algorithm
 
-- 基本思路
-  - 选择**最长时间没有被引用**的页面进行置换
-  - 如某页面长时间未被访问，则它**在将来还可能**会长时间不会访问
+- Basic idea
+  - Select the page that has not been referenced for the longest time to replacement
+  - If a page has not been visited for a long time, it **may not be accessed for a long time in the future**
 
-- 算法实现
-  - 缺页时，计算内存中每个逻辑页面的**上一次访问**时间
-  - 选择上一次使用到当前时间最长的页面进行置换
-- 算法特征
-  - **最优置换算法的一种近似**
+- Algorithm implementation
+  - When there is a page fault, calculate the **last access** time of each logical page in memory
+  - Select the page with the longest time since the last access to the current time for replacement
+- Algorithm feature
+  - **An approximation to the the optimal replacement algorithm**
 
 ---
 
-#### 最近最久未使用算法示例
+#### Example of LRU algorithm
 
-![w:900](figs/lru-1.png)
+![ w:900 ]( figs/lru-1.png )
 
-  
 ---
 
-#### 最近最久未使用算法示例
+#### Example of LRU algorithm
 
-![w:900](figs/lru-2.png)
+![ w:900 ]( figs/lru-2.png )
 
-
-  
 ---
 
-#### 最近最久未使用算法示例
+#### Example of LRU algorithm
 
-![w:900](figs/lru-3.png)
+![ w:900 ]( figs/lru-3.png )
 
-  
 ---
-
-#### 最近最久未使用算法示例
 
-![w:900](figs/lru-4.png)
+#### Example of LRU algorithm
 
+![ w:900 ]( figs/lru-4.png )
 
-  
 ---
 
-#### 最近最久未使用算法示例
+#### Example of LRU algorithm
 
-![w:900](figs/lru-5.png)
+![ w:900 ]( figs/lru-5.png )
 
-  
 ---
 
-#### 最近最久未使用算法示例
+#### Example of LRU algorithm
 
-![w:900](figs/lru-6.png)
+![ w:900 ]( figs/lru-6.png )
 
-
-  
 ---
 
-#### 最近最久未使用算法示例
+#### Example of LRU algorithm
 
-![w:900](figs/lru-7.png)
+![ w:900 ]( figs/lru-7.png )
 
-  
-  
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### LRU的页面链表实现
+#### Implementation LRU's page linked list 
 
-- 页面链表
-  - 系统维护一个按最近一次访问时间排序的页面**链表**
-    - **链表首节点**是最近刚刚使用过的页面
-    - **链表尾节点**是最久未使用的页面
-  - 访问内存时，找到相应页面，并把它**移到链表之首**
-  - 缺页时，置换链表尾节点的页面
-- 特征
-  - 开销大
+- Page linked list
+  - The system maintains a page **linked list** that is sorted by the lastest access time
+    - **The first node of the linked list** is the page that has just been used recently
+    - **The tail node of the linked list** is the page that has not been used for the longest time
+  - When accessing memory, the corresponding page is found and **moved to the head of the linked list**
+  - When there is a page fault, the page at the tail of the list is replaced
+- Feature
+  - High overhead
 
-  
-  
 ---
 
-#### LRU的活动页面栈实现
+#### Implementation LRU's page stack
 
-- 活动页面**栈**
-  - 访问页面时，将此页号**压入栈顶**，并栈内相同的页号抽出
-  - 缺页时，**置换栈底**的页面
-- 特征
-  - 开销大
+- Activity page **stack**
+  - When accessing a page, push its page number **to the top of the stack** , and remove the same page number from the stack
+  - When there is a page fault, **replace the page at the bottom of the stack**
+- Feature
+  - High overhead
 
-  
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
+![ w:900 ]( figs/stack-lru-1.png )
 
-![w:900](figs/stack-lru-1.png)
-
 ---
-
-#### LRU的活动页面栈实现示例
 
-![w:900](figs/stack-lru-2.png)
+#### Implementation example of LRU's active page stack 
 
+![ w:900 ]( figs/stack-lru-2.png )
 
-  
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
 
-![w:900](figs/stack-lru-3.png)
+![ w:900 ]( figs/stack-lru-3.png )
 
-
-  
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
 
-![w:900](figs/stack-lru-4.png)
+![ w:900 ]( figs/stack-lru-4.png )
 
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
 
-![w:900](figs/stack-lru-5.png)
+![ w:900 ]( figs/stack-lru-5.png )
 
-  
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
 
-![w:900](figs/stack-lru-6.png)
+![ w:900 ]( figs/stack-lru-6.png )
 
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
 
-![w:900](figs/stack-lru-7.png)
+![ w:900 ]( figs/stack-lru-7.png )
 
-
-  
 ---
 
-#### LRU的活动页面栈实现示例
+#### Implementation example of LRU's active page stack 
 
-![w:900](figs/stack-lru-8.png)
+![ w:900 ]( figs/stack-lru-8.png )
 
-  
 ---
-
-#### LRU的活动页面栈实现示例
 
-![w:900](figs/stack-lru-9.png)
+#### Implementation example of LRU's active page stack 
 
+![ w:900 ]( figs/stack-lru-9.png )
 
-  
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-### 5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+1. Basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. Least recently used page replacement algorithm (LRU, least recently used)
+### 5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least frequently used algorithm (LFU, least frequently used)
+8. Belady phenomenon
 
---- 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 时钟置换算法的工作原理
+#### Working principle of clock replacement algorithm
 
-- 基本思路
-  - 仅对页面的访问情况进行**大致统计**
-- 数据结构 
-  - 在页表项中增加**访问位**，描述页面在过去一段时间的内访问情况
-  - 各页面组织成**环形链表**
-  - 指针指向**最先调入的页面**
+- Basic idea
+  - Only **roughly count** the access status of the page
+- Data structure
+  - Add an **access bit** to the page table entry to describe the access status of the page in the past period of time
+  - Organize all pages into a **circular linked list**
+  - The pointer points to **the first loaded page**
 
-![bg right:51% 100%](figs/clock-demo.png)
+![ bg right:40% 100% ]( figs/clock-demo.png )
 
 ---
+
+
+#### Working principle of clock replacement algorithm
 
-#### 时钟置换算法的工作原理
+- Algorithm implementation
+  - **When accessing the page**, record the page access status in the page table entry
+  - **When there is a page is fault**, start searching from the pointer for an unaccessed page to replace it
 
-- 算法实现
-  - **访问页面时**，在页表项记录页面访问情况
-  - **缺页时**，从指针处开始顺序查找未被访问的页面进行置换
+![ bg right:30% 100% ]( figs/clock-demo.png )
 
-![bg right:54% 100%](figs/clock-demo.png)
-  
 ---
+<style scoped>
+{
+  font-size: 27px
+}
+</style>
 
-#### 时钟置换算法的具体实现过程
+#### Implementation of clock replacement algorithm
 
-- 页面**装入内存时**，访问位初始化为0
-- **访问页面（读/写)时**，访问位置1
-- **缺页时**，从指针当前位置顺序检查
-  - 访问位为0，则置换该页
-  - 访问位为1，则访问位置0，并指针移动到下一个页面，直到找到可置换的页面
-- 算法特征
-  - 时钟算法是LRU和FIFO的折中
+- When **loading a page into memory**, the access bit is initialized to 0
+- When **accessing a page (read/write)**, the access bit is set to 1
+- When **a page fault occurs**, the algorithm checks the pages in order from the current position of the pointer
+  - When the access bit is 0, the page is replaced
+  - When the access bit is 1, the access bit is set to 0, and the pointer moves to the next page until a page that can be replaced is found
+- Algorithm feature
+  - The clock algorithm is a compromise between LRU and FIFO
 
-![bg right:34% 100%](figs/clock-demo.png)
+![ bg right:30% 100% ]( figs/clock-demo.png )
 
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-1.png)
+![ w:900 ]( figs/clock-1.png )
 
-
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-2.png)
+![ w:900 ]( figs/clock-2.png )
 
-
 ---
-
-#### 时钟置换算法示例
 
-![w:900](figs/clock-3.png)
+#### Example of clock replacement algorithm 
 
+![ w:900 ]( figs/clock-3.png )
 
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-4.png)
+![ w:900 ]( figs/clock-4.png )
 
-
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-5.png)
+![ w:900 ]( figs/clock-5.png )
 
-
 ---
-
-#### 时钟置换算法示例
 
-![w:900](figs/clock-6.png)
+#### Example of clock replacement algorithm 
 
+![ w:900 ]( figs/clock-6.png )
 
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-7.png)
+![ w:900 ]( figs/clock-7.png )
 
-
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-8.png)
+![ w:900 ]( figs/clock-8.png )
 
 
-
 ---
-
-#### 时钟置换算法示例
 
-![w:900](figs/clock-9.png)
+#### Example of clock replacement algorithm 
 
+![ w:900 ]( figs/clock-9.png )
 
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-10.png)
+![ w:900 ]( figs/clock-10.png )
 
-
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-11.png)
+![ w:900 ]( figs/clock-11.png )
 
-
 ---
-
-#### 时钟置换算法示例
 
-![w:900](figs/clock-12.png)
+#### Example of clock replacement algorithm  
 
+![ w:900 ]( figs/clock-12.png )
 
 
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-13.png)
+![ w:900 ]( figs/clock-13.png )
 
-
 ---
 
-#### 时钟置换算法示例
+#### Example of clock replacement algorithm 
 
-![w:900](figs/clock-14.png)
+![ w:900 ]( figs/clock-14.png )
 
-
 ---
-
-#### 时钟置换算法示例
 
-![w:900](figs/clock-15.png)
+#### Example of clock replacement algorithm 
 
+![ w:900 ]( figs/clock-15.png )
 
 
-  
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-### 6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+1. Basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. Least recently used page replacement algorithm (LRU, least recently used)
+5. Clock page replacement algorithm (Clock)
+### 6. Improved clock page replacement algorithm
+7. Least frequently used algorithm (LFU, least frequently used)
+8. Belady phenomenon
 
---- 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 改进的时钟置换算法的工作原理
+#### How the Improved Clock Replacement Algorithm Works
 
-- 基本思路
-  - 减少**修改页**的缺页处理开销
-- 数据结构 
-  - 在页面中增加**修改位**，描述页面在过去一段时间的内写访问情况
-- 算法实现
-  - 访问页面时，在页表项记录页面访问情况
-  - **修改页面时**，在页表项记录页面修改情况
-  - 缺页时，修改页面标志位，以**跳过**有修改的页面
-  
+- Basic idea
+  - Reduce page fault handling overhead for **modified pages**
+- Data structure
+  - Add **Modification Bit** to the page to describe the write access of the page in the past period of time
+- Algorithm implementation
+  - When accessing a page, record the page access status in the page table entry
+  - **When modifying the page** , record the page modification in the page table entry
+  - When a page is missing, modify the page flag bit to **skip** the modified page
 ---
 
-#### 改进的时钟置换算法的工作原理
+#### How the Improved Clock Replacement Algorithm Works
 
-![w:1150](figs/advanced-clock-demo.png)
+![ w:1150 ]( figs/advanced-clock-demo.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-1.png)
+![ w:1000 ]( figs/aclock-1.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-2.png)
+![ w:1000 ]( figs/aclock-2.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-3.png)
+![ w:1000 ]( figs/aclock-3.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-4.png)
+![ w:1000 ]( figs/aclock-4.png )
 
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-5.png)
+![ w:1000 ]( figs/aclock-5.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-6.png)
+![ w:1000 ]( figs/aclock-6.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-7.png)
+![ w:1000 ]( figs/aclock-7.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-8.png)
+![ w:1000 ]( figs/aclock-8.png )
 
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-9.png)
+![ w:1000 ]( figs/aclock-9.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-10.png)
+![ w:1000 ]( figs/aclock-10.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-11.png)
+![ w:1000 ]( figs/aclock-11.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-12.png)
+![ w:1000 ]( figs/aclock-12.png )
 
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-13.png)
+![ w:1000 ]( figs/aclock-13.png )
 
-  
 ---
 
-#### 改进的时钟置换算法示例
+#### Improved Clock Replacement Algorithm Example
 
-![w:1000](figs/aclock-14.png)
+![ w:1000 ]( figs/aclock-14.png )
 
-  
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-### 7. 最不常用置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+1. The basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. The least recently used page replacement algorithm (LRU, Least Recently Used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+### 7. Least Frequently Used Algorithm (LFU, Least Frequently Used)
+8. The Belady phenomenon
 
---- 
+---
 
-#### 最不常用算法的工作原理
+#### How the Least Common Algorithm Works
 
-- 基本思路
-  - 缺页时，置换**访问次数最少**的页面
+- Basic idea
+  - When a page is missing, replace the page with the **least visits**
 
-- 算法实现
-  - 每个页面设置一个**访问计数**
-  - 访问页面时，**访问计数加1** 
-  - 缺页时，置换**计数最小的页面**
+- Algorithm implementation
+  - Set a **visit count** per page
+  - When a page is visited, **Visit count is incremented by 1** 
+  - When a page is missing, replace **the page with the smallest count**
 
-  
 ---
 
-#### 最不常用算法特征
+#### Least Common Algorithm Features
 
-- 特征
-  - 算法开销大
-  - 开始时频繁使用，但以后不使用的页面**很难置换**
-    - 解决方法：计数定期右移
+- Features
+  - Algorithmic overhead is high
+  - Pages that are frequently used at first but not used later are **difficult to replace**
+    - Workaround: count shifted right periodically
 
-- LRU关注多久未访问,时间越短越好
-- LFU关注访问次数，次数越多越好
+- LRU pays attention to how long you have not visited, the shorter the time, the better
+- LFU focuses on the number of visits, the more the better
 
-  
 ---
 
-#### LFU示例
+#### LFU Example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-1.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-1.png )
 
-  
 ---
 
-#### LFU示例
+#### LFU example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-2.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-2.png )
 
-  
 ---
 
-#### LFU示例
+#### LFU example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-3.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-3.png )
 
-  
 ---
 
-#### LFU示例
+#### LFU example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-4.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-4.png )
 
 ---
 
-#### LFU示例
+#### LFU example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-5.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-5.png )
 
-  
 ---
 
-#### LFU示例
+#### LFU Example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-6.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-6.png )
 
-  
 ---
 
-#### LFU示例
+#### LFU example
 
-4个物理页帧，最初的访问次数a-＞8 b-＞5 c-＞6 d-＞2
-![w:1100](figs/lfu-7.png)
+4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
+![ w:1100 ]( figs/lfu-7.png )
 
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-**提纲**
+**Outline**
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-### 8. Belady现象
+1. The basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. The least recently used page replacement algorithm (LRU, Least Recently Used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least Frequently Used Algorithm (LFU, Least Frequently Used)
+### 8. The Belady Phenomenon
 
---- 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### Belady现象
-- 现象
-  - 采用FIFO等算法时，可能出现**分配的物理页面数增加**，**缺页次数反而升高**的异常现象
-- 原因
-  - FIFO算法的置换特征与进程访问内存的动态特征**矛盾**
-  - 被它置换出去的页面**并不一定**是进程近期不会访问的
-- 思考
-  - 哪些置换算法没有Belady现象？
+#### Belady Phenomenon
+- Phenomenon
+  - When FIFO and other algorithms are used, there may be an abnormal phenomenon that **the number of allocated physical pages increases** and the number of ** page faults increases**
+- Reason
+  - The replacement feature of the FIFO algorithm is inconsistent with the dynamic feature of the process accessing the memory **contradiction**
+  - The pages replaced by it are **not necessarily** the process will not visit in the near future
+- Thinking
+  - Which permutation algorithms do not have the Belady phenomenon?
 
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-1.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-1.png )
 
 
-
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-1.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-1.png )
 
-
 ---
-
-#### FIFO算法的Belady现象
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-2.png)
+#### Belady phenomenon of FIFO algorithm
 
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-2.png )
 
 
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-3.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-3.png )
 
 
-
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-4.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-4.png )
 
-
 ---
-
-#### FIFO算法的Belady现象
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-5.png)
+#### Belady phenomenon of FIFO algorithm
 
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-5.png )
 
 
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 3  ； 缺页次数: 9
-![w:1100](figs/belady-3fifo-6.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 3; Number of page faults: 9
+![ w:1100 ]( figs/belady-3fifo-6.png )
 
 
-
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 4  ； 缺页次数: 10
-![w:900](figs/belady-4fifo-1.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 4; Number of page faults: 10
+![ w:900 ]( figs/belady-4fifo-1.png )
 
 
-
 ---
-
-#### FIFO算法的Belady现象
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 4  ； 缺页次数: 10
-![w:900](figs/belady-4fifo-2.png)
+#### Belady phenomenon of FIFO algorithm
 
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 4; Number of page faults: 10
+![ w:900 ]( figs/belady-4fifo-2.png )
 
 
 
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 4  ； 缺页次数: 10
-![w:900](figs/belady-4fifo-3.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 4; Number of page faults: 10
+![ w:900 ]( figs/belady-4fifo-3.png )
 
 
 
-
 ---
 
-#### FIFO算法的Belady现象
+#### Belady phenomenon of FIFO algorithm
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 4  ； 缺页次数: 10
-![w:900](figs/belady-4fifo-4.png)
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 4; Number of page faults: 10
+![ w:900 ]( figs/belady-4fifo-4.png )
 
 
 
-
 ---
-
-#### FIFO算法的Belady现象
 
-访问顺序 : 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
-物理页面数: 4  ； 缺页次数: 10
-![w:900](figs/belady-4fifo-5.png)
+#### Belady phenomenon of FIFO algorithm
 
+Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+Number of physical pages: 4; Number of page faults: 10
+![ w:900 ]( figs/belady-4fifo-5.png )
 
 
 ---
 
-#### FIFO算法存在Belady现象
+#### FIFO algorithm has Belady phenomenon
 
-![w:600](figs/belady-3fifo-6.png)
-![w:600](figs/belady-4fifo-5.png)
-<!--![bg left:50% 100%](figs/belady-3fifo-7.png) 
+![ w:600 ]( figs/belady-3fifo-6.png )
+![ w:600 ]( figs/belady-4fifo-5.png )
+<!--![bg left:50% 100%](figs/belady-3fifo-7.png)
 ![bg right:50% 100%](figs/belady-4fifo-5.png)-->
 <!--![w:900](figs/belady-4fifo-5.png) -->
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### LRU算法不存在Belady现象
+#### LRU algorithm does not exist Belady phenomenon
 
-![w:1100](figs/belady-lru.png)
+![ w:1100 ]( figs/belady-lru.png )
 
-时钟/改进的时钟页面置换是否有Belady现象？
-为什么LRU页面置换算法没有Belady现象？
-
----
-
-#### LRU、FIFO和Clock的比较
-
-  - LRU算法和FIFO本质上都是先进先出的思路
-  - LRU依据页面的最近访问时间排序
-  - LRU需要动态地调整顺序
-  - FIFO依据页面进入内存的时间排序
-  - FIFO的页面进入时间是固定不变的
+Does clock/improved clock page replacement have the Belady phenomenon?
+Why does the LRU page replacement algorithm not have the Belady phenomenon?
 
 ---
 
-#### LRU、FIFO和Clock的比较
+#### Comparison of LRU, FIFO and Clock
 
-  - LRU可退化成FIFO
-    - 如页面进入内存后**没有被访问**，最近访问时间与进入内存的时间相同
-    - 例如：给进程分配3个物理页面，逻辑页面的访问顺序为1、2、3、4、5、6、1、2、3…
-
+- LRU algorithm and FIFO are essentially first-in first-out ideas
+- LRU is sorted by the most recent access time of the page
+- LRU needs to dynamically adjust the order
+- FIFO is sorted by the time the pages entered memory
+- FIFO page entry time is fixed
 
 ---
 
-#### LRU、FIFO和Clock的比较
+#### Comparison of LRU, FIFO and Clock
 
-  - LRU算法性能较好，但系统开销较大
-  - FIFO算法系统开销较小，会发生Belady现象
-  - Clock算法是它们的**折衷**
-    - 页面访问时，不动态调整页面在链表中的顺序，仅做标记
-    - 缺页时，再把它移动到链表末尾
-    - 对于**未被访问的**页面，Clock和LRU算法的表现一样好
-    - 对于**被访问过的**页面，Clock算法不能记录准确访问顺序，而LRU算法可以
+- LRU can degenerate into FIFO
+  - If the page has not been accessed after entering the memory , the latest access time is the same as the time when it entered the memory
+  - For example: allocate 3 physical pages to the process, the access sequence of logical pages is 1, 2, 3, 4, 5, 6, 1, 2, 3...
 
---- 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-### 小结
+#### Comparison of LRU, FIFO and Clock
 
-1. 页面置换算法的基本概念
-2. 最优页面置换算法 (OPT, optimal)
-3. 先进先出页面置换算法 (FIFO)
-4. 最近最久未使用页面置换算法 (LRU, Least Recently Used)
-5. 时钟页面置换算法 (Clock)
-6. 改进的时钟页面置换算法
-7. 最不常用页面置换算法 (LFU, Least Frequently Used)
-8. Belady现象
+- The performance of the LRU algorithm is better, but the system overhead is larger
+- The system overhead of FIFO algorithm is small, and the Belady phenomenon will occur
+- Clock algorithm is their **compromise**
+  - When the page is accessed, the order of the page in the linked list is not dynamically adjusted, only marked
+  - When a page is missing, move it to the end of the linked list
+  - For **not visited** pages, Clock and LRU algorithms perform as well
+  - For **visited** pages, the Clock algorithm cannot record the exact access sequence, while the LRU algorithm can
+
+---
+
+### Summary
+
+1. The basic concept of page replacement algorithm
+2. Optimal page replacement algorithm (OPT, optimal)
+3. First in first out page replacement algorithm (FIFO)
+4. The least recently used page replacement algorithm (LRU, Least Recently Used)
+5. Clock page replacement algorithm (Clock)
+6. Improved clock page replacement algorithm
+7. Least Frequently Used Algorithm (LFU, Least Frequently Used)
+8. The Belady phenomenon
 
 
 
