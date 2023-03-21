@@ -11,137 +11,158 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第六讲 虚拟存储管理
-## 第三节 全局页面置换算法
+# Lecture 6 Virtual Memory Management
+## Section 3 Global Page Replacement Algorithm
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
-2023年春季
-
+Spring 2023
+<!--- refer: https://pages.cs.wisc.edu/~remzi/OSTEP/vm-complete.pdf --->
 ---
 
-**提纲**
+**Outline**
 
-### 1. 全局页面置换算法的定义
-2. 工作集页面置换算法
-3. 缺页率页面置换算法
-
---- 
-#### 局部置换算法没有考虑进程访存差异
-FIFO 页面置换算法: 假设初始顺序 a->b->c 
-物理页面数: 3   缺页次数: 9
+### 1. Definition of Global Page Replacement Algorithm
+2. Working Set Page Replacement Algorithm
+3. Page Fault Frequency Algorithm 
+<!---Note this term is from NYU's Slide  https://cs.nyu.edu/~gottlieb/courses/2010s/2010-11-spring/os2250/lectures/lecture-10.html#local-global-replacement --->
+---
+#### Local Replacement Algorithm ignores memory access pattern differences of different processes
+FIFO: Assume initial order is a->b->c
+Number of physical pages: 3 -> Number of page faults: 9
 ![w:1100](figs/local-rp-1.png)
 
---- 
-#### 局部置换算法没有考虑进程访存差异
-FIFO 页面置换算法: 假设初始顺序 a->b->c 
-物理页面数: 4   缺页次数: 1
+---
+#### Local Replacement Algorithm ignores memory access pattern differences of different processes
+FIFO page replacement algorithm: assume initial order a->b->c
+Number of physical pages: 4 -> Number of page faults: 1
 ![w:1100](figs/local-rp-2.png)
 
 
---- 
-#### 全局置换算法的工作原理
-- 思路
-  - **为进程分配可变数目的物理页面**
-- 全局置换算法要解决的问题
-  - 进程在**不同阶段**的内存需求是变化的
-  - 分配给进程的**内存**也需要在**不同阶段有所变化**
-  - 全局置换算法需要**确定分配给进程的物理页面数**
+---
+#### How Global Replacement Algorithms work
+- Ideas
+   - **Allocate a variable number of physical pages for a process**
+- Problems in Global Replacement Algorithms
+   - Memory demand of a process varies at **different stages**
+   - The **memory** allocated to the process should adapt
+    at **different stages**
+   - The global replacement algorithm should **determine the number of physical pages allocated to the process**
 
 ---
-#### CPU利用率与程序运行数量
+#### CPU Utilization with different number of running programs
 
 ![bg right:40% 100%](figs/cpu-usage-relation.png)
 <!-- ![w:450](figs/cpu-usage-relation.png) -->
- - CPU利用率与程序运行数量存在相互**促进和制约**的关系
-   - 运行程序少时，提高程序运行数，可提高CPU利用率
-   - 程序运行数量大导致内存访问增加，并会降低访存的局部性
-   - 局部性下降会导致缺页率上升和CPU利用率下降
+  - There is a mutual promotion and restriction relationship between CPU utilization and the number of programs running
+    - When there are few running programs,  we can increase CPU utilization by increasing the number of running programs
+    - Large number of running programs will increase memory access frequency and reduces the locality of memory access
+    -Lower locality leads to higher page fault rate and lower CPU utilization
 
 
 ---
 
-**提纲**
+**Outline**
 
-1. 全局页面置换算法的定义
-### 2. 工作集页面置换算法
-3. 缺页率页面置换算法
-
---- 
-
-#### 工作集
-一个进程当前正在使用的逻辑页面集合，可表示为二元函数W(t, $\Delta$)
-- 当前执行时刻$t$
-- 工作集窗口(working-set window)$\Delta$：一个定长的页面访问时间窗口
-- 工作集窗口$\Delta$大小$\tau$
-  - 时间段长度，用当前时刻 $t$ 前的**内存访问次数**来表示
-- 工作集W(t, $\Delta$)
-  - 在当前时刻 $t$ 前的$\Delta$时间窗口中的所有访问页面所组成的集合
-- 工作集大小 | W(t, $\Delta$) |：页面数目
+1. Definition of Global Page Replacement Algorithm
+### 2. Working Set Page Replacement Algorithm
+3. Page Fault Frequency Algorithm 
 
 ---
-#### 进程的工作集示例
-页面访问顺序：
-W(t, $\Delta$) ={1,2,5,6,7} , 工作集窗口大小 $\tau=10, 当前时刻 t=t_1$ 
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+#### Working Set
+The set of logical pages currently used by a process, it can be expressed as a binary function W(t, $\Delta$)
+- Current execution time $t$
+- Working-set window $\Delta$: A fixed-length page access time window
+- working set window $\Delta$ size $\tau$
+   - The length of the time window, represented by the **memory accesses** before the current time $t$
+- working set W(t, $\Delta$)
+   - The set of all pages accessed within the time window $\Delta$ before the current time $t$
+- working set size | W(t, $\Delta$) |: Number of pages
+
+---
+#### Working set example of a process
+Page access record:
+W(t, $\Delta$) ={1,2,5,6,7} , working set window size $\tau=10$, current time $t=t_1$
 ![w:1100](figs/working-set-window-1.png)
 
 ---
-#### 进程的工作集示例
+#### Working set example of a process
 
-页面访问顺序：
-W(t, $\Delta$) ={1,2,3,4,5,6,7} , 工作集窗口大小 $\tau=10, 当前时刻 t=t_1$ 
+Page access record:
+W(t, $\Delta$) ={1,2,3,4,5,6,7} , working set window size $\tau=10$, current time $t=t_1$
 
 ![w:1100](figs/working-set-window-2.png)
 
 
 ---
-#### 进程的工作集示例
-页面访问顺序：
-W(t, $\Delta$) ={3,4}， 工作集窗口大小 $\tau=10$，当前时刻 $t=t_2$
+#### Working set example of a process
+
+Page access record:
+W(t, $\Delta$) ={3,4}, working set window size $\tau=10$, current time $t=t_2$
 
 ![w:1100](figs/working-set-window-3.png)
 
 
 
 ---
-#### 工作集的变化
+#### Changes of Working Set
+<style scoped>
+{
+  font-size: 27px
+}
+</style>
 ![w:600](figs/working-set-change.png)
-- **进程开始执行**后，随着访问新页面逐步建立较稳定的工作集
-- 当内存访问的**局部性区域位置大致稳定**时，工作集大小也大致稳定
-- **局部性区域位置改变**时，工作集快速扩张和收缩过渡到下一个稳定值
+- **After a process starts to execute**, its working set is gradually established by accessing new pages
+- When the **locality area** of memory accesses is roughly stable, the working set size is also roughly stable
+- When the locality area changes, the working set quickly expands and contracts until it transitions to the next stable value.
 
 
 ---
-#### 常驻集
-  在当前时刻，进程**实际驻留内存**中的页面集合
-- 工作集与常驻集的关系
-  - 工作集是进程在运行过程中的**固有性质**
-  - 常驻集**取决于系统**分配给进程的物理页面数目和页面置换算法
-- 缺页率与常驻集的关系 
-  - 常驻集  $\supseteq$ 工作集时，缺页较少
-  - 工作集发生剧烈变动（过渡）时，缺页较多
-  - 进程常驻集大小达到一定数目后，缺页率也不会明显下降
+#### Resident Set
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+   The set of pages that are **actually present** in the memory of a process at the current time.
+- Relationship between working set and resident set
+   - The working set is an **inherent property** of a process during its execution.
+   - The resident set is determined by the number of physical pages allocated to the process and the page replacement algorithm, which **depends on the system**
+- Relationship between page fault rate and resident set
+   - When the resident set $\supseteq$ working set, the page fault rate is relatively low.
+   - When the working set changes dramatically (transition), the page fault rate is relatively high.
+   - After the process resident set size reaches a certain number, the page fault rate will not decrease significantly
 
 
 ---
-#### 工作集页面置换算法
-- 思路
-   - 换出**不在工作集中的**页面
-- 工作集窗口大小$\tau$
-   - 当前时刻前$\tau$次内存访问的页面集合构成**工作集**
+#### Working Set Page Replacement Algorithm
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+- Ideas
+    - Swap out pages **not in the working set**
+- Working set window size $\tau$
+    - The set of pages accessed in the previous $\tau$ memory accesses before the current time form the **working set**
 
-- 实现方法
-  - 访存链表：维护窗口内的访存页面链表
-  - 访存时，**换出**不在工作集的页面，更新访存链表
-  - 缺页时，换入页面，更新访存链表
+- Implementation
+   - Memory Access Record linkedlist: Maintains a list of accessed pages within the window
+   - When a page is accessed, swap out pages not in the working set and update the Memory Access Record list
+   - When a page fault occurs, swap in the page and update the list.
 
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -150,7 +171,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -160,7 +181,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -170,7 +191,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -179,7 +200,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -189,7 +210,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -199,7 +220,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -208,7 +229,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -218,7 +239,7 @@ $\tau=4$
 
 ---
 
-#### 工作集置换算法示例
+#### Example of Working Set Replacement Algorithm 
 
 $\tau=4$
 
@@ -226,158 +247,168 @@ $\tau=4$
 
 ---
 
-**提纲**
+**Outline**
 
-1. 全局页面置换算法的定义
-2. 工作集页面置换算法
-### 3. 缺页率页面置换算法
-
---- 
-
-#### 缺页率(Page-Fault-Frequency, Page Fault Rate)
-
-缺页次数 / 内存访问**次数** 或 缺页平均时间**间隔的倒数**
-
-- 影响缺页率的因素
-  - 页面置换算法
-  - 分配给进程的物理页面数目
-  - 页面大小
-  - 程序的编写方法
-
-
----
-#### 缺页率置换算法
-
-![bg right:60% 100%](figs/page-fault-relation.png)
-
-通过调节**常驻集大小**，使每个进程的**缺页率**保持在一个合理的范围内
-- 若进程缺页率过高，则增加常驻集以分配更多的物理页面
-- 若进程缺页率过低，则减少常驻集以减少它的物理页面数
-
----
-#### 缺页率页面置换算法
-- 访存时，**设置**引用位标志
-- 缺页时，**计算**从上次缺页时间$t_{last}$ 到现在$t_{current}$ 的**时间间隔**
-  - 如果 $t_{current} – t_{last}>T$（容忍的缺页窗口），则**置换**所有在$[t_{last} ,  t_{current} ]$时间内没有被引用的页
-  - 如果$t_{current} – t_{last} \le T$，则**增加**缺失页到常驻集中
+1. Definition of Global Page Replacement Algorithm
+2. Working Set Page Replacement Algorithm
+### 3. Page Fault Frequency Algorithm 
 
 ---
 
-#### 缺页率置换算法示例
+#### Page-Fault-Frequency(Page Fault Rate)
 
-假定窗口大小为 2
+**Page Faults / Memory Accesses** or the **reciprocal** of the average time interval between page faults.
+
+- Factors Affecting Page Fault Rate
+   - Page replacement algorithm
+   - Number of physical pages allocated to the process
+   - Page size
+   - Program coding methods
+
+
+---
+#### Page Fault Frequency Replacement Algorithm
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+![bg right:55% 100%](figs/page-fault-relation.png)
+
+By adjusting the **resident set size**, the **page fault frequency** of each process is kept within a reasonable range.
+- If the process's page fault frequency is too high, increase the resident set to allocate more physical pages.
+- If the process's page fault frequency is too low, decrease the resident set to reduce its number of physical pages.
+
+---
+#### Page Fault Frequency Replacement Algorithm
+- When accessing memory, **set** the reference bit flag
+- When there is a page fault, **calculate** the **time interval** from the last page fault time $t_{last}$ to the current time $t_{current}$
+   - If $t_{current} – t_{last}>T$ (tolerated page fault window), then **replace** all pages that have not been referenced during the time interval $[t_{last} , t_{current} ]$
+   - If $t_{current} – t_{last} \le T$, then **add** missing pages to the resident set
+
+---
+
+#### Example of Page Fault Frequency Algorithm
+
+Assuming the window size is 2
 ![w:1100](figs/ppf-1.png)
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-2.png)
 
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-3.png)
 
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-4.png)
 
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-5.png)
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-6.png)
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-7.png)
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-8.png)
 
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-9.png)
 
 
 
 ---
 
-#### 缺页率置换算法示例
+#### Example of Page Fault Frequency Algorithm
 
-假定窗口大小为 2
+Assuming the window size is 2
 ![w:1100](figs/ppf-a.png)
 
 
 ---
-####  抖动问题(thrashing)
-- 抖动
-  - 进程**物理页面太少**，不能包含工作集
-  - 造成**大量缺页**，频繁置换
-  - 进程**运行速度变慢**
+#### Thrashing
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+- Thrashing
+   - **Too few physical pages** to contain working set
+   - Results in **a large number of page faults**, frequent page replacement
+   - Results in **slow execution of the process**
 
-- 产生抖动的原因
-   - 随着驻留内存的**进程数目**增加，分配给每个进程的物理页面数不断减小，缺页率不断上升
--  操作系统需**在并发水平和缺页率之间达到一个平衡**
-   - 选择一个适当的进程数目和进程需要的物理页面数
-
----
-
-### 课程实验二
-
-* 第四章：地址空间 -> chapter4练习 -> 
-    * [rCore](https://learningos.github.io/rCore-Tutorial-Guide-2022A/chapter4/7exercise.html)
-    * [uCore](https://learningos.github.io/uCore-Tutorial-Guide-2022A/chapter4/7exercise.html)
-* 实验任务
-    * 重写获取系统时间和进程控制块信息的内核函数
-    * 实现申请和取消虚存映射的系统调用
-* 实验提交要求
-    * 任务布置后的第11天（2022年10月30日）；
+- Causes of thrashing
+    - As the number of **processes** residing in memory increases, the number of physical pages allocated to each process decreases, and the page fault frequency keeps increasing
+- The OS needs to **achieve a balance** between concurrency level and **page fault frequency**
+    - Select an appropriate number of processes and the demanding number of physical pages for each process
 
 ---
 
-### 第五讲虚拟存储管理小结
+### Course Lab 2
 
-* 第一节 虚拟存储概念
-    * 需求、覆盖、交换、虚拟存储的概念、缺页异常
-* 第二节 局部页面置换算法
-    * 页面置换算法的概念、OPT、FIFO、LRU、Clock、改进的时钟页面置换算法、LFU、Belady现象
-* 第三节 全局页面置换算法
-    * 全局页面置换算法、工作集置换算法、缺页率置换算法
+* Chapter 4: Address Space -> Chapter4 Exercises ->
+     * [rCore](https://learningos.github.io/rCore-Tutorial-Guide-2022A/chapter4/7exercise.html)
+     * [uCore](https://learningos.github.io/uCore-Tutorial-Guide-2022A/chapter4/7exercise.html)
+* Lab tasks
+     * Rewrite the kernel function for obtaining system time and process control block
+     * Implement system calls for mapping and unmapping virtual memory
+* Submission requirements
+     * The 11th day after the task is assigned (October 30, 2022);
+
+---
+
+### Lecture 5 Summary of Virtual Memory
+
+* Section 1 Concepts of Virtual Memory
+     * Demanding Paging, Overlay, Swapping, Concepts of Virtual Memory, Page Fault
+* Section 2 Local Page Replacement Algorithm
+     * Concepts of page replacement algorithm, OPT, FIFO, LRU, Clock, Improved Clock Page Replacement Algorithm, LFU, Belady Phenomenon
+* Section 3 Global Page Replacement Algorithm
+     * Global page replacement algorithm, Working Set Replacement Algorithm, Page Fault Frequency Algorithm
+     
