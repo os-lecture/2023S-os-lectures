@@ -30,7 +30,7 @@ Spring 2023
 4. Least recently used page replacement algorithm (LRU, least recently used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least frequently used algorithm (LFU, least frequently used)
+7. Least frequently used page replacement algorithm (LFU, least frequently used)
 8. Belady phenomenon
 
 ---
@@ -126,7 +126,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 4. Least recently used page replacement algorithm (LRU, least recently used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least frequently used algorithm (LFU, least frequently used)
+7. Least frequently used page replacement algorithm (LFU, least frequently used)
 8. Belady phenomenon
 
 ---
@@ -183,7 +183,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 4. Least recently used page replacement algorithm (LRU, least recently used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least frequently used algorithm (LFU, least frequently used)
+7. Least frequently used page replacement algorithm (LFU, least frequently used)
 8. Belady phenomenon
 
 ---
@@ -259,7 +259,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 ### 4. Least recently used page replacement algorithm (LRU, least recently used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least frequently used algorithm (LFU, least frequently used)
+7. Least frequently used page replacement algorithm (LFU, least frequently used)
 8. Belady phenomenon
 
 ---
@@ -419,7 +419,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 4. Least recently used page replacement algorithm (LRU, least recently used)
 ### 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least frequently used algorithm (LFU, least frequently used)
+7. Least frequently used page replacement algorithm (LFU, least frequently used)
 8. Belady phenomenon
 
 ---
@@ -447,7 +447,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 
 - Algorithm implementation
   - **When accessing the page**, record the page access status in the page table entry
-  - **When there is a page is fault**, start searching from the pointer for an unaccessed page to replace it
+  - **When there is a page fault**, start searching from the pointer for an unaccessed page to replace it
 
 ![ bg right:30% 100% ]( figs/clock-demo.png )
 
@@ -578,8 +578,9 @@ c, a, d, b, e, b, a, b, c, d in characters
 4. Least recently used page replacement algorithm (LRU, least recently used)
 5. Clock page replacement algorithm (Clock)
 ### 6. Improved clock page replacement algorithm
-7. Least frequently used algorithm (LFU, least frequently used)
+7. Least frequently used page replacement algorithm (LFU, least frequently used)
 8. Belady phenomenon
+
 
 ---
 <style scoped>
@@ -588,7 +589,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 }
 </style>
 
-#### How the Improved Clock Replacement Algorithm Works
+####  Working Principle of the Improved Clock Replacement Algorithm
 
 - Basic idea
   - Reduce page fault handling overhead for **modified pages**
@@ -596,95 +597,94 @@ c, a, d, b, e, b, a, b, c, d in characters
   - Add **Modification Bit** to the page to describe the write access of the page in the past period of time
 - Algorithm implementation
   - When accessing a page, record the page access status in the page table entry
-  - **When modifying the page** , record the page modification in the page table entry
-  - When a page is missing, modify the page flag bit to **skip** the modified page
+  - **When modifying the page** , record the page modification  status in the page table entry
+  - When there is a page fault, modify the page flag to **skip** the modified page
 ---
 
-#### How the Improved Clock Replacement Algorithm Works
-
+#### Working Principle of the Improved Clock Replacement Algorithm
 ![ w:1150 ]( figs/advanced-clock-demo.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-1.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-2.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-3.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm
 
 ![ w:1000 ]( figs/aclock-4.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-5.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-6.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-7.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-8.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm 
 
 ![ w:1000 ]( figs/aclock-9.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm
 
 ![ w:1000 ]( figs/aclock-10.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm
 
 ![ w:1000 ]( figs/aclock-11.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm
 
 ![ w:1000 ]( figs/aclock-12.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm
 
 ![ w:1000 ]( figs/aclock-13.png )
 
 ---
 
-#### Improved Clock Replacement Algorithm Example
+#### Example of Improved Clock Replacement Algorithm
 
 ![ w:1000 ]( figs/aclock-14.png )
 
@@ -703,78 +703,76 @@ c, a, d, b, e, b, a, b, c, d in characters
 4. The least recently used page replacement algorithm (LRU, Least Recently Used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-### 7. Least Frequently Used Algorithm (LFU, Least Frequently Used)
+### 7. Least Frequently Used page replacement algorithm (LFU, Least Frequently Used)
 8. The Belady phenomenon
 
 ---
 
-#### How the Least Common Algorithm Works
-
+####  Working Principle of the Least Frequently Used Page Replacement Algorithm  
 - Basic idea
-  - When a page is missing, replace the page with the **least visits**
-
+  - When there is a page fault , replace the page with the **least visit count**
 - Algorithm implementation
-  - Set a **visit count** per page
-  - When a page is visited, **Visit count is incremented by 1** 
-  - When a page is missing, replace **the page with the smallest count**
+  - Set a **visit count** for per page
+  - When a page is visited, **increment visit count by 1**
+  - When there is a page fault, **replace the page with least visit count**
 
 ---
 
-#### Least Common Algorithm Features
+####  Least Frequently Used Page Replacement Algorithm Features
 
 - Features
-  - Algorithmic overhead is high
-  - Pages that are frequently used at first but not used later are **difficult to replace**
-    - Workaround: count shifted right periodically
+  - High overhead 
+  - Pages that are frequently used at the beginning  but not used later are **difficult to replace**
+    - Solution: count shifted right periodically
 
-- LRU pays attention to how long you have not visited, the shorter the time, the better
-- LFU focuses on the number of visits, the more the better
+-LRU focuses on how long the page has not been used, the shorter the time, the better.
+-LFU focuses on the number of visits                  , the more the better.
 
 ---
 
-#### LFU Example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-1.png )
 
 ---
 
-#### LFU example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-2.png )
 
 ---
 
-#### LFU example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-3.png )
 
 ---
 
-#### LFU example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-4.png )
 
 ---
 
-#### LFU example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-5.png )
 
 ---
 
-#### LFU Example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-6.png )
 
 ---
 
-#### LFU example
+#### Example of LFU 
 
 4 physical page frames, the initial number of visits a->8 b->5 c->6 d->2
 ![ w:1100 ]( figs/lfu-7.png )
@@ -794,7 +792,7 @@ c, a, d, b, e, b, a, b, c, d in characters
 4. The least recently used page replacement algorithm (LRU, Least Recently Used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least Frequently Used Algorithm (LFU, Least Frequently Used)
+7. Least Frequently Used page replacement algorithm (LFU, Least Frequently Used)
 ### 8. The Belady Phenomenon
 
 ---
@@ -806,16 +804,16 @@ c, a, d, b, e, b, a, b, c, d in characters
 
 #### Belady Phenomenon
 - Phenomenon
-  - When FIFO and other algorithms are used, there may be an abnormal phenomenon that **the number of allocated physical pages increases** and the number of ** page faults increases**
+  - When using algorithms such as FIFO, there may be an abnormal phenomenon that **the number of allocated physical pages increases** and **the number of page faults increases**
 - Reason
-  - The replacement feature of the FIFO algorithm is inconsistent with the dynamic feature of the process accessing the memory **contradiction**
+  - FIFO algorithm's  is **contradictory** to the dynamic feature of the process accessing the memory 
   - The pages replaced by it are **not necessarily** the process will not visit in the near future
 - Thinking
-  - Which permutation algorithms do not have the Belady phenomenon?
+  - Which replacement algorithms do not have the Belady phenomenon?
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -824,7 +822,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -832,7 +830,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -841,7 +839,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -850,7 +848,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -858,7 +856,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -867,7 +865,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 3; Number of page faults: 9
@@ -876,7 +874,7 @@ Number of physical pages: 3; Number of page faults: 9
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 4; Number of page faults: 10
@@ -885,7 +883,7 @@ Number of physical pages: 4; Number of page faults: 10
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 4; Number of page faults: 10
@@ -895,7 +893,7 @@ Number of physical pages: 4; Number of page faults: 10
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 4; Number of page faults: 10
@@ -905,7 +903,7 @@ Number of physical pages: 4; Number of page faults: 10
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 4; Number of page faults: 10
@@ -915,7 +913,7 @@ Number of physical pages: 4; Number of page faults: 10
 
 ---
 
-#### Belady phenomenon of FIFO algorithm
+#### Belady Phenomenon of FIFO Algorithm
 
 Access sequence: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
 Number of physical pages: 4; Number of page faults: 10
@@ -924,7 +922,7 @@ Number of physical pages: 4; Number of page faults: 10
 
 ---
 
-#### FIFO algorithm has Belady phenomenon
+#### Belady Phenomenon of FIFO Algorithm
 
 ![ w:600 ]( figs/belady-3fifo-6.png )
 ![ w:600 ]( figs/belady-4fifo-5.png )
@@ -939,21 +937,21 @@ Number of physical pages: 4; Number of page faults: 10
 }
 </style>
 
-#### LRU algorithm does not exist Belady phenomenon
+#### LRU Algorithm does not Experience Belady phenomenon
 
 ![ w:1100 ]( figs/belady-lru.png )
 
-Does clock/improved clock page replacement have the Belady phenomenon?
-Why does the LRU page replacement algorithm not have the Belady phenomenon?
+Does clock/improved clock page replacement experience the Belady phenomenon?
+Why does the LRU page replacement algorithm not experience the Belady phenomenon?
 
 ---
 
 #### Comparison of LRU, FIFO and Clock
 
-- LRU algorithm and FIFO are essentially first-in first-out ideas
-- LRU is sorted by the most recent access time of the page
-- LRU needs to dynamically adjust the order
-- FIFO is sorted by the time the pages entered memory
+- LRU algorithm and FIFO are essentially based on FIFO ideas
+- LRU sorts by the recent access time of the page
+- LRU needs to dynamically adjust the sort order
+- FIFO sorts by the time the pages entered memory
 - FIFO page entry time is fixed
 
 ---
@@ -961,7 +959,7 @@ Why does the LRU page replacement algorithm not have the Belady phenomenon?
 #### Comparison of LRU, FIFO and Clock
 
 - LRU can degenerate into FIFO
-  - If the page has not been accessed after entering the memory , the latest access time is the same as the time when it entered the memory
+  - If the page **has not been accessed**after entering the memory , the latest access time is the same as the time when it entered the memory
   - For example: allocate 3 physical pages to the process, the access sequence of logical pages is 1, 2, 3, 4, 5, 6, 1, 2, 3...
 
 ---
@@ -973,11 +971,11 @@ Why does the LRU page replacement algorithm not have the Belady phenomenon?
 
 #### Comparison of LRU, FIFO and Clock
 
-- The performance of the LRU algorithm is better, but the system overhead is larger
-- The system overhead of FIFO algorithm is small, and the Belady phenomenon will occur
-- Clock algorithm is their **compromise**
+- LRU: high performance,large system overhead 
+- FIFO：small system overhead, experience the Belady phenomenon 
+- Clock algorithm : their **compromise**
   - When the page is accessed, the order of the page in the linked list is not dynamically adjusted, only marked
-  - When a page is missing, move it to the end of the linked list
+  - When there is a page fault, move it to the end of the linked list
   - For **not visited** pages, Clock and LRU algorithms perform as well
   - For **visited** pages, the Clock algorithm cannot record the exact access sequence, while the LRU algorithm can
 
@@ -991,7 +989,7 @@ Why does the LRU page replacement algorithm not have the Belady phenomenon?
 4. The least recently used page replacement algorithm (LRU, Least Recently Used)
 5. Clock page replacement algorithm (Clock)
 6. Improved clock page replacement algorithm
-7. Least Frequently Used Algorithm (LFU, Least Frequently Used)
+7. Least Frequently Used page replacement  algorithm (LFU, Least Frequently Used)
 8. The Belady phenomenon
 
 
