@@ -58,7 +58,7 @@ Ideal Memory:  **large capacity**, **fast**, **cheap**, **Non-Volatile**
 - Virtual Memory
    - The OS automatically swaps content in and out of memory in units of **page**
 
-Virtual Memory = Internal Memory + External Memory
+Virtual Memory = Memory + External Storage
 
 ---
 #### Address space
@@ -107,7 +107,7 @@ The `Address Space` is the **abstraction** of virtual memory by the OS.
    Overlay refers to dividing a program into some segments with relatively independent functions. Segments that are not required to be loaded into memory at the same time can form a group (named an overlay segment), which will **share** same area of main memory.
    - **Necessary** parts of (Frequently used) code and data will be resident in memory
    - **Optional** parts (not frequently used) are placed in other program modules, and only loaded into memory when **needed**
-   - If there is **no calling or called relationship** between two modules, they can share the same memory area
+   - If there is **no caller & callee relationship** between two modules, they can share the same memory area
 
 ---
 
@@ -121,14 +121,14 @@ The `Address Space` is the **abstraction** of virtual memory by the OS.
 
 #### Shortages of Memory Overlay
 
-- Increase **Program Difficulty**
+- Increase **Programming Difficulty**
    - Programmers are required to divide functional modules and determine the overlay relationship between modules
    - Increase programming complexity;
 - Increase **Execution Time**
-   - Load overlay module from external memory
+   - Load overlay module from external storage
    - Sacrifice execution time to save space
 
-  Overlay system unit of Turbo Pascal supports programmer-controlled overlay technology
+  The overlay system of Turbo Pascal supports programmer-controlled overlay technology
 
 
 ---
@@ -152,8 +152,8 @@ The `Address Space` is the **abstraction** of virtual memory by the OS.
 - Basic idea
    - The OS automatically swaps contents into and out from of memory in units of **programs**
 - Method
-   - **Swap out**: Dump contents of an executing program's address space to external memory
-   - **Swap in**: Load contents of a program's address space from external memory into the memory
+   - **Swap out**: Save the content of an executing program's address space to the external storage
+   - **Swap in**: Load the content of a program's address space from the external storage into the memory
 
 ![bg right:30% 100%](figs/swapping.png)
 
@@ -163,9 +163,9 @@ The `Address Space` is the **abstraction** of virtual memory by the OS.
 
 - Swapping **time**: When to swap?
    - Swapping happens only  when memory space is already or possibly not enough
-- Swap Space **size**: Be able to store all memory images's copies of all user processes 
+- Swap space **size**: Be able to store the copy of the memory image of all user processes 
 - **Program Relocation**: Should it be placed in the same place when swapping happens?
-   - Not necessarily in the same place, correctness of addressing & execution of the program can be guaranteed with some mapping mechnisms
+   - Not necessary in the same place, but we need a mapping mechanism to address & execute of the program correctly 
 
 
 ---
@@ -179,13 +179,11 @@ The `Address Space` is the **abstraction** of virtual memory by the OS.
 - Program Overlay
    - Occurs between **modules/functions** that are not on the same control flow during a certain period of time
    - In units of modules/functions
-   - Programmers must give the **logical overlay structure** between modules/functions manually
+   - Programmers must provide the **logical overlay structure** between modules/functions manually
 - Memory Swapping
    - Occurs between running **programs**
    - In units of running programs
    - No need for logical overlay structures between modules
-
-Program to run: ``task`` or ``process``
  
 ---
 
@@ -205,11 +203,11 @@ Program to run: ``task`` or ``process``
 </style>
 #### Definition of Virtual Memory
 - Definition
-   - Virtual Memory = **Main Memory** + **External Memory**
+   - Virtual Memory = **Main Memory** + **External Storage**
 - Ideas
-   - The OS moves infrequently-used parts of the memory to the external storage **temporarily**, and loads the data needed by the processor from external memory into memory
+   - The OS moves infrequently-used parts of the memory to the external storage **temporarily**, and loads the data needed by the processor from external storage into memory
 - **Prerequisites**
-   - Program follows the principle of **locality**
+   - Programs follow the principle of **locality**
 
 ![bg right:40% 95%](figs/virtual-memory.png)
 
@@ -223,11 +221,11 @@ Program to run: ``task`` or ``process``
 #### Principle of Locality
 
 Locality : During a **short period** of the program's execution process, the address and **operands** of the instruction executed are respectively limited to a small area
-- **Temporal** locality: If at one point a particular memory location is referenced, then it is likely that the same location will be referenced again in the near future(This applies to both instructions and data).
-- **Spatial** locality: If a particular memory location is referenced at a particular time, then it is likely that nearby memory locations will be referenced in the near future(This applies to both instructions and data).
-- **Branch** locality: If we excute a **jump instruction** twice, the program is likely to jump to the same memory address
+- **Temporal** locality: If at one point a particular memory location is visited, then it is likely that the same location will be visited again in the near future (This applies to both instructions and data).
+- **Spatial** locality: If a particular memory location is visited at a particular time, then it is likely that nearby memory locations will be visited in the near future (This applies to both instructions and data).
+- **Branch** locality: If we execute a **jump instruction** twice, the program is likely to jump to the same memory address.
 
-Significance of locality: If most programs has significant locality, virtual memory can be realized and achive satisfactory results
+Significance of locality: If most programs have significant locality, virtual memory can be realized and achieve satisfactory results
  
 
 
@@ -242,8 +240,8 @@ Significance of locality: If most programs has significant locality, virtual mem
 - Idea: Temporarily move some infrequently-used memory blocks to external storage
 - Rule:
    - When **loading** the program: only load the **pages or segments required by the** current instruction execution into the memory
-   - When the instruction or data **needed by the instruction execution is not in the memory** (page fault / segment fault): the processor notifies the OS to OS the corresponding page or segment into the memory
-   - The OS saves pages or segments in memory that are **temporarily unused**  to external memory
+   - When the instruction or data **needed by the instruction execution is not in the memory** (page fault / segment fault): the processor notifies the OS to load the corresponding page or segment into the memory
+   - OS saves the **temporarily unused** pages or segments  to external storage
 - Implementation:
    - Paging
    - Segmentation
@@ -254,10 +252,10 @@ Significance of locality: If most programs has significant locality, virtual mem
 - Discontinuity
    - Physical memory allocation is discontiguous
    - The use of virtual address space is discontiguous
-- Large user space
+- Large user address space
    - The virtual memory provided to the user can be larger than the actual physical memory
 - Partial exchange
-   - Virtual memory only swap some parts of the virtual address space into / out from memory
+   - Virtual memory only swaps some parts of the virtual address space into / out from memory
  
 
 ---
@@ -266,7 +264,7 @@ Significance of locality: If most programs has significant locality, virtual mem
    - Hardware **address translation** mechanism, hardware **exception** in paging or segmentation memory management
 - Software (OS)
    - Create **page table or segment table** in memory
-   - Manage **swap-in and swap-out** of pages or segments between main memory and external memory
+   - Manage **swap-in and swap-out** of pages or segments between main memory and external storage
  
 
 ---
@@ -276,13 +274,13 @@ Significance of locality: If most programs has significant locality, virtual mem
 }
 </style>
 
-#### Virtual Paging Memory Management
-On the basis of physical paging memory management, add **demand paging** and **page replacement**
+#### Virtual Paging Management
+On the basis of paging management, add **demand paging** and **page replacement**
 
-- **The basic idea**
-   - When a user program is loaded into memory, only a portion of its pages are loaded to begin program execution.
-   - As the user program runs, if it needs code or data that is not in memory, it generates a **page fault exception** request to the system.
-   - When the OS handles a page fault exception, it brings in the corresponding page from external storage into memory, allowing the user program to continue running.
+- **Basic idea**
+   - When a user program is loaded into memory, only a portion of its pages are loaded for program execution.
+   - As the user program runs, if it needs code or data that is not in memory, it generates a **page fault exception** and send it to the OS.
+   - When the OS handles a page fault exception, it loads the corresponding page from external storage into memory, allowing the user program to continue running.
    - When memory becomes scarce, the OS swaps out some pages from memory to external storage.
 
 
@@ -294,8 +292,8 @@ On the basis of physical paging memory management, add **demand paging** and **p
 </style>
 
 #### Virtual Paging Memory Management
-On the basis of physical paging memory management, add **demand paging** and **page replacement**
-- Demand paging: The data will be transferred from external memory to main memory when the processor needs to access it.
+On the basis of paging management, add **demand paging** and **page replacement**
+- Demand paging: The data will be transferred from external storage to memory when the processor needs to access it.
 - Page replacement: Swap out infrequently-used pages and swap in frequently-used pages
 - Page fault handling: **Software and hardware cooperation**
  
@@ -320,9 +318,9 @@ On the basis of physical paging memory management, add **demand paging** and **p
 </style>
 
 #### Workflow of page fault handling
-1. The CPU issues a memory access request, then matches the physical address in the TLB according to its virtual address.  It will get a miss, and **read the page table**;
+1. The CPU issues a memory access request, then matches the physical address in the TLB according to its virtual address.  It will get a miss and **read the page table**;
 2. Since the presence bit of the page table entry is 0, the CPU generates a **page fault**;
-3. The OS **finds** the page content stored in the external memory;
+3. The OS **finds** the page content stored in the external storage;
 
 ![bg left:40% 100%](figs/page-fault-handler.png)
 
@@ -336,8 +334,8 @@ On the basis of physical paging memory management, add **demand paging** and **p
 
 #### Workflow of page fault handling
 
-4-1. If there is an idle physical page frame, swap the page content **in the external memory into an idle physical page frame**;
-4-2. If there is no free physical page frame, release/swap out a physical page frame to the external memory through the replacement algorithm, and then swap the page content in the external memory into the previous page frame;
+4-1. If there is a free physical page frame, swap the page content **in the external memory into an idle physical page frame**;
+4-2. If there is no free physical page frame, release/swap out a physical page frame to the external storage through the page replacement algorithm, and then swap the page content from the external storage into the previous page frame;
 
 ![bg left:40% 100%](figs/page-fault-handler.png)
 
@@ -364,12 +362,12 @@ On the basis of physical paging memory management, add **demand paging** and **p
 }
 </style>
 
-#### Swap Space of External Memory
-Where to save the addresses of the pages stored in external memory?
+#### Swap Space of External Storage
+Where to save the addresses of the pages stored in external storage?
 
 - Swap space
      - Disk partition: typically sector address
-     - Save the page address of external memory in the page table entry whose presence bit is 0
+     - Save the page address of external storage in the page table entry whose presence bit is 0
      
 
 ![bg right:50% 100%](figs/page-fault-handler.png)
@@ -381,15 +379,15 @@ Where to save the addresses of the pages stored in external memory?
 }
 </style>
 
-#### Disk Files of External Memory 
+#### Disk Files of External Storage 
 
-Where to save the addresses of the pages stored in external memory?
+Where to save the addresses of the pages stored in external storage?
 
-- Files on disk(code or data)
+- Files on disk (code or data)
    - The logical segment representation in the address space has a corresponding file position
-     - eg: `MemorySet::MapArea`
-   - Code Segement: executable binaries
-   - Program segments of dynamically loaded shared library: Library file that are dynamically called 
+     - e.g., `MemorySet::MapArea`
+   - Code Segment: executable binaries
+   - Dynamically loaded program segments of shared libraries: Library files that are dynamically called 
 
 ![bg right:40% 100%](figs/page-fault-handler.png)
 
