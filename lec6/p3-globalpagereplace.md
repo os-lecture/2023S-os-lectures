@@ -255,9 +255,9 @@ $\tau=4$
 
 ---
 
-#### Page-Fault-Frequency(Page Fault Rate)
+#### Page-Fault-Frequency (Page Fault Rate)
 
-**Page Faults / Memory Accesses** or the **reciprocal** of the average time interval between page faults.
+**The number of page faults / the number of memory accesses** or the **reciprocal** of the average time interval between page faults.
 
 - Factors Affecting Page Fault Rate
    - Page replacement algorithm
@@ -275,7 +275,7 @@ $\tau=4$
 </style>
 ![bg right:55% 100%](figs/page-fault-relation.png)
 
-By adjusting the **resident set size**, the **page fault frequency** of each process is kept within a reasonable range.
+By adjusting the **resident set size**, the **page fault frequency** of each process keeps in a reasonable range.
 - If the process's page fault frequency is too high, increase the resident set to allocate more physical pages.
 - If the process's page fault frequency is too low, decrease the resident set to reduce its number of physical pages.
 
@@ -283,7 +283,7 @@ By adjusting the **resident set size**, the **page fault frequency** of each pro
 #### Page Fault Frequency Replacement Algorithm
 - When accessing memory, **set** the reference bit flag
 - When there is a page fault, **calculate** the **time interval** from the last page fault time $t_{last}$ to the current time $t_{current}$
-   - If $t_{current} – t_{last}>T$ (tolerated page fault window), then **replace** all pages that have not been referenced during the time interval $[t_{last} , t_{current} ]$
+   - If $t_{current} – t_{last}>T$ (tolerated page fault window), then **replace** all pages that have not been visited during the time interval $[t_{last} , t_{current} ]$
    - If $t_{current} – t_{last} \le T$, then **add** missing pages to the resident set
 
 ---
@@ -379,9 +379,9 @@ Assuming the window size is 2
 }
 </style>
 - Thrashing
-   - **Too few physical pages** to contain working set
-   - Results in **a large number of page faults**, frequent page replacement
-   - Results in **slow execution of the process**
+   - **Physical pages** are not enough to contain all working sets
+   - Lead to **a large number of page faults**, frequent page replacement
+   - Lead to **slow execution of the process**
 
 - Causes of thrashing
     - As the number of **processes** residing in memory increases, the number of physical pages allocated to each process decreases, and the page fault frequency keeps increasing
@@ -399,7 +399,7 @@ Assuming the window size is 2
      * Rewrite the kernel function for obtaining system time and process control block
      * Implement system calls for mapping and unmapping virtual memory
 * Submission requirements
-     * The 11th day after the task is assigned (October 30, 2022);
+     * April 8, 2023
 
 ---
 
@@ -407,8 +407,8 @@ Assuming the window size is 2
 
 * Section 1 Concepts of Virtual Memory
      * Demanding Paging, Overlay, Swapping, Concepts of Virtual Memory, Page Fault
-* Section 2 Local Page Replacement Algorithm
+* Section 2 Local Page Replacement Algorithms
      * Concepts of page replacement algorithm, OPT, FIFO, LRU, Clock, Improved Clock Page Replacement Algorithm, LFU, Belady Phenomenon
-* Section 3 Global Page Replacement Algorithm
+* Section 3 Global Page Replacement Algorithms
      * Global page replacement algorithm, Working Set Replacement Algorithm, Page Fault Frequency Algorithm
      
