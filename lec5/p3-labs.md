@@ -31,7 +31,7 @@ Spring 2023
 
 ### 1. Lab Objectives and Steps
 - Lab Objectives
-- Practical Steps
+- Steps
 2. System Architecture
 3. Address Space from User Perspective
 4. Kernel-managed Address Space
@@ -60,15 +60,15 @@ Improve performance, simplify development, enhance security
 - Simplify programming, APP does not need to consider the initial execution address of its runtime
    - Reach a consensus with the compiler to set a fixed start execution address for each APP
 - **Isolate the memory address space accessed by APP**
-   - Demarcate the memory address space of the APP, and cannot access the OS and other APPs beyond the boundary
+   - Set the memory space boundary for each APP to make it cannot access the OS and other APPs beyond the boundary
 
 ---
 
 #### Lab Requirements
 - Understand address space
-- master page mechanism
-- Will handle page access exceptions
-- Can write an operating system that supports page mechanism
+- Master paging mechanism
+- Know how to handle page access exceptions
+- Can write an OS that supports paging mechanism
 
 <!-- Ankylosauridae Late Cretaceous -->
 
@@ -99,11 +99,11 @@ Improve performance, simplify development, enhance security
 
 - In 1940 **two-level storage** system appeared
    - Main memory: Magnetic core; Secondary: Magnetic drum
-- Proposed **Virtual memory (Virtual memory)** technology concept
+- Proposed **Virtual memory** technology concept
    - Fritz-Rudolf Güntsch, Ph.D. student, TU Berlin, Germany
-- Atlas Supervisor operating system in 1959
+- Atlas Supervisor OS in 1959
    - Professor Tom Kilburn's team at the University of Manchester, UK, demonstrating the Atlas computer and the Atlas Supervisor operating system
-   - **created** paging technology and virtual memory technology (virtual memory, then called one-level storage system)
+   - **Proposed** paging technology and virtual memory technology (called one-level storage system at that time)
 ---
 <style scoped>
 {
@@ -115,7 +115,7 @@ Improve performance, simplify development, enhance security
 
 1. Lab Objectives and Steps
 - Lab Objectives
-- ### Practical Steps
+- ### Steps
 2. System Architecture
 3. Address Space from User Perspective
 4. Kernel-managed Address Space
@@ -125,14 +125,14 @@ Improve performance, simplify development, enhance security
 
 ---
 
-#### Practical steps
+#### Lab Steps
 - Modify the APP link script (custom start address)
-- load & execute application
-- switch tasks and **task's address space**
+- Load & execute application
+- Switch tasks and **task's address space**
 
 
 ---
-#### Compilation steps
+#### Compilation
 ```
 git clone https://github.com/rcore-os/rCore-Tutorial-v3.git
 cd rCore-Tutorial-v3
@@ -143,7 +143,7 @@ make run
 
 ---
 
-#### Output result
+#### Output
 
 ```
 Into Test load_fault, we will insert an invalid load operation...  
@@ -159,7 +159,7 @@ power_3 [130000/300000]
 ```
 
 ---
-#### Test Application
+#### Test Applications
 
 It contains two applications `04load_fault`, `05store_fault`
 ```
@@ -188,7 +188,7 @@ It contains two applications `04load_fault`, `05store_fault`
 1. Lab Objectives and Steps
 ### 2. System Architecture
 - Code Structure
-- RISC-V SV39 Page Mechanism
+- RISC-V SV39 Paging Mechanism
 3. Address Space from User Perspective
 4. Kernel-managed Address Space
 5. Implementing ASOS
@@ -215,10 +215,10 @@ It contains two applications `04load_fault`, `05store_fault`
 ```
 └── user
      ├── build.py (removed: the script that sets the unique starting address for the application)
-     └── src (userland library and application)
+     └── src (user library and application)
          ├── bin (each application)
          ├──...
-         └── linker.ld (modification: place all applications in fixed locations in their respective address spaces)
+         └── linker.ld (modified: place all applications in fixed locations in their respective address spaces)
 ```
 
 
@@ -228,16 +228,16 @@ It contains two applications `04load_fault`, `05store_fault`
 ```
 ├── os
      └── src
-   ├── config.rs (modification: add some memory management related configuration)
-   ├── linker-k210.ld (Modification: Introduce trampoline page into memory layout)
-     ├── linker-qemu.ld (modification: introduce the trampoline page into the memory layout)
-   ├── loader.rs (modification: only keep the function of obtaining the number of applications and data)
+   ├── config.rs (modified: add some memory management related configuration)
+   ├── linker-k210.ld (modified: introduce trampoline page into memory layout)
+     ├── linker-qemu.ld (modified: introduce the trampoline page into the memory layout)
+   ├── loader.rs (modified: only keep the function of obtaining the number of applications and application data)
    ├── main.rs (modified)
 ```
 
 ---
 
-#### Mm submodule
+#### MM (Memory Management) submodule
 ```
 ├── os
      └── src
@@ -257,15 +257,15 @@ It contains two applications `04load_fault`, `05store_fault`
 ├── os
      └── src
    ├── syscall
-   ├──fs.rs (modification: sys_write implementation based on address space)
+   ├──fs.rs (modified: sys_write implementation based on address space)
    ├── task
-   ├──context.rs (Modification: Construct an initial task context to jump to different locations)
+   ├──context.rs (modified: Construct an initial task context to jump to different locations)
    ├──mod.rs (modified)
            └──task.rs (modified)
           └── trap
               ├── context.rs (modified: added more content in Trap context)
-              ├── mod.rs (modification: modify the trap mechanism based on the address space)
-              └── trap.S (Modified: Trap context save and restore assembly code based on address space)
+              ├── mod.rs (modified: modify the trap mechanism based on the address space)
+              └── trap.S (modified: modify the assembly codes of saving and restoring trap context based on address space)
 ```
 
 
@@ -282,7 +282,7 @@ It contains two applications `04load_fault`, `05store_fault`
 1. Lab Objectives and Steps
 2. System Architecture
 - Code Structure
-- ### RISC-V SV39 Page Mechanism
+- ### RISC-V SV39 Paging Mechanism
 3. Address Space from User Perspective
 4. Kernel-managed Address Space
 5. Implementing ASOS
@@ -299,9 +299,9 @@ It contains two applications `04load_fault`, `05store_fault`
 #### RISC-V SATP-based virtual memory system
 
 - Virtual addresses divide memory into fixed-size pages for address translation and content protection.
-- Page table base address register satp: The kernel mode control status register controls paging. satp has three domains:
+- Page table base address register satp: A CSR in the kernel mode controls paging. It has three fields:
    - MODE field: enable paging and select page table levels
-   - ASID (Address Space Identifier, address space identifier) field: optional, used to reduce the overhead of context switching
+   - ASID (Address Space Identifier) field: optional, used to reduce the overhead of context switching
    - PPN field: saves the physical address of the root page table
 ![w:800](figs/satp.png)
 
@@ -309,8 +309,8 @@ It contains two applications `04load_fault`, `05store_fault`
 
 ---
 #### Page table base address register satp
-- satp CSR:(S-Mode)
-   Supervisor Address Translation and Protection, supervisor address translation and protection
+- satp CSR: (S-Mode)
+   Supervisor Address Translation and Protection
 - Control hardware paging mechanism
 
 ![bg right:50% 100%](figs/sv39-full.png)
@@ -325,9 +325,9 @@ It contains two applications `04load_fault`, `05store_fault`
 #### Initialize & enable page mechanism
 
 - M-mode RustSBI writes 0 to satp before first entering S-Mode to disable paging
-- Then the S-Mode OS will write satp again after initializing the page table
+- Then the OS in S-Mode will write satp again after initializing the page table
    - Enable page table: `MODE`=8
-   - Set page table starting physical address page number `PPN`
+   - Set the page number of the starting physical address of the page table `PPN`
 
 ![bg right:50% 90%](figs/sv39-full.png)
 
@@ -338,14 +338,14 @@ It contains two applications `04load_fault`, `05store_fault`
 }
 </style>
 
-#### Page Table Item Attributes
+#### Item Attributes
 
 - V: valid bit
 - R, W, X: read/write/execute bits
 - U: Whether U-Mode can be accessed
 - G: Whether it is valid for all addresses
-- A: Access, access bit
-- D: Dirty, modify bit
+- A: Accessed bit
+- D: Modified bit
 - RSW: reserved bit
 - PPN: Physical Page Number
 
@@ -365,7 +365,7 @@ It contains two applications `04load_fault`, `05store_fault`
 ### 3. Address Space from User Perspective
 * ASOS Address Space
 * Trampoline Page
-* Aplication Address Space 
+* Application Address Space 
 4. Kernel-managed Address Space
 5. Implementing ASOS
 
@@ -381,8 +381,8 @@ It contains two applications `04load_fault`, `05store_fault`
 
 #### Application address space
 - **Address space**: a series of logical segments that are **related** and **not necessarily contiguous**
-- The virtual/physical memory space composed of several logical segments is bound to a running program (currently a running program is called **task** and **process**)
-- A process's direct access to code and data is limited to its associated address space
+- The virtual/physical memory space consists of several logical segments bounded to a running program (currently a running program is called **task** and **process**)
+- The memory space where a process can direct access is limited by the associated address space of its code and data
 ![bg right:50% 100%](figs/seg-addr-space.png)
 
 ---
@@ -414,7 +414,7 @@ It contains two applications `04load_fault`, `05store_fault`
 3. Address Space from User Perspective
 * ASOS Address Space
 * ### Trampoline Page
-* Aplication Address Space 
+* Application Address Space 
 4. Kernel-managed Address Space
 5. Implementing ASOS
 
@@ -423,7 +423,7 @@ It contains two applications `04load_fault`, `05store_fault`
 ---
 #### trampoline page
 - The virtual address of the trampoline page of the application and the kernel is the same and mapped to the same physical page
-- Placed is the execution code in ``trap.S``
+- The content placed in it is the execution codes of ``trap.S``
 <!-- - But user mode cannot access this memory area
 - When an exception/interrupt occurs, it will jump to the ``_all_traps`` entry of the trampoline page
 - and after switching page tables, continue execution smoothly -->
@@ -443,9 +443,9 @@ It contains two applications `04load_fault`, `05store_fault`
 
 ---
 
-#### Trapped in (Trap) context page
-- The `_all_traps` assembly function on the trampoline page will **save** the relevant registers to the trapping context
-- The `_restore` assembly function on the trampoline page will **restore** the relevant registers from the trapped context
+#### Trap Context 
+- The `_all_traps` assembly function of the trampoline page will **save** the relevant registers to the trapping context
+- The `_restore` assembly function of the trampoline page will **restore** the relevant registers from the trapped context
 
 
 ![bg right:50% 100%](figs/trampoline.png)
@@ -453,32 +453,32 @@ It contains two applications `04load_fault`, `05store_fault`
 
 ---
 
-#### Recap: OS Without Pages
+#### Review: OS Without Paging
 The trapping context is saved on the top of the kernel stack, ``sscratch`` saves the application's kernel stack
 - Only transfer **user/kernel stack pointer** through the ``sscratch`` register
-- When an application traps to the kernel, sscratch has already pointed to the top of the application's kernel stack, and a command can be used to switch from the user stack to the kernel stack, and then directly push the Trap context to the top of the kernel stack.
+- When an application traps to the kernel, sscratch has already pointed to the top of the application's kernel stack, and a command can be used to switch from the user stack to the kernel stack, and then directly push the trap context to the top of the kernel stack.
 
 <!--
 ![bg right:50% 100%](figs/trampoline.png)
 -->
 
 ---
-#### Comparing the OS with the page mechanism enabled
+#### Compare to the OS with Paging
 
 How to transfer **stack pointer** and **page table base address** only through the `sscratch` register?
-- Can I use the previous method?
-- Option 1: transfer **user/kernel stack pointer** through the `sscratch` register
+- Can we use the previous method?
+- Option 1: transfer **user/kernel stack pointers** through the `sscratch` register
 - Scheme 2: transfer **user stack pointer/page table base address** through the `sscratch` register
 
 ![bg right:30% 100%](figs/kernel-stack.png)
 
 
 ---
-#### Solution 1: transfer the user/kernel stack pointer through `sscratch` register
+#### Solution 1: transfer the user/kernel stack pointers through `sscratch` register
 - Transfer **user/kernel stack pointer** through ``sscratch`` register
     - Currently, the sp pointer points to the kernel address space
     - While the user mode page table is still being used at this time
-- This causes an exception to be generated in kernel mode, leading to the **system crash**
+- It causes an exception in the kernel mode, leading to the **system crash**
 
 ![bg right:30% 100%](figs/kernel-stack.png)
 
@@ -528,7 +528,7 @@ How to transfer **stack pointer** and **page table base address** only through t
 3. Address Space from User Perspective
 * ASOS Address Space
 * Trampoline Page
-* ### Aplication Address Space 
+* ### Application Address Space 
 4. Kernel-managed Address Space
 5. Implementing ASOS
 
@@ -603,12 +603,12 @@ How to transfer **stack pointer** and **page table base address** only through t
  
 #### Address Space from the Perspective of the Kernel
 
-- **address space from kenel's perspective**
+- **address space from kernel's perspective**
    - Create & sense virtual/physical addresses
-   - Translates between kernel/application virtual address spaces
+   - Traverse between kernel/application virtual address spaces
 - Application page table
-   - Represents the real-world application address space managed by the kernel
-   - Enables the CPU to access the application address space
+   - Represents the real address space of an application managed by the kernel
+   - The address space that the CPU can access when running the application
 
 ![bg right:40% 100%](figs/trampoline.png)
 
@@ -617,7 +617,7 @@ How to transfer **stack pointer** and **page table base address** only through t
 #### Page Table Mechanism
 - **Manage Physical Memory**
 - Build Kernel/Application Page Tables
-- Enable Page Mechanism
+- Enable Paging Mechanism
 
 ![bg right:62% 100%](figs/page-overview.png)
 
@@ -691,7 +691,7 @@ How to transfer **stack pointer** and **page table base address** only through t
 - managed in units of page-sized nodes. 
 - Each node is stored in exactly one physical page frame
 - ues a  physical page number to represent its position
-- Satp CSR
+- satp CSR
 ![bg right:45% 100%](figs/sv39-full.png)
 
 
@@ -710,28 +710,28 @@ How to transfer **stack pointer** and **page table base address** only through t
 
 VPN: Virtual Page Number
 PPN: Physical Page Number
-satp: CSR containing the PPN at the beginning of the page table
+satp: CSR containing the PPN of the staring address of page table
 ![bg right:40% 100%](figs/sv39-full.png)
 
 
 ---
 
-#### Establish and Remove Virtual and Real Address Mapping 
+#### Create and Remove Virtual and Physical Address Mapping 
 
 * Find a **page table entry** corresponding to a virtual address in the multi-level page table.
-* By **modifying page table entries** , **key-value pairs** can be inserted and deleted, thereby establishing and removing **mapping relationships**.
+* By **modifying page table entries** , **key-value pairs** can be inserted and deleted, thereby creating and removing **mapping relationships**.
 
 ![bg right:40% 100%](figs/sv39-full.png)
 
 ---
-#### Enable Page Mechanism
+#### Enable Paging Mechanism
 
 - set ``satp=root_ppn``
 
 Containment relationship of core data structures
 ```
 TCB-->MemorySet-->PageTable-->root_ppn
-Task Control Block ---------------> Task's page table base address
+Task Control Block ------> the base address of a task's page table
 ```
 
 ![bg right:50% 100%](figs/kernel-as-low.png)
@@ -771,9 +771,9 @@ Task Control Block ---------------> Task's page table base address
 
 **Ideal: Plump vs. Reality: Skinny**
 - Application's **page table**
-   - Application address space in real world
+   - Realistic address space of the application
 - The **logical segment** of the application
-   - ideally the application address space
+   - Ideal address space of the application 
 
 ![bg right:48% 100%](figs/seg-addr-space.png)
 
@@ -803,7 +803,7 @@ pub struct MapArea {
 </style>
 
 #### The Data Structure of the Address Space ``MemorySet``
-- **Address Space**: a series of associated logical segments that are not necessarily continuous
+- **Address Space**: a series of associated logical segments that are not necessarily continuous in physical memory
 ```rust
 // os/src/mm/memory_set.rs
 
@@ -818,7 +818,7 @@ pub struct MemorySet {
 
 ---
 #### The timing for kernel to manage task  address space
-- **Address Space** managed by Operating System  ``MemorySet``=``PageTable``+``MapAreas``
+- **Address Space** managed by OS  ``MemorySet``=``PageTable``+``MapAreas``
     - **Create** tasks: create a ``MemorySet`` of the task
     - **Clear** tasks: reclaim the memory occupied by ``MemorySet`` of tasks
     - **Adjust** the memory space size of the application: Modify the ``MemorySet`` of the task
@@ -856,7 +856,7 @@ pub struct MemorySet {
 4. The kernel manages the address space
 ### 5. Implement ASOS
 * Start Paging Mode
-* Implement trampoline Mechanism
+* Implement trampoline
 * Load and Execute the Application
 * Improve the Implementation of Trap Handling
 * Improve the Implementation of sys_write
@@ -870,18 +870,18 @@ pub struct MemorySet {
 }
 </style>
 
-#### Extensions to Time-Sharing Multitasking Operating Systems
+#### Extensions to Time-Sharing Multitask OS
 
 1. Create **kernel page table**, enable the paging mechanism,  establish the virtual address space of the kernel;
-2. Extend **Trap Context**, switch page table (ie switch virtual address space) during the process of saving and restoring Trap context;
+2. Extend **Trap Context**, switch page table (i.e., switch virtual address space) during the process of saving and restoring Trap context;
 3. Establish the **trampoline space** required for switching between the kernel address space and the application address space;
 4. Extend  **Task Control Block** to include virtual memory-related information, and when loading and executing a task based on an application, establish the virtual address space of the application;
-5. Improve the implementation of **system calls** such as trap processing and sys_write to support separate application address space and kernel address space.
+5. Improve the implementation of **system calls** such as trap processing and sys_write to support separating application address space and kernel address space.
 
 ---
 #### Start paging mode
 1. Create a kernel address space
-2. Initialize the memory management subsystem
+2. Initialize the memory management (MM) submodule
 
 ![bg right:63% 100%](figs/trampoline.png)
 
@@ -922,7 +922,7 @@ pub fn init() {
 4. The kernel manages the address space
 5. Implement ASOS
 * Start pagination mode
-### Implement trampoline Mechanism
+### Implement trampoline 
 * Load and Execute the Application
 * Improve  the Implementation of Trap Handling
 * Improve the Implementation of sys_write
@@ -931,9 +931,9 @@ pub fn init() {
 
 ---
 
-#### Motivation for Implementing the trampoline Mechanism
+#### Why use trampoline?
 
-After the paging mechanism is started, applications and kernels in different address spaces can perform normal **privilege level switching** operations and **data interaction**.
+After the paging mechanism is enabled, applications and kernels in different address spaces should be able to perform normal **privilege level switching** operations and **data interaction**.
 
 ![bg right:50% 100%](figs/trampoline.png)
 
@@ -944,7 +944,7 @@ After the paging mechanism is started, applications and kernels in different add
 }
 </style>
 
-#### The Idea of Trampoline Mechanism
+#### How to use Trampoline?
 
 - The **highest virtual page** in the virtual address space of the kernel and application is a trampoline page
 - After the **privilege level** switch,  complete the **address space** switch, **kernel stack** switch quickly, and **smoothly continue to execute** the kernel code
@@ -953,7 +953,7 @@ After the paging mechanism is started, applications and kernels in different add
 
 ---
 
-#### The Idea of Trampoline Mechanism
+#### How to use Trampoline?
 
 - The **second highest virtual page** of the application address space is set to store the trap context of the application
 
@@ -961,7 +961,7 @@ After the paging mechanism is started, applications and kernels in different add
 
 ---
 
-#### The Idea of Trampoline Mechanism
+#### How to use Trampoline?
 
 - Q: Why not put the Trap context directly in the kernel stack of the application?
 
@@ -970,7 +970,7 @@ After the paging mechanism is started, applications and kernels in different add
 
 ---
 
-#### The Idea of Trampoline Mechanism
+#### How to use Trampoline?
 
 - Q: Why not put the Trap context directly in the kernel stack of the application?
    - Accessing the Trap context address in the kernel stack requires switching **page table**;
@@ -982,7 +982,7 @@ After the paging mechanism is started, applications and kernels in different add
 ---
 
 #### Create a Trampoline Page
-- Place the entire assembly code in trap.S in the .text.trampoline segment
+- Place the entire assembly code of trap.S in the .text.trampoline segment
 - Align it to one page of the code segment when adjusting the memory layout
 ```
 # os/src/linker.ld
@@ -1025,13 +1025,13 @@ RISC-V only provides a sscratch register which can be used for temporary turnaro
 ```
 ---
 
-#### Switch Traps Context
+#### Switch Trap Context
 * **Save Trap Context**
    - Switch **User Stack Pointer** to TrapContext in user address space
    - **Save** general registers, sstatus, sepc in TrapContext
-   - **Read** outkernel_satp, kernel_sp, trap_handler in TrapContext
-   - **switch** kernel address space, switch to kernel stack
-   - **jump** to trap_handler to continue execution
+   - **Read** out kernel_satp, kernel_sp, trap_handler in TrapContext
+   - **Switch** kernel address space, switch to kernel stack
+   - **Jump** to trap_handler to continue execution
 * **Restore Trap Context**
    - The inverse of the above process
 
@@ -1052,7 +1052,7 @@ Q: Why use ``jr t1`` instead of ``call trap_handler`` to complete the jump?
 
 Q: Why use ``jr t1`` instead of ``call trap_handler`` to complete the jump?
 - In the memory layout, both the jump instruction and trap_handler in the .text.trampoline section are located within the code segment. The Assembler and Linker will set the address of the jump instruction and calculate the offset between the two addresses based on the address layout description in linker-qemu.ld. This will cause the actual effect of the jump instruction to be the current PC incremented by this offset.
-- When this jump instruction is executed, its virtual address is set by the operating system kernel within the highest page in the address space, so adding this offset cannot correctly get the entry address of trap_handler.
+- When this jump instruction is executed, its virtual address is set to the highest page in the address space by the kernel, so adding this offset cannot correctly get the entry address of trap_handler.
 
 
 ---
@@ -1086,9 +1086,9 @@ Q: Why use ``jr t1`` instead of ``call trap_handler`` to complete the jump?
 
 ---
 
-#### Extend  task control block
+#### Extend task control block
 - memory_set: App's **address space** 
-- trap_cx_ppn: The physical page number of the physical page frame where **Trap context** located
+- trap_cx_ppn: The physical page number of the physical page frame where **trap context** located
 - base_size: **Application Data Size** 
 ```
 // os/src/task/task.rs
@@ -1106,10 +1106,10 @@ pub struct TaskControlBlock {
 
 #### Update Task Management
 - Create task control block 
-   1. Form the virtual address space of the application according to the **ELF execution file** of the application
-   2. Establish the **kernel stack** used for the application after switching to kernel mode is established
+   1. Form the virtual address space of the application according to the **ELF  file** of the application
+   2. Create the **kernel stack** used for the application after switching to kernel mode
    3. Create the **TCB** of the application in the kernel address space
-   4. Construct a **Trap context**TrapContext in the user address space
+   4. Construct a **trap context** in the user address space
 ---
 <style scoped>
 {
@@ -1134,11 +1134,11 @@ pub struct TaskControlBlock {
 ---
 
 #### Improve the Implementation of trap handling
-Since the application's Trap context is not in the kernel address space, call current_trap_cx to **obtain the variable reference of the current application's Trap context** instead of passing it as a parameter to trap_handler as before. 
-Nothing changed for trap processing.
+Since the application's Trap context is not in the kernel address space, call current_trap_cx to **obtain the variable reference of the current application's trap context** instead of passing it as a parameter to trap_handler as before. 
+However, nothing is changed for trap handling.
 
-For simplicity, the trap processing process of S state -> S state is weakened: **panic** directly.
-Note: ch9 will support S state -> S state trap processing
+For simplicity, the trap handling process of S state -> S state is weakened: **panic** directly.
+Note: ch9 will support S state -> S state trap handling
 
 ---
 
@@ -1180,8 +1180,8 @@ unsafe {
 
 #### Improve the Implementation of sys_write
 
-- sys_write can no longer directly access data located in **application space** because of  the separation of kernel and application address spaces
-- **manually look up the page table** to know which physical page frames the data is placed on and accessed.
+- sys_write can no longer directly access data located in **application space** because of the separation of kernel and application address spaces
+- **manually look up the page table** to know which physical page frames the data is placed on, then access them.
 
 
 ---
@@ -1191,9 +1191,9 @@ unsafe {
 }
 </style>
 
-#### Helper Functions for Accessing Application Spatial Data
+#### Auxiliary Functions for Accessing Application Data
 
-Helper Function: provided by page_table, converts a buffer in the application address space into a form that can be directly accessed in the kernel space:
+Auxiliary Function: provided by page_table, converts a buffer in the application address space into a form that can be directly accessed in the kernel space:
 ```rust
 // os/src/mm/page_table.rs
 pub fn translated_byte_buffer
@@ -1209,5 +1209,5 @@ pub fn translated_byte_buffer
 - Segment Mechanism
 - Page Table Mechanism
 - Page Access Exception
-- Ability to Write Ankylosaurus OS
+- Can Write Ankylosaurus OS
 ![bg right:50% 100%](figs/addr-space-os-detail.png)
