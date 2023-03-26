@@ -163,10 +163,16 @@ The `Address Space` is the **abstraction** of virtual memory by the OS.
 
 - Swapping **time**: When to swap?
    - Swapping happens only  when memory space is already or possibly not enough
-- Swap space **size**: Be able to store the copy of the memory image of all user processes 
+
 - **Program Relocation**: Should it be placed in the same place when swapping happens?
    - Not necessary in the same place, but we need a mapping mechanism to address & execute of the program correctly 
 
+---
+#### Problems in Memory Swapping
+
+- Swap space **size**: empirical value
+
+![w:900](figs/swap-size.png)
 
 ---
 <style scoped>
