@@ -12,7 +12,7 @@ backgroundColor: white
 <!-- _class: lead -->
 
 # Lecture 6 Virtual Memory Management
-## Section 3 Global Page Replacement Algorithm
+## Section 3 Global Page Replacement Algorithms
 
 <br>
 <br>
