@@ -66,7 +66,7 @@ backgroundColor: white
 - [Section 3 Practice: Building Address Space OS (ASOS)](./lec5/p3-labs.html)
 
 ---
-## Lecture 6 Address Space - Virtual Storage Management
+## Lecture 6 Address Space - Virtual Memory Management
 - [Section 1 Concepts of Virtual Memory](./lec6/p1-vmoverview.html)
 - [Section 2 Local Page Replacement Algorithms](./lec6/p2-localpagereplace.html)
 - [Section 3 Global Page Replacement Algorithms](./lec6/p3-globalpagereplace.html)
