@@ -12,7 +12,7 @@ backgroundColor : white
 <!-- _class: lead -->
 
 # Lecture 6 Virtual Memory Management
-## Section 2 Local Page Replacement Algorithm
+## Section 2 Local Page Replacement Algorithms
 
 
 
