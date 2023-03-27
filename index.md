@@ -63,13 +63,13 @@ backgroundColor: white
 ## Lecture 5 Address Space - Physical Memory Management
 - [Section 1 Address Space](./lec5/p1-memintro.html)
 - [Section 2 Memory Allocation](./lec5/p2-memalloc.html)
-- [Section 3 Practice: Establishing an Operating System for Address Space](./lec5/p3-labs.html)
+- [Section 3 Practice: Building Address Space OS (ASOS)](./lec5/p3-labs.html)
 
 ---
 ## Lecture 6 Address Space - Virtual Storage Management
-- [Section 1 Basic Concepts of Virtual Storage](./lec6/p1-vmoverview.html)
-- [Section 2 Page Replacement Algorithm -- Partial Page Replacement Algorithm](./lec6/p2-pagereplace-1.html)
-- [Section 3 Page Replacement Algorithm -- Global Page Replacement Algorithm](./lec6/p2-pagereplace-2.hml)
+- [Section 1 Concepts of Virtual Memory](./lec6/p1-vmoverview.html)
+- [Section 2 Local Page Replacement Algorithms](./lec6/p2-localpagereplace.html)
+- [Section 3 Page Replacement Algorithm -- Global Page Replacement Algorithm](./lec6/p3-globalpagereplace.hml)
 
 <!--
 ---
