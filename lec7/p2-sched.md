@@ -11,478 +11,549 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第七讲 进程管理与单处理器调度
-## 第二节 单处理器调度
+# Lecture 7 Process Management and Single Processor Scheduling
+## Section 2 Single Processor Scheduling
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
-2023年春季
-
----
-
-**提纲**
-
-### 1. 处理机调度概念
-  - 处理机调度的时机和策略
-  - 比较调度算法的准则
-2. 调度算法
+Spring 2023
 
 ---
 
-#### CPU资源的时分复用
+**Outline**
 
-- 进程切换：CPU资源的当前占用者切换
-  - 保存当前进程在PCB中的执行上下文(CPU状态)
-  - 恢复下一个进程的执行上下文
+### 1. Concept of Processor scheduling
+   - Timing and strategy for processor scheduling
+   - Criteria for comparing scheduling algorithms
+2. Scheduling Algorithms
 
-- 处理机调度
-   - 从就绪队列中挑选下一个占用CPU运行的进程
-   - 从多个可用CPU中挑选就绪进程可使用的CPU资源
-- 调度器：挑选就绪进程的内核函数
-- 调度策略
-    -   依据什么原则挑选进程？
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### Time-Division Multiplexing of CPU resources
+
+- Process switching: switching the current occupants of CPU resources
+   - Save the execution context (CPU state) of the current process in the PCB
+   - Restore the execution context of the next process
+
+- Processor scheduling
+    - Select the next process that will occupy the CPU from the ready queue
+    - Select the CPU resources available to the ready process from multiple available CPUs
+- Scheduler: Kernel function that picks ready processes
+- Scheduling Algorithm
+     - What principles are used to select processes?
 
 
 ---
-#### 调度时机
+#### Scheduling timing
 
-- 内核执行调度的条件
-   - 进程从运行状态切换到等待/就绪状态
-   - 进程被终结了
-- 非抢占系统
-  - 当前进程主动放弃CPU时
-- 可抢占系统
-  - 中断请求被服务例程响应完成时
+- The conditions when the kernel starts to schedule
+    - Process switches from running state to waiting/ready state
+    - The process was terminated
+- Non-preemptive systems
+   - Current process voluntarily yields CPU
+- Preemptive system
+   - Interrupt requests are handled by the interrupt handler
 
 ---
 
-#### 调度策略
+#### Scheduling Algorithm
 
-确定如何从就绪队列中选择下一个执行进程
-- 要解决的问题
-   - 通过什么样的准则来选择？
-   - 挑选就绪队列中的哪一个进程？
-- 调度算法
-   - 在内核调度中实现的调度策略
--  比较调度算法的准则
-   - 哪一个策略/算法较好?
+Determines how to select the next process from the ready queue for execution
+- Issues to be addressed:
+    - Based on what criteria is selection made?
+    - Which process in the ready queue is picked?
+- Scheduling Algorithms
+    - Scheduling strategies implemented in kernel scheduling
+- Criteria for comparing scheduling algorithms
+    - Which strategy/algorithm is better?
  
 ---
-#### 处理机资源的使用模式
-- 进程在CPU计算和I/O操作间交替
-   - 每次调度决定在下一个CPU计算时将哪个工作交给CPU
-   - 在时间片机制下，进程可能在结束当前CPU计算前被迫放弃CPU
+#### Usage Patterns of Processor Resource 
+- Process alternates between CPU computation and I/O operations
+    - Each scheduling decision determines which task to assign to the CPU for the next computation.
+    - With time slicing, a process may be forced to yield the CPU before completing its current computation.
 
- ![w:650](figs/cpu-usage.png) 
-
- 
----
-
-**提纲**
-
-1. 处理机调度概念
-  - 处理机调度的时机和策略
-### 比较调度算法的准则
-2. 调度算法
-
----
-
-#### 比较调度算法的准则
-- CPU使用率 : CPU处于忙状态的时间百分比
-- 吞吐量：单位时间内完成的进程数量
-- 周转时间：进程从初始化到结束(包括等待)的总时间
-- 就绪等待时间：就绪进程在就绪队列中的总时间
-- 响应时间：从提交请求到产生响应所花费的总时间
-- 公平：进程占用相同的资源，如CPU时间等
-
-
- 
----
-#### 比较调度算法的吞吐量与延迟准则
-- 调度算法的要求：   希望“更快”的服务
-- 什么是更快？
-  - 传输文件时的高带宽，调度算法的高吞吐量
-  - 玩游戏时的低延迟，调度算法的低响应延迟
-  - 这两个因素相互影响
-- 与水管的类比
-  - 低延迟：喝水的时候想要一打开水龙头水就流出来
-  - 高带宽：给游泳池充水时希望从水龙头里同时流出大量的水，并且不介意是否存在延迟
-
- 
----
-#### 比较调度算法的响应时间准则
-- 减少响应时间
-  - 及时处理用户的输入请求，尽快将输出反馈给用户
-- 减少平均响应时间的波动
-  - 在交互系统中，可预测性比高差异低平均更重要
-- 低延迟调度改善了用户的交互体验
-  - 如果移动鼠标时，屏幕中的光标没动，用户可能会重启电脑
-- 响应时间是操作系统的计算延迟
-
- 
----
-#### 比较调度算法的吞吐量准则
-- 增加吞吐量
-   - 减少开销（操作系统开销，上下文切换）
-   - 系统资源的高效利用（CPU，I/O设备）
-- 减少就绪等待时间
-   - 减少每个就绪进程的等待时间
-- 操作系统需要保证吞吐量不受用户交互的影响
-  - 即使存在许多交互任务
-- 吞吐量是操作系统的计算带宽
-
- 
----
-#### 比较调度算法的公平准则
-
-一个用户比其他用户运行更多的进程时，公平吗？怎么办？
-
-- 公平的定义
-  - 保证每个进程占用相同的CPU时间
-  - 保证每个进程的就绪等待时间相同
-- 公平通常会增加平均响应时间
+  ![w:650](figs/cpu-usage.png)
 
  
 ---
 
-**提纲**
+**Outline**
 
-1. 处理机调度概念
-### 2. 调度算法
-- 先来先服务算法FCFS、短作业优先算法SJF
-- 最短剩余时间算法SRT、最高响应比优先算法HRRN
-- 时间片轮转算法RR
-- 多级队列调度算法MQ、多级反馈队列算法MLFQ
-- 公平共享调度算法FSS
-
+1. Concept of Processor scheduling
+   - Timing and strategy for processor scheduling
+ ###  - Criteria for comparing scheduling algorithms
+2. Scheduling Algorithms
 
 ---
 
-#### 先来先服务调度算法FCFS
+#### Criteria for comparing scheduling algorithms
+- CPU Utilization: the percentage of time the CPU is busy
+- Throughput: the number of processes completed per unit of time
+- Turnaround time: the total time the process takes from initialization to completion (including waiting time)
+- Ready-waiting time: the total time that the ready process is in the ready queue
+- Response time: the total time from submitting a request to producing a response
+- Fairness: ensuring processes have equal access to resources, such as CPU time
+
+
+ 
+---
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+
+#### Criteria for comparing Scheduling Algorithms: Throughput and Latency
+- Requirements of scheduling algorithms: A desire for "faster" service
+- What is "faster"?
+   - High bandwidth for file transfers, high throughput for scheduling algorithms
+   - Low latency when playing games, low response latency for scheduling algorithms
+   - These two factors affect each other
+- Analogy with water pipes
+   - Low latency: When you drink water, you want the water to flow out as soon as you open the tap
+   - High bandwidth: You want a large volume of water to flow simultaneously from the faucet when filling a swimming pool, regardless of latency
+
+ 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### Criteria for Comparing Scheduling Algorithms: Response Time
+- Reduce response time
+   - Process the user's input request promptly, and provide output feedback to the user as soon as possible
+- Reduce fluctuations of average response time
+   - In interactive systems, predictability is more important than low average with high variance
+- Low-latency scheduling improves user interaction experience
+   - If the cursor on the screen does not move when the mouse is moved, the user may restart the computer
+- Response time is the calculation delay of the OS
+ 
+---
+#### Criteria for Comparing Scheduling Algorithms: Throughput
+- Increase throughput
+    - Reduce overhead (OS overhead, context switching)
+    - Efficient utilization of system resources (CPU, I/O devices)
+- Reduce waiting time in the ready queue
+    - Reduce waiting time for each ready process
+- The OS needs to ensure that throughput is not affected by user interaction
+   - Even if there are many interactive tasks
+- Throughput is the computing bandwidth of the OS
+
+ 
+---
+#### Criteria for Comparing Scheduling Algorithms: Fairness
+
+If one user runs more processes than other users, is it fair? What can be done?
+
+- Definition of fairness
+   - Ensure each process has equal access to CPU time
+   - Ensure each process has the same waiting time in the ready queue
+- Fairness usually increases average response time
+
+ 
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+**Outline**
+
+1. Concept of processor scheduling
+### 2. Scheduling Algorithms
+- First-come, First-served(FCFS), Short job first(SJF)
+- Shortest remaining time(SRT), Highest Response Ratio Next(HRRN)
+- Round-Robin(RR)
+- MultiQueue(MQ), Multi-Level Feedback Queue(MLFQ)
+- Fair Share Scheduling(FSS)
+---
+
+#### First come, first served (FCFS)
 
 FCFS: First Come, First Served
-- 依据进程进入就绪状态的先后顺序排列
-- 进程进入等待或结束状态时，就绪队列中的下一个进程占用CPU
-- 指标
-   - FCFS算法的周转时间
+- Processes are scheduled in the order they arrive in the ready queue.
+- When a process becomes waiting or end state, the next process in the ready queue occupies the CPU
+- Metric
+    - Turnaround time of FCFS 
   
 ---
 
-#### 先来先服务调度算法示例
+#### An Example of FCFS
 
-- 示例：3个进程，计算时间分别为12,3,3
+- Example: 3 processes with calculation times of 12,3,3
 
-![w:800](figs/sched-fifo.png) 
+![w:800](figs/sched-fifo.png)
 
    
 ---
 
-#### 先来先服务调度算法的特征
+#### Characteristics of FCFS
 
-- 优点：简单
-- 缺点
-  - 平均等待时间波动较大
-  - 短作业/任务/进程可能排在长进程后面
-  - I/O资源和CPU资源的利用率较低
-     - CPU密集型进程会导致I/O设备闲置时，
-I/O密集型进程也等待
+- Advantages: Simple
+- Disadvantages:
+   - High fluctuation in the average waiting time
+   - Short jobs/tasks/processes may have to wait for long one to finish.
+   - Low utilization of I/O and CPU resources
+      - CPU-intensive processes will lead to idle I/O devices, and I/O-intensive processes will also have to wait.
   
 ---
 
-#### 短作业优先调度算法SJF
+#### Short Job First(SJF)
 
 Short Job First
-- 选择就绪队列中执行时间最短作业/进程占用CPU进入运行状态
-- 就绪队列按预期的执行时间来排序
+- Selects the process with the shortest expected CPU time from the ready queue to run.
+- The ready queue is sorted by expected execution time.
 
- ![w:800](figs/sched-sjf.png) 
-
----
-
-#### 短作业优先调度算法的特征
-
-**具有最优平均周转时间**
-
-修改作业/进程执行顺序可能减少平均等待时间吗?
- ![w:800](figs/sched-sjf-best.png) 
-
-
- ---
-
-#### 短作业优先调度算法的特征
-
-- 可能导致饥饿
-  - 连续的短作业/进程流会使长作业/进程无法获得CPU资源
-
-- 需要预知未来
-  - 如何预估下一个CPU计算的持续时间？
-  - 简单的解决办法：询问用户
-     - 用户欺骗就杀死相应进程
-     - 用户不知道怎么办？
----
-
-#### 短作业优先算法的执行时间预估
-
-- 用历史的执行时间来预估未来的执行时间
-
-$\tau_{n+1} = \alpha t_n+(1-\alpha) \tau_n，其中 0\le \alpha \le 1$
-$t_n$ -- 第n次的CPU计算时间
-$\tau_{n+1}$ -- 第n+1次的CPU计算时间预估
-
-$\tau_{n+1} = \alpha t_n+(1-\alpha) \alpha t_{n-1} + (1-\alpha)  (1-\alpha) \alpha t_{n-2} + ...$
-
+  ![w:800](figs/sched-sjf.png)
 
 ---
 
-#### 短作业优先算法的执行时间预估
+#### Characteristics of SJF
 
-- 执行时间预估
- ![w:800](figs/sched-sjf-time.png) 
+**SJF has the best average turnaround time.**
 
+Can changing the order of process execution reduce the average waiting time?
+  ![w:800](figs/sched-sjf-best.png)
+
+
+  ---
+
+#### Characteristics of SJF
+
+- May cause starvation
+   - A sequence of short jobs may prevent long jobs from obtaining CPU resources.
+
+- Requires knowledge of the future
+   - How to estimate the duration of the next CPU calculation?
+   - Simple solution: ask the user
+      - Kill the corresponding process if the user cheats
+      - What to do if the user doesn't know?
+---
+
+#### Execution Time Estimation of SJF
+
+- Use historical execution time to predict future execution time
+
+$\tau_{n+1} = \alpha t_n+(1-\alpha) \tau_n, where 0\le \alpha \le 1$
+$t_n$ -- the nth CPU calculation time
+$\tau_{n+1}$ -- CPU calculation time estimate for the n+1th time
+
+$\tau_{n+1} = \alpha t_n+(1-\alpha) \alpha t_{n-1} + (1-\alpha) (1-\alpha) \alpha t_{n-2} + .. .$
 
 
 ---
 
-#### 最短剩余时间算法SRT
+#### Execution Time Estimation of SJF
 
-Shortest Remaining Time, SRT
+- Execution Time Estimation
+  ![w:800](figs/sched-sjf-time.png)
 
-- SRT支持抢占调度机制，即有新的进程就绪，且新进程的服务时间小于当前进程的剩余时间，则转到新的进程执行。
 
----
-
-#### 最高响应比优先算法HRRN
-
-Highest Response Ratio Next，HRRN
-
-- 高响应比优先调度算法主要用于作业调度
-- 该算法是对FCFS调度算法和SJF调度算法的一种综合平衡，同时考虑每个作业的等待时间和估计的运行时间
-- 在每次进行作业调度时，先计算后备作业队列中每个作业的响应比，从中选出响应比最高的作业投入运行。
 
 ---
 
-#### 最高响应比优先算法HRRN
+#### Shortest Remaining Time(SRT)
 
-- 选择就绪队列中响应比R值最高的进程
+Shortest Remaining Time(SRT)
 
-$Ｒ＝（ｗ+s)/s$
-w: 就绪等待时间(waiting time)
-s: 执行时间(service time)
+- SRT supports preemption, i.e., if a new process is ready and its service time is smaller than the remaining time of the current process, then the new process will be scheduled to execute.
+---
 
-- 在短作业优先算法的基础上改进
-- 关注进程的等待时间
-- 防止无限期推迟
+#### Highest Response Ratio Next, HRRN
+
+Highest Response Ratio Next, HRRN
+
+- HRRN is mainly used for job scheduling.
+- This algorithm is a balanced combination of FCFS and SJF, considering both the waiting time and estimated running time of each job.
+- In each job scheduling, calculate the response ratio of each job in the queue and select the job with the highest response ratio to run.
 
 ---
 
-**提纲**
+#### Highest Response Ratio Next, HRRN
 
-1. 处理机调度概念
-2. 调度算法
-- 先来先服务算法FCFS、短作业优先算法SJF
-- 最短剩余时间算法SRT、最高响应比优先算法HRRN
-### 时间片轮转算法RR
-- 多级队列调度算法MQ、多级反馈队列算法MLFQ
-- 公平共享调度算法FSS
+- Select the process in the ready queue with the highest response ratio R value.
+
+$R=(w+s)/s$
+w: ready waiting time (waiting time)
+s: execution time (service time)
+
+- Improve the Shortest Job First algorithm.
+- Focus on the waiting time of the process.
+- Prevent indefinite postponement
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 时间片轮转算法RR
+**Outline**
+
+1. Concept of processor scheduling
+2. Scheduling algorithm
+- First-come, First-served(FCFS), Short job first(SJF)
+- Shortest remaining time(SRT), Highest Response Ratio Next(HRRN)
+### Round-Robin(RR)
+- MultiQueue(MQ), Multi-Level Feedback Queue(MLFQ)
+- Fair Share Scheduling(FSS)
+
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### Round-Robin(RR)
 
 RR, Round-Robin
 
-- 时间片
-  - 分配处理机资源的基本时间单元
-- 算法思路
-  -  时间片结束时，按FCFS算法切换到下一个就绪进程
-  -  每隔(n – 1)个时间片进程执行一个时间片q
- ![w:700](figs/sched-rr-1.png) 
-
- ---
-
-#### 时间片轮转算法示例
-
- ![w:700](figs/sched-rr-2.png) 
+- Time slice
+   - The basic time unit for allocating processor resources.
+- Algorithm ideas
+   - At the end of the time slice, switch to the next ready process according to FCFS algorithm
+   - Execute a time slice q every (n – 1) time slice.
+  ![w:700](figs/sched-rr-1.png)
 
 ---
 
-#### 时间片轮转算法的时间片长度参数
+#### An example of RR
 
-- RR算法开销： 额外的上下文切换
-- 时间片太大
-  - 等待时间过长，极限情况退化成FCFS
-- 时间片太小
-  - 反应迅速，但产生大量上下文切换
-  - 大量上下文切换开销影响到系统吞吐量
-- 时间片长度选择目标
-  - 选择一个合适的时间片长度
-  - 经验规则：维持上下文切换开销处于1%以内
+  ![w:700](figs/sched-rr-2.png)
+
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### Time slice length parameter of RR
+
+- Overhead of the RR algorithm: additional context switching
+- Too large time slice
+   - Long waiting time, degenerates into FCFS in extreme cases.
+- Too small time slice
+   - Responsive, but produces lots of context switches
+   - A lot of context switching's overhead affects system throughput
+- Time slice length selection goal:
+   - Choose an appropriate time slice length
+   - Empirical rule: keep the context switching overhead within 1%
 
 ---
 
-#### 比较FCFS和RR
+#### Comparison between FCFS and RR
 
-![w:800](figs/sched-rr-3.png) 
+![w:800](figs/sched-rr-3.png)
 
-
----
-
-**提纲**
-
-1. 处理机调度概念
-2. 调度算法
-- 先来先服务算法FCFS、短作业优先算法SJF
-- 最短剩余时间算法SRT、最高响应比优先算法HRRN
-- 时间片轮转算法RR
-### 多级队列调度算法MQ、多级反馈队列算法MLFQ
-- 公平共享调度算法FSS
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 多级队列调度算法MQ
+**Outline**
+
+1. The concept of processor scheduling
+2. Scheduling algorithm
+- First-come, First-served(FCFS), Short job first(SJF)
+- Shortest remaining time(SRT), Highest Response Ratio Next(HRRN)
+- Round-Robin(RR)
+### MultiQueue(MQ), Multi-Level Feedback Queue(MLFQ)
+- Fair Share Scheduling(FSS)
+
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### MultiQueue Algorithm, MQ
 
 MQ, MultiQueue
-- 就绪队列被划分成多个独立的子队列
-   - 如：前台进程(交互)子队列、后台进程(批处理)子队列
-   - 同一优先级的进程属于某个队列，且不能跨越队列
-- 每个队列拥有自己的调度策略
-   - 如：前台进程–RR、后台进程–时间片大的RR/FCFS
+- The ready queue is divided into multiple independent subqueues
+    - For example, foreground process(interactive) sub-queue, background process (batch processing) sub-queue
+    - Processes of the same priority belong to a certain queue and cannot cross queues
+- Each queue has its own scheduling policy
+    - Such as: foreground process – RR, background process – RR/FCFS with a large time slice
  
- - 规则1：如果A的优先级 > B的优先级，运行A（不运行B）。
- - 规则2：如果A的优先级 = B的优先级，轮转运行A和B。
+  - Rule 1: If A's priority > B's priority, run A (do not run B).
+  - Rule 2: If A's priority = B's priority, run A and B alternately.
 ---
 
-#### 多级队列调度算法MQ
+#### MultiQueue Algorithm, MQ
 
-- 队列间的调度
-  - 固定优先级
-    - 先处理前台(交互)进程，然后处理后台进程
-    - 可能导致饥饿
-  - 时间片轮转
-    - 每个队列都得到一个确定的能够调度其进程的CPU总时间
-    - 如：80%CPU时间用于前台进程，20%CPU时间用于后台进程
+- Scheduling between queues
+   - Fixed priority
+     - Handle foreground (interactive) processes first, then process background processes
+     - May cause starvation
+   - Time slice round-robin
+     - Each queue gets a fixed amount of CPU time to schedule its processes
+     - For example: 80% CPU time is used for foreground processes, 20% CPU time is used for background processes
 
 
 ---
 
-#### 多级反馈队列调度算法MLFQ
+#### Multi-Level Feedback Queue, MLFQ
 
 MLFQ, Multi-Level Feedback Queue
-- 1962年，MIT教授Corbato首次提出多级反馈队列，应用于兼容时分共享系统（CTSS-Compatible Time-Sharing System）
-- 解决两方面的问题
-  -  如何在不知道工作要运行多久的情况下，优化周转时间
-  -  如何降低响应时间，给交互用户很好的交互体验
+- In 1962, professor Corbato from MIT first proposed the multi-level feedback queue, which was applied to CTSS(Compatible Time-Sharing System)
+- Solve two problems
+   - How to optimize turnaround time without knowing how long the job will run
+   - How to reduce the response time and provide a good interactive experience for users?
 
 
 ---
 
-#### 多级反馈队列调度算法MLFQ
+#### Multi-Level Feedback Queue, MLFQ
 
-- 关键问题：没有完备的知识如何调度？
-   - 对进程工作长度未知情况下，如何构建能同时减少响应时间和周转时间的调度程序？
-- 启发：从历史中学习　
-   - 用历史经验预测未来 
-- 继承Multi Queue的调度规则
-   - 如果A的优先级 > B的优先级，运行A（不运行B）
-   - 如果A的优先级 = B的优先级，轮转/FIFO运行A和B
+- Key issues: how to schedule without complete knowledge?
+    - How to build a scheduler that reduces both response time and turnaround time when the length of the process is unknown?
+- Inspiration: Learn from History
+    - Predict the future with historical experience
+- Inherit the scheduling rules of MultiQueue
+    - If A's priority > B's priority, run A (do not run B)
+    - If A's priority = B's priority, run A and B in a round-robin/FIFO manner
 ---
 
-#### 多级反馈队列调度算法MLFQ
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+#### Multi-Level Feedback Queue, MLFQ
 
-基本调度规则
-   - 工作进入系统时，放在最高优先级（最上层队列）
-   - 如进程在当前的时间片没有完成，则降到下一个优先级
-   - 如果工作在其时间片以内主动释放CPU，则优先级不变
-   - 时间片大小随优先级级别增加而增加
- ![w:500](figs/sched-mlfq.png) 
+Basic scheduling rules
+  - When a job enters the system, it is placed at the highest priority (top-level queue)
+  - If the process doesn't finish within the current time slice, it will be moved to the next lower priority queue.
+  - If the job actively releases the CPU within its time slice, the priority remains the same
+  - Time slice size increases as priority level increases
+  ![w:500](figs/sched-mlfq.png)
 
  
 ---
 
-#### 三个优先级队列的MLFQ调度例子
+#### An Example of MLFQ with three priority queues
 
-- CPU密集型进程首先进入最高优先级队列；
-- 执行1ms时间片后，调度器将进程的优先级减1，进入次高优先级队列；
-- 执行2ms时间片后，进入系统的最低优先级队列，一直留在那里，按4ms时间片执行。
+- CPU-intensive processes enter the highest priority queue first;
+- After executing a 1ms time slice, the scheduler will reduce the priority of the process by 1 and moves it to the next highest priority queue;
+- After executing a 2ms time slice, the process enters the lowest priority queue of the system, stays there, and executes using a 4ms time slice.
 
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-#### 多级反馈队列调度算法MLFQ
+#### Multi-Level Feedback Queue, MLFQ
 
-- MLFQ算法的特征
-   - CPU密集型进程的优先级下降很快
-   - I/O密集型进程停留在高优先级
+- Characteristics of the MLFQ 
+    - The priority of CPU-intensive processes drops quickly
+    - I/O-intensive processes stay at high priority
 
-- 潜在问题
-  - CPU密集型进程会饥饿
-  - 恶意进程会想办法留在高优先级
- ![bg right:40% 100%](figs/sched-mlfq.png) 
+- Potential problems
+   - CPU-intensive processes may starve
+   - Malicious processes may try to stay at high priority
+  ![bg right:40% 100%](figs/sched-mlfq.png)
 
  
 ---
 
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-#### 多级反馈队列调度算法MLFQ
+#### Multi-Level Feedback Queue Scheduling Algorithm MLFQ
 
-基本调度规则
-   - 如果A的优先级 > B的优先级，运行A（不运行B）
-   - 如果A的优先级 = B的优先级，轮转/FIFO运行A和B
-   - 工作进入系统时，放在最高优先级（最上层队列）
-   - 一旦工作用完了其在某一层中的时间配额（无论中间主动放弃了多少次CPU），就降低其优先级（移入低一级队列）
-   - 经过一段时间S，就将系统中所有工作重新加入最高优先级队列
+Basic scheduling rules
+  - If A's priority > B's priority, run A (do not run B)
+  - If A's priority = B's priority, run A and B in a round-robin/FIFO manner
+  - When a job enters the system, it is placed at the highest priority (the top-level queue)
+  - Once a job has used up its time slice in a certain level (regardless of how many times it has voluntarily given up the CPU), its priority is reduced (moved to a lower-level queue)
+  - After a period of time S, move all jobs in the system to the highest priority queue
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 公平共享调度算法FSS
+#### Fair Share Scheduling Algorithm, FSS
 
 FSS, Fair Share Scheduling
-- 控制用户对系统资源的访问
-   - 不同用户拥有多个进程
-   - 按用户优先级分配资源
-   - 保证不重要的用户无法垄断资源
-   - 未使用的资源按比例分配
+- Control access to system resources by users
+    - Different users have multiple processes
+    - Resources are allocated according to user priority
+    - Ensures that unimportant users cannot monopolize resources
+    - Unused resources are distributed proportionally
   
- ![bg right:40% 100%](figs/sched-fss.png) 
+  ![bg right:40% 100%](figs/sched-fss.png)
 
-  
----
-
-#### 调度算法的特征
-
-- 先来先服务算法
-   - 平均等待时间较差 
-- 短作业优先算法
-   - 平均周转时间最小
-   - 需要精确预测计算时间
-   - 不允许抢占；可能导致饥饿
-- 最短剩余时间算法
-   - 对短作业优先算法的改进，允许抢占
-   - 可能导致饥饿
   
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
-#### 调度算法的特征
+#### Characteristics of different scheduling algorithm
 
-- 最高响应比优先算法
-   -  基于短作业优先调度，不可抢占
-   -  同时考虑每个作业的等待时间和估计的运行时间
-- 时间片轮转算法
-   - 公平，但是平均等待时间较差 
-- 多级反馈队列算法
-   - 多种算法的集成 
-- 公平共享调度算法
-   - 公平是第一要素
+- irst Come First Serve (FCFS) algorithm
+    - Poor average waiting time
+- Shortest job first(SJF) algorithm
+    - Minimal average turnaround time
+    - Requires accurate prediction of calculation time
+    - No preemption allowed; may cause starvation
+- Shortest Remaining Time (SRT) algorithm
+    - Improve the short job first algorithm, allowing preemption
+    - May cause starvation
+  
+---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
 
+#### Characteristics of different scheduling algorithm
+
+- Highest Response Ratio Next (HRRN) algorithm
+    - Based on SJF, non-preemptive
+    - Consider both the waiting time and the estimated run time of each job
+- Round Robin (RR) algorithm
+    - Fair, but has a poor average waiting time
+- Multi-Level Feedback Queue (MLFQ) algorithm
+    - Integration of multiple algorithms
+- Fair share scheduling(FSS) algorithm
+    - Fairness is the primary consideration
 ---
 
-### 小结
+### Summary
 
-1. 处理机调度概念
-- 处理机调度的时机和策略、比较调度算法的准则
-2. 调度算法
-- FCFS、SJF、SRT、HRRN
+1. Concept of Processor Scheduling
+- Timing and strategy of processor scheduling, criteria for comparing scheduling algorithms
+2. Scheduling Algorithms
+- FCFS, SJF, SRT, HRRN
 - RR
-- MQ、MLFQ、FSS
+- MQ, MLFQ, FSS
