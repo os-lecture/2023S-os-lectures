@@ -76,7 +76,7 @@ backgroundColor: white
 ## Lecture 7 Process Management and Single Processor Scheduling
 - [Section 1 Process Management](./lec7/p1-process-overview.html)
 - [Section 2 Single Processor Scheduling](./lec7/p2-sched.html)
-- [Section III Real-time Management and Scheduling](./lec7/p3-realtime.html)
+- [Section 3 Real-time Scheduling](./lec7/p3-realtime.html)
 - [Section 4 Practice: Operating System Supporting Processes](./lec7/p4-labs.html)
 
 <!--
