@@ -149,7 +149,7 @@ W(t, $\Delta$) ={3,4}, working set window size $\tau=10$, current time $t=t_2$
   font-size: 28px
 }
 </style>
-- Ideas
+- Idea
     - Swap out pages **not in the working set**
 - Working set window size $\tau$
     - The set of pages accessed in the previous $\tau$ memory accesses before the current time form the **working set**
@@ -263,7 +263,7 @@ $\tau=4$
    - Page replacement algorithm
    - Number of physical pages allocated to the process
    - Page size
-   - Program coding methods
+   - The coding method of a program
 
 
 ---
@@ -273,7 +273,7 @@ $\tau=4$
   font-size: 28px
 }
 </style>
-![bg right:55% 100%](figs/page-fault-relation.png)
+![bg right:50% 100%](figs/page-fault-relation.png)
 
 By adjusting the **resident set size**, the **page fault frequency** of each process keeps in a reasonable range.
 - If the process's page fault frequency is too high, increase the resident set to allocate more physical pages.
@@ -383,9 +383,9 @@ Assuming the window size is 2
    - Lead to **a large number of page faults**, frequent page replacement
    - Lead to **slow execution of the process**
 
-- Causes of thrashing
+- Cause of thrashing
     - As the number of **processes** residing in memory increases, the number of physical pages allocated to each process decreases, and the page fault frequency keeps increasing
-- The OS needs to **achieve a balance** between concurrency level and **page fault frequency**
+- The OS needs to balance the concurrency level and **page fault frequency**
     - Select an appropriate number of processes and the demanding number of physical pages for each process
 
 ---
@@ -406,7 +406,7 @@ Assuming the window size is 2
 ### Lecture 5 Summary of Virtual Memory
 
 * Section 1 Concepts of Virtual Memory
-     * Demanding Paging, Overlay, Swapping, Concepts of Virtual Memory, Page Fault
+     * Demanding Paging, Overlay, Swapping, Concept of Virtual Memory, Page Fault
 * Section 2 Local Page Replacement Algorithms
      * Concepts of page replacement algorithm, OPT, FIFO, LRU, Clock, Improved Clock Page Replacement Algorithm, LFU, Belady Phenomenon
 * Section 3 Global Page Replacement Algorithms
