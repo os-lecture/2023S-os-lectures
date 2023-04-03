@@ -11,126 +11,136 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第八讲 多处理器调度
+# Lecture 8 Multiprocessor Scheduling
 
-## 第二节 多处理器调度概述
+## Section 2 Overview of Multiprocessor Scheduling
 
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
-2023年春季
-
----
-
-**提纲**
-
-### 1. 单队列多处理器调度SQMS
-2. 多队列多处理器调度MQMS
+Spring 2023
 
 ---
 
-#### 单队列多处理器调度
+**Outline**
+
+### 1. Single Queue Multiprocessor Scheduling(SQMS)
+2. Multi-Queue Multiprocessor Scheduling(MQMS)
+
+---
+
+#### Single Queue Multiprocessor Scheduling
 Single Queue Multiprocessor Scheduling, SQMS
-- 复用单处理器调度下的基本架构
-- 所有需要调度的进程放入**一个队列**中
-![w:800](figs/sqms.png) 
+- Reuse the basic architecture of single-processor scheduling.
+- All processes that need to be scheduled are put into **a single queue**
+![w:800](figs/sqms.png)
 
 
 ---
-#### 单队列多处理器调度的特征
-- 缺乏可扩展性 (scalability)
-- 缓存亲和性 (cache affinity) 弱
-![w:800](figs/sqms.png) 
+#### Characteristics of Single Queue Multiprocessor Scheduling
+- Lack of scalability
+- Weak cache affinity
+![w:800](figs/sqms.png)
 
 ---
-#### 多处理器调度的亲和度与负载均衡
-尽可能让进程在同一个 CPU 上运行。保持一些进程的亲和度的同时，可能需要牺牲其他进程的亲和度来实现负载均衡。
-![bg right:63% 90%](figs/sqms-cache-affinity.png) 
-
----
-
-**提纲**
-
-1. 单队列多处理器调度SQMS
-### 2. 多队列多处理器调度MQMS
+#### Affinity and load balancing of multiprocessor scheduling
+Processes should be scheduled to run on the same CPU as much as possible. While maintaining affinity for some processes, other processes may need to sacrifice affinity to achieve load balancing.
+![bg right:50% 90%](figs/sqms-cache-affinity.png)
 
 ---
 
-#### 多队列多处理器调度
-Multi-Queue MultiprocessorScheduling, MQMS
-- 基本调度框架包含**多个调度队列**，每个队列可用不同的调度规则。
-- 依照一些启发性规则，在进程进入系统时，将其放入某个调度队列。
-- **每个 CPU 调度相互独立**，避免单队列方式的数据共享及同步问题。
-![w:800](figs/multi-queue.png) 
-![w:800](figs/mqms.png) 
+**Outline**
 
----
-#### 多队列多处理器调度的特征
-- 具有**可扩展性**：队列的数量会随着CPU 的增加而增加，因此锁和缓存争用的开销不是大问题。
-- 具有良好的**缓存亲和度**：所有进程都保持在固定的 CPU 上，因而可以很好地利用缓存数据。
-![w:800](figs/multi-queue.png) 
-![w:800](figs/mqms.png) 
-
-
----
-#### 多队列多处理器调度的负载不均
--  假定4个进程，2个CPU；队列都执行轮转调度策略；进程C执行完毕
--  A 获得了 B 和 D 两倍的 CPU 时间
-
-![w:1000](figs/mqms-problem-1.png) 
-![w:1000](figs/mqms-problem-2.png) 
-
+1. Single Queue Multiprocessor Scheduling(SQMS)
+### 2. Multi-Queue Multiprocessor Scheduling(MQMS)
 
 ---
 
-#### 如何解决MQMS的负载不均？
+#### Multi-Queue MultiprocessorScheduling, MQMS
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+- Basic scheduling framework contains **multiple scheduling queues**, each of which may use different scheduling rules.
+- When a process enters the system, it is placed in a scheduling queue based on some heuristic rules.
+- **Each CPU schedules independently** to avoid data sharing and synchronization issues of single-queue scheduling.
+![w:800](figs/multi-queue.png)
+![w:800](figs/mqms.png)
 
-- 假定 4 个进程，2 个 CPU；每个队列都执行轮转调度策略；A 和 C 都执行完毕，系统中只有 B 和 D
-  - CPU1 很忙
-  - CPU0 空闲
-
-![w:1000](figs/mqms-problem-3.png) 
-![w:1000](figs/mqms-problem-4.png) 
-
+---
+#### Characteristics of multi-queue multi-processor scheduling
+- **Scalable**: The number of queues increases with the number of CPUs, so the cost of lock and cache contention is not a big issue.
+- Good **cache affinity**: All processes are kept on fixed CPUs, so cache data can be utilized well.
+![w:800](figs/multi-queue.png)
+![w:800](figs/mqms.png)
 
 
 ---
-#### 进程迁移 (migration)
-- 通过进程的跨 CPU 迁移，可实现负载均衡。
-  - 情况：CPU0 空闲，CPU1 有一些进程。
-  - 迁移：将 B 或 D 迁移到 CPU0
+#### Load Imbalance in Multi-Queue Multiprocessor Scheduling
+- Suppose there are 4 processes and 2 CPUs; all queues use round-robin scheduling strategy; process C completes.
+- A obtains twice as much CPU time as B and D.
 
-![w:1000](figs/mqms-problem-3.png) 
-![w:1000](figs/mqms-problem-4.png) 
+![w:1000](figs/mqms-problem-1.png)
+![w:1000](figs/mqms-problem-2.png)
+
+
+---
+
+#### How to Solve Load Imbalance in MQMS?
+
+- Suppose there are 4 processes and 2 CPUs; all queues use round-robin scheduling strategy; A and C complete, leaving only B and D in the system.
+   - CPU1 is busy
+   - CPU0 is idle
+
+![w:900](figs/mqms-problem-3.png)
+![w:900](figs/mqms-problem-4.png)
 
 
 
 ---
-#### MQMS如何确定进程迁移时机?
+#### Process Migration
+- Load balance can be achieved through migrating processes across CPUs.
+   - Situation: CPU0 is idle, CPU1 has some processes.
+   - Migrate: Migrate B or D to CPU0
 
-- 情况：A 独自留在 CPU 0 上，B 和 D 在 CPU 1 上交替运行
-- 迁移：**不断地迁移和切换**一个或多个进程
+![w:900](figs/mqms-problem-3.png)
+![w:900](figs/mqms-problem-4.png)
 
-![w:1000](figs/mqms-problem-5.png) 
-![w:1000](figs/mqms-problem-6.png) 
+
+
+---
+#### How Does MQMS Determine When to Migrate Processes?
+
+- Situation: A is left alone on CPU 0, B and D run alternately on CPU 1
+- Migration: **Continuously migrate and switch** one or more processes
+
+![w:900](figs/mqms-problem-5.png)
+![w:900](figs/mqms-problem-6.png)
 
 
 
 ---
-#### MQMS的工作窃取 (work stealing)
-- 进程量较少的 (源) 队列不定期地“偷看”其他 (目标) 队列是不是比自己的进程多
-- 如果目标队列比源队列 (显著地) 更满，就从目标队列“窃取”一个或多个进程，实现负载均衡。
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
+
+#### Work Stealing in MQMS
+- he (source) queue with a relatively small number of processes periodically checks other (target) queues to see if they have significantly more processes than itself.
+- f a target queue is significantly fuller than the source queue, one or more processes are "stolen" from the target queue to achieve load balance.
 
 
-![w:1000](figs/mqms-problem-5.png) 
-![w:1000](figs/mqms-problem-6.png) 
+![w:900](figs/mqms-problem-5.png)
+![w:900](figs/mqms-problem-6.png)
 
 ---
-#### 工作窃取的队列检查间隔
-- 如果频繁地检查其他队列，就会带来较高的开销，可扩展性不好
-- 如果检查间隔太长，又可能会带来严重的负载不均
-![w:1000](figs/mqms-problem-5.png) 
-![w:1000](figs/mqms-problem-6.png) 
+#### Queue Inspection Interval for Work Stealing
+- Frequent inspection of other queues can result in high overhead and poor scalability.
+- If the inspection interval is too long, it can lead to serious load imbalance.
+![w:900](figs/mqms-problem-5.png)
+![w:900](figs/mqms-problem-6.png)

@@ -11,62 +11,62 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第八讲 多处理器调度
+# Lecture 8 Multiprocessor Scheduling
 
-## 第一节 对称多处理与多核架构
+## Section 1 Symmetric Multiprocessing and Multi-Core Architecture
 
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
-2023年春季
-
----
-
-**提纲**
-
-### 1. 多处理机器
-2. Cache一致性(Cache Coherence)
+Spring 2023
 
 ---
 
-#### 单核处理器
-![w:800](figs/single-core.png) 
+**Outline**
 
-
----
-#### 超线程(Hyperthread, Simultaneous multithreading)处理器
-![w:500](figs/hyperthread.png) 
-
-
----
-#### 多核(multi-core)处理器
-![w:1150](figs/multi-core.png) 
-
----
-#### 众核(many-core)处理器
-![w:1150](figs/many-core.png) 
+### 1. Multiprocessor Machines
+2. Cache Coherence
 
 ---
 
-**提纲**
-
-1. 多处理机器
-### 2. Cache一致性(Cache Coherence)
-
----
-
-#### 对称多处理器(SMP)与非一致内存访问系统(NUMA)
-![w:1000](figs/smp-numa.png) 
-
----
-#### Cache 一致性 (Cache Coherence)
-![w:800](figs/cache-coherence.png) 
+#### Single Core Processor
+![w:800](figs/single-core.png)
 
 
 ---
+#### Hyperthread (Simultaneous Multithreading) processor
+![w:500](figs/hyperthread.png)
 
-#### Cache 一致性问题
+
+---
+#### Multi-core Processors
+![w:1150](figs/multi-core.png)
+
+---
+#### Many-core Processors
+![w:1150](figs/many-core.png)
+
+---
+
+**Outline**
+
+1. Multiprocessor Machines
+### 2. Cache Coherence
+
+---
+
+#### Symmetric Multiprocessing (SMP) and Non-Uniform Memory Access(NUMA) Systems 
+![w:900](figs/smp-numa.png)
+
+---
+#### Cache Coherence
+![w:800](figs/cache-coherence.png)
+
+
+---
+
+#### Cache Coherence Issues
 ![w:900](figs/cache-coherence-problem.png)
