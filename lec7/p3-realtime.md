@@ -33,8 +33,8 @@ Spring 2023
 
 ---
 #### Definition of real-time OS
-- Definition of real-time operating system
-   - An operating system that depends on both time and functionality for correctness.
+- Definition of real-time OS
+   - An operating system that depends on both time and functionalities for correctness.
 - Performance metrics for real-time OS
     - Timeliness of time-constrained tasks (deadlines)
     - Speed and average performance are relatively unimportant
@@ -56,7 +56,7 @@ Spring 2023
    - A single computation, file read, message transfer, etc.
 - Task properties
    - Resources required to complete the task.
-   - Timing parameters
+   - Deadline parameter
 
 ![w:1000](figs/rt-task.png)
 
@@ -77,7 +77,7 @@ Spring 2023
    - It must be verified that the deadline can be met in the worst-case scenario.
 - Soft deadline
    - The task deadline is usually met.
-   - If it cannot be met, the requirements will be lowered.
+   - If it cannot be met, lower the requirement.
    - Do your best to meet the deadline.
 
 ---
@@ -87,10 +87,11 @@ Spring 2023
   font-size: 29px
 }
 </style>
-- Schedulability refers to the ability of a real-time operating system to meet task deadlines.
+- Schedulability refers to the ability of a real-time OS to meet task deadlines.
     - The execution order of real-time tasks needs to be determined.
-    - **Static** priority scheduling: The priority of a task does not change during execution.
-    - **Dynamic** priority scheduling: The priority of a task can change during execution.
+    - **Static** priority scheduling: Task priority does not change during execution.
+    - **Dynamic** priority scheduling: Task priority can change during execution.
+
 ![w:750](figs/rt-task-3.png)
 
 
@@ -197,7 +198,7 @@ If there is **shared resource occupation** between tasks, tasks with high priori
 #### Lowest Laxity First Algorithm (LLF)
 
 
-- Determine task priority according to **task urgency or slack level**
+- Determine task priority according to **task urgency or laxity level**
 
 - The higher the urgency, the higher the priority.
 
@@ -224,8 +225,8 @@ If there is **shared resource occupation** between tasks, tasks with high priori
 
 The phenomenon of a high-priority process waiting for a resource occupied by a low-priority process for a long time.
 
-- Priority inversion problem exists in priority-based preemptive scheduling algorithms.
-Priority: T1>T2>T3
+- Priority inversion problem exists in priority-based preemptive scheduling algorithms. Priority: T1>T2>T3
+
 ![w:600](figs/rt-pi.png)
 
 
@@ -239,8 +240,10 @@ Priority: T1>T2>T3
 </style>
 The phenomenon of a high-priority process waiting for a resource occupied by a low-priority process for a long time.
 
-- Priority inversion problem exists in priority-based preemptive scheduling algorithms.
+- Priority inversion problem exists in priority-based preemptive scheduling algorithms. 
+
 Priority: T1>T2>T3
+
 ![bg right:50% 100%](figs/priority1.png)
 
 

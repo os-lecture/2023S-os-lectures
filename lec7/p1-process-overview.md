@@ -25,8 +25,8 @@ Spring 2023
 
 **Outline**
 
-### 1. Basic concept of process
-- Background of demand for process management
+### 1. Basic concepts of process
+- Demand for process management
 - Concept of process
 - Process and task
 2. Process management
@@ -39,7 +39,7 @@ Spring 2023
 }
 </style>
 
-#### Background of demand for process management
+#### Demand for process management
 
 - Background
   - **Hardware** is becoming increasingly powerful
@@ -47,7 +47,7 @@ Spring 2023
     - Larger memory and external storage
     - More diverse peripherals
   - Developers hope to have more **dynamic interaction and control capabilities** on computers
-  - Users need more **convenient** computer interaction capabilities
+  - Users need more **convenient** interaction capabilities
   
 - Objective
   - **Improve development and execution efficiency**
@@ -59,14 +59,14 @@ Spring 2023
 }
 </style>
 
-#### Background of demand for process management
+#### Demand for process management
 
 - The interface between the **OS and the user for interaction** 
 - **Command line** interface (CLI)
 - Users directly enters commands directly through the keyboard
 -Shell
 - **Graphical** user interface (GUI)
-- Users input commands through the mouse/window and other means
+- Users input commands through the mouse/window or by other means
 
 ![bg right:50% 90%](figs/cli-gui.png)
 
@@ -77,7 +77,7 @@ Spring 2023
   font-size: 30px
 }
 </style>
-#### Background of demand for process management
+#### Demand for process management
 
 - User needs to **dynamically manage and control the execution of applications**
 - During the application execution process, the user actively sends **requests** to the OS through the interface to **create and execute** new applications, **pause or stop** the execution of applications, and so on
@@ -88,7 +88,7 @@ Spring 2023
 
 #### Purpose of introducing the concept of process
 - Clearly **depict** the dynamic internal laws of program execution in the OS
-- Effectively **manage and schedule** the execution of multiple programs and the use of resources
+- Effectively **manage and schedule** the execution of multiple programs and the usage of resources
 
 ![bg right:47% 90%](figs/cli-gui.png)
 
@@ -100,11 +100,11 @@ Spring 2023
 </style>
 #### The abstraction provided by the process to the application program
 
-- The **key abstraction** provided by the process to the application program from the application view
-  - Independent logical **control flow**:  It appears as if the program has exclusive use of the processor
+- From the application's view, the **key abstractions** provided by the process to the application program include
+  - Independent logical **control flow**:  it appears as if the program has exclusive use of the processor
   - Private **address space**: It appears as if the program has exclusive use of the memory system
   
-![bg right:47% 90%](figs/cli-gui.png)
+![bg right:45% 90%](figs/cli-gui.png)
 
 ---
 <style scoped>
@@ -112,7 +112,7 @@ Spring 2023
   font-size: 32px
 }
 </style>
-#### Looking at the process from an implementation perspective
+#### What is a process from an implementation perspective
 
 From an implementation perspective, a process is a **data structure** related to process management established by the OS during program execution, as well as the **dynamic operating** process on the data structure
 
@@ -125,13 +125,14 @@ From an implementation perspective, a process is a **data structure** related to
   font-size: 30px
 }
 </style>
-#### Looking at the process from a resource perspective
+#### What is a process from a resource perspective
 
 - From a resource perspective, a process is a collection of **resources used** during program execution
   - Shared resources vs exclusive resources
-  - Processor, time
-  - memory, address space
-  - File, I/O, ...
+  - Processor - time
+  - Memory - address space
+  - File - I/O
+  ...
   
 ![bg right:52% 90%](figs/cli-gui.png)
 
@@ -145,8 +146,8 @@ From an implementation perspective, a process is a **data structure** related to
 
 - Simple definition
   - The execution **process** of a program
-  - An **instance** of a program being executed
-- Detailed definition: A dynamic process of **executation and resource usage** of a program with certain **independent functions** on a set of **data set**
+  - An **instance** of an executing program
+- Comprehensive definition: a dynamic **execution and resource usage** process of a program with certain **independent functions** on a specific **data set**
   - Executes program logic and reads/writes data
   - Creates and executes new processes
   - Uses shared resources such as files
@@ -161,13 +162,13 @@ From an implementation perspective, a process is a **data structure** related to
 </style>
 #### Task and process
 
-Analysis from two aspects of **resource usage** and **execution process**
+Comparison in terms of **resource usage** and **execution process**
 
 Similarities:
-- From the user's perspective, tasks and processes both represent running programs
-- From the OS's perspective, tasks and processes both represent the execution process of a program
+- From the user's perspective, task and process both represent a running program
+- From the OS's perspective, task and process both represent the execution process of a program
 - From the perspective of resource usage
-  - Both can be interrupted by the OS and time-shareing occupy CPU resources by switching
+  - Both can be interrupted by the OS and occupy CPU resources in a time-sharing way via switching
   - Both require address space to place code and data
 
 ---
@@ -178,7 +179,7 @@ Similarities:
 </style>
 #### Task and Process
 
-Analysis from two aspects of **resource usage** and **execution process**
+Comparison in terms of **resource usage** and **execution process**
 
 Similarities:
 - From the perspective of execution process, both have a lifecycle that runs from start to finish
@@ -196,14 +197,14 @@ Similarities:
 </style>
 #### Task and Process
 
-Analysis from two aspects of **resource usage** and **execution process**
+Comparison in terms of **resource usage** and **execution process**
 
 Differences:
-- Tasks are the **primary stage** of processes mentioned here and do not have the following functionalities:
-  - Processes can create child processes and overwrite existing program content with new program content during their execution
-  - Processes become the carriers for dynamically requesting, using, and releasing various resources during program execution
+- Task is the **primary stage** of process and does not have the following functionalities:
+  - Process can create child processes and overwrite existing program content with new program content during execution
+  - Process becomes the carrier for dynamically requesting, using, and releasing various resources during program execution
 
-The dynamic functionality of processes allows for more flexible program execution
+The dynamic functionality of processes enables more flexible program execution
 
 ---
 
@@ -216,7 +217,7 @@ The dynamic functionality of processes allows for more flexible program executio
 
 **Outline**
 
-1.  Basic concept of process
+1.  Basic concepts of process
 ### 2. Process management
 - System calls for process management
 - Process control block (PCB)
@@ -229,10 +230,10 @@ The dynamic functionality of processes allows for more flexible program executio
 #### Background of system calls for process management
 
 - How can applications **easily and dynamically execute other applications**?
-  - process_id = execute(app_name)?
-- How can applications **know if the other application** they launched has ended?
-  - The launched applications exit(status)?
-  - The initiating main application wait(process_id)?
+  - process_id = execute(app_name)
+- How can applications **know if the other application** they launched has exited?
+  - The launched applications use exit(status)?
+  - The father application uses wait(process_id)?
 
 Therefore, various OSs (UNIX/Windows, etc.) have designed various system calls for process management similar to the ones mentioned above
 
@@ -242,11 +243,11 @@ Therefore, various OSs (UNIX/Windows, etc.) have designed various system calls f
 
 | system call name| meaning|
 | -------------------------- | ------ |
-| ``int fork()`` | **Create** a process and return the PID of the child process. |
-| ``int exec(char *file)`` | **Load** a file and execute it; return only on error. |
-| ``int exit(int status)`` | **Terminate** itself; report `status` to the parent process executing the waitpid() syscall. |
-| ``int waitpid(int pid, int *status)`` | **Wait for **`pid` child process to exit, get its ``*status`` exit status. |
-| ``int getpid()`` | **Get** the PID of the current process. |
+| ``int fork()`` | Create a process and return the PID of the child process. |
+| ``int exec(char *file)`` | Load a file and execute it; return only on error. |
+| ``int exit(int status)`` | Terminate itself; report `status` to the parent process executing waitpid(). |
+| ``int waitpid(int pid, int *status)`` | Wait for `pid` child process to exit, get its exit status ``*status``. |
+| ``int getpid()`` | Get the PID of the current process. |
 
 
 ---
@@ -355,7 +356,7 @@ Shell: Process 2 exited with code 0
 
 - The process of process switching
   - **Pause** the currently running process and change its state from running to another state
-  - **Schedule** another process  and change its state from ready to running
+  - **Schedule** another process and change its state from ready to running
 
 - The requirements for process switching:
   - **Save** the process context before switching
@@ -386,7 +387,7 @@ Shell: Process 2 exited with code 0
 
 **Outline**
 
-1. Basic concept of process
+1. Basic concepts of process
 2. Process management
 - System calls for process management 
 - Process control block (PCB)
@@ -396,7 +397,7 @@ Shell: Process 2 exited with code 0
 
 ---
 
-#### API of windows process creation : ``CreateProcess(filename)``
+#### Process creation API of windows: ``CreateProcess(...)``
 
 - Close all file descriptors in the child process during creation
 - ``CreateProcess(filename, CLOSE_FD)``
@@ -407,13 +408,12 @@ Shell: Process 2 exited with code 0
 
 #### Process creation/loading
 
-- System calls for Unix process creation/loading: fork/exec
+- System calls of process creation/loading in Unix: fork/exec
 - fork() creates a new process by duplicating the calling process
 - parent (old PID), child (new PID)
-- exec() overwrites the current process with a new program
-- PID did not change
+- exec() overwrites the current process with a new program, but PID will not change
 
-![bg right:45% 90%](figs/fork-exec.png)
+![bg right:40% 90%](figs/fork-exec.png)
 
 ---
 
@@ -428,7 +428,7 @@ exec("program", argc, argv0, argv1, ...);
 ```
 - fork() creates an inherited child process
 - **Copy** all variables and memory of the parent process
-- **Copy** all CPU registers of the parent process (**except** one register )
+- **Copy** all CPU registers of the parent process (**except** one register, a0, i.e., the return value of fork())
    
  
 ---
@@ -446,7 +446,7 @@ if(pid == 0) { 			// child process continues here
 exec("program", argc, argv0, argv1, ...);
 }
 ```
-- Return values of fork()
+- Return value of fork()
 - fork() returns 0 in the child process
 - fork() returns the process ID (PID) of the child process in the parent process
 - The return value of fork() can be conveniently used for subsequent operations. The child process can use getpid() function to get its own PID
@@ -462,7 +462,7 @@ exec("program", argc, argv0, argv1, ...);
 
 #### Example of program loading and execution
 
-- The system call exec() loads a new program to replace the currently running process (Is there a problem with the code???)
+- The system call exec() loads a new program to replace the currently running process (Is there any problem with the code???)
 ```C
 main()
 …
@@ -620,18 +620,19 @@ exit(0);
 #### Parent process waits for child process
 
 - The system call wait() is used by the parent process to wait for the termination of the child process
-  - When the child process exits, it returns a value to the parent process through the exit() system call
+  - When the child process exits, it returns a value to the parent process through the system call exit()
   - The parent process accepts and processes the return value using wait()
-- Function of the wait() system call
+- Functionalities of wait() 
   - When the child process is alive, the parent process enters the waiting state and waits for the return result of the child process
-  - When the child process calls exit(), wake up the parent process and use the return value of exit() as the return value of wait in the parent process
+  - When the child process calls exit(), wake up the parent process and use the return value of exit() as the return value of wait() in the parent process
 
 ---
 
 #### Zombie process and orphan process
 
-- Zombie process: A child process whose process control block **has not** been reclaimed by the parent process through the sys_wait system call, even though it has already executed the sys_exit system call
-  - When waiting for a zombie child process, the wait() system call immediately returns one of its values
+- Zombie process: A child process whose PCB **has not** been reclaimed by the parent process through the sys_wait system call, even though it has already executed the sys_exit system call
+  - How to handle Zombie process? 
+  - Using signal or fork twice
 - Orphan process: A child process **whose parent process has exited before it**
   - The root process is responsible for waiting and reclaiming orphan processes
 
@@ -645,13 +646,13 @@ exit(0);
 #### Process exit ``exit()``
 
 - When a process ends, it calls exit() to complete process resource reclamation
-  - Function of the exit() system call
+  - Functionalities of exit()
   - Use the call argument as the "result" of the process
-  - Close all open files and other resource occupations
+  - Close all occupied resource, such as opened files
   - Release memory
   - Release most of the kernel data structures associated with the process
   - Preserve the value of the result and check whether the parent process is alive
-    - If the parent process is not alive, set the parent process to the root process
+    - If it is not, set the parent process to the root process
   - Enter the zombie/defunct state, waiting for the parent process to reclaim it
 
 ---
@@ -664,13 +665,13 @@ exit(0);
 #### Other related system calls for process management
 
 - Priority control
-  - The nice() system call is used to specify the initial priority of a process
-  - In Unix systems, the priority of a process will decay over time
+  -  nice() is used to specify the initial priority of a process
+  - In Unix, the priority of a process will decay over time
 - Process debugging
-  - The ptrace() system call allows one process to control the execution of another process
-  - Sets breakpoints, views registers, etc
+  - ptrace() allows one process to control the execution of another process
+  - Set breakpoints, view registers, etc
 - Timing
-  - The sleep() system call allows a process to wait in the timer's waiting queue for a specified amount of time
+  - sleep() allows a process to wait in the timer's waiting queue for a specific amount of time
 
 
 
@@ -715,7 +716,7 @@ System calls related to process management may affect the state of the process
 
 #### Overhead of fork()?
 
-- In 99% of cases, we call exec() after fork()
+- In 99% cases, we call exec() after fork()
   - Memory copying during the fork() operation is unnecessary --why?
   - The child process may close opened files and network connections --why?
 
@@ -766,7 +767,7 @@ But!
 
 #### Rethinking fork
 
-But!
+
 ![w:1100](figs/fork-slow.png)
 
 
@@ -820,7 +821,7 @@ Conclusions:
 
 ### Summary
 
-1. Basic concept of process
+1. Basic concepts of process
 2. Process management
 3. Thoughts on Fork()
 - Overhead of fork()?
