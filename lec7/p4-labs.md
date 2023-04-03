@@ -27,8 +27,8 @@ Spring 2023
 
 **Outline**
 
-### 1. Experimental Objectives and Steps
-- Experiment Objectives
+### 1. Lab Objectives and Steps
+- Lab Objectives
 - Practical Steps
 2. Code Structure
 3. Application Design
@@ -60,7 +60,7 @@ Improve performance, simplify development, strengthen security
 }
 </style>
 
-#### Experiment Objectives
+#### Lab Objectives
 
 Enhance process management and resource management, improve performance, simplify development, and strengthen security.
 
@@ -73,13 +73,13 @@ Enhance process management and resource management, improve performance, simplif
 
 ---
 
-#### Experiment Requirements
+#### Lab Requirements
 
-- Understanding the concept of processes
-- Understanding the design and implementation of the dynamic management mechanism of the process
+- Understand the concept of processes
+- Understand the design and implementation of dynamic process management mechanisms
 - Basic understanding of process scheduling
-- Mastering the writing and use of shell applications
-- Ability to write an operating system that supports processes
+- Mastering writing and using shell applications
+- Able to write an OS that supports processes
 
 <!-- The most intelligent Cretaceous "Troodon" operating system troodon -->
 
@@ -122,7 +122,7 @@ Enhance process management and resource management, improve performance, simplif
 - 1965: Description of the Future MULTICS Operating System
    - Led by Prof. Fernando J. Corbató at MIT
    - Participating units: MIT, GE (General Electric Company), AT&T Bell Labs
-   - Proposed **process dynamic management idea**, inspired and created UNIX
+   - Proposed **dynamic process management**, inspiring the creation of UNIX
 - 1971: Thompson shell
    - The first **UNIX Shell** written by Ken Thompson
    - Designed with minimalism in mind, its syntax is very simple and is a simple command line interpreter 
@@ -157,7 +157,7 @@ After the operating system starts the ``shell``, the user can execute the applic
 
 - Manage processes
      - create
-     - Recycle
+     - reclaim
      - fork
      - exec
   
@@ -167,7 +167,7 @@ After the operating system starts the ``shell``, the user can execute the applic
 
 **Outline**
 
-1. Experimental Objectives and Steps
+1. Lab Objectives and Steps
 ### 2. Code Structure
 3. Application Design
 4. Kernel Programming
@@ -179,11 +179,11 @@ After the operating system starts the ``shell``, the user can execute the applic
 #### Improve OS
 ```
 ├── os
-     ├── build.rs (modification: application builder based on application name)
+     ├── build.rs (modified: application builder based on application name)
      └── src
-     ├── loader.rs (modification: application loader based on application name)
+     ├── loader.rs (modified: application loader based on application name)
    ├── main.rs (modified)
-          ├── mm (Modification: In order to support the system calls in this chapter, 
+          ├── mm (modified: In order to support the system calls in this chapter, 
                   some enhancements are made to this module)
 ```
 
@@ -194,19 +194,19 @@ After the operating system starts the ``shell``, the user can execute the applic
 ├── os
      └── src
    ├── syscall
-   ├──fs.rs (modification: add sys_read)
-              ├── mod.rs (modification: new system call distribution processing)
-              └── process.rs (modification: add sys_getpid/fork/exec/waitpid)
+   ├──fs.rs (modified: add sys_read)
+              ├── mod.rs (modified: new system call distribution processing)
+              └── process.rs (modified: add sys_getpid/fork/exec/waitpid)
    ├── task
-              ├── manager.rs (modification: task manager, which is part of the task manager function 
+              ├── manager.rs (modified: task manager, which is part of the task manager function 
                              in the previous chapter)
-   ├── mod.rs (modification: adjust the original interface implementation to support process)
-              ├── pid.rs (modification: Rust abstraction of process identifiers and kernel stack)
-              ├── processor.rs (modification: processor management structure ``Processor``, 
+   ├── mod.rs (modified: adjust the original interface implementation to support process)
+              ├── pid.rs (modified: Rust abstraction of process identifiers and kernel stack)
+              ├── processor.rs (modified: processor management structure ``Processor``, 
                                 which is part of the task manager function in the previous chapter)
-             └── task.rs (modification: task control block supporting process management mechanism)
+             └── task.rs (modified: task control block supporting process management mechanism)
           └── trap
-               ├── mod.rs (modification: modify the implementation of system calls to support process 
+               ├── mod.rs (modified: modify the implementation of system calls to support process 
                            system calls)
 ```
 
@@ -215,7 +215,7 @@ After the operating system starts the ``shell``, the user can execute the applic
 
 **Outline**
 
-1. Experimental Objectives and Steps
+1. Lab Objectives and Steps
 2. Code Structure
 ### 3. Application Design
 4. Kernel Programming
@@ -236,7 +236,7 @@ After the operating system starts the ``shell``, the user can execute the applic
   
 - OS Perspective
      - **Process** is an execution process applied on its address space
-        - A process owns resources,  the operating system manages process's resources according to the execution state of the process
+        - A process owns resources,  OS manages process's resources according to the execution state of the process
 ![bg right:45% 100%](figs/seg-addr-space.png)
 
 ---
@@ -300,11 +300,11 @@ pub fn sys_waitpid(pid: isize, exit_code: *mut i32) -> isize;
 
 **Outline**
 
-1. Experimental Objectives and Steps
+1. Lab Objectives and Steps
 2. Code Structure
 3. Application Design
 ### 4. Kernel Programming
-- Linking and Loading Support for Applications
+- Linking and Loading Apps
 - Core Data Structures
 - Implementation of Process Management Mechanism
 
@@ -312,7 +312,7 @@ pub fn sys_waitpid(pid: isize, exit_code: *mut i32) -> isize;
 
 ---
 
-#### Linking and Loading Support for Applications.
+#### Linking and Loading Apps
 
 During compiling the operating system, the following link_app.S file will be generated
 ```
@@ -330,9 +330,9 @@ During compiling the operating system, the following link_app.S file will be gen
 
 ---
 
-#### Application loading based on application name
+#### App loading based on app name
 
-In the loader loader.rs, analyze the content in link_app.S, and use a globally visible **read-only** vector ``APP_NAMES`` to store the names of all applications in memory in order, for the purpose of passing through the exec system The call to create a new process is done in advance.
+In the loader loader.rs, analyze the content in link_app.S, and use a globally visible **read-only** vector ``APP_NAMES`` to store the names of all applications in memory in order, for the purpose of passing through exec() to create a new process.
 
 
 ---
@@ -347,7 +347,7 @@ In the loader loader.rs, analyze the content in link_app.S, and use a globally v
 2. Code Structure
 3. Application Design
 4. Kernel Programming
-- Linking and Loading Support for Applications
+- Linking and Loading Apps
 ### Core Data Structures
 - Implementation of Process Management Mechanism
 
@@ -424,7 +424,7 @@ pub struct Processor {
 ```
 - Responsibility for maintaining the CPU state that is delegated from the Task `TaskManager`
 - Maintain tasks running on a processor, accessing their information or replacing them if necessary
-- `Processor` has an idle control flow that attempts to select a task from the Task Manager for execution on the current CPU core and has its own CPU startup kernel stack.
+- `Processor` has an idle control flow that attempts to select a task from the Task Manager for executing on the current CPU core and has its own CPU startup kernel stack.
 
 
 ---
@@ -440,7 +440,7 @@ pub struct Processor {
 2. Code Structure
 3. Application Design
 4. Kernel Programming
-- Linking and Loading Support for Applications
+- Linking and Loading Apps
 - Core data structures
 ### Implementation of process management mechanism
 
@@ -458,8 +458,8 @@ pub struct Processor {
 1. Create an initial process: create the first user mode process `initproc`
 2. Process generation mechanism: introduce process-related system calls `sys_fork`/`sys_exec`
 3. Process scheduling mechanism: process active/passive switching
-4. Process resource recycling mechanism: calling `sys_exit` to exit or or terminate a process and saving its exit code
-5. Process resource recycling mechanism: the parent process collects the information of the process through `sys_waitpid` and reclaims its resources
+4. Process resource reclaiming mechanism: calling `sys_exit` to exit or or terminate a process and saving its exit code
+5. Process resource reclaiming mechanism: the parent process collects the information of the process through `sys_waitpid` and reclaims its resources
 6. Character input mechanism: get character input through `sys_read` system call
 
 
@@ -476,7 +476,7 @@ pub fn add_initproc() {
      add_task(INITPROC. clone());
 }
 ```
-- `TaskControlBlock::new` parse the ELF execution file format of `initproc`, and establish the application address space, kernel stack, etc. form a ready TVB
+- `TaskControlBlock::new` parse the ELF execution file format of `initproc`, and establish the application address space, kernel stack, etc. form a ready TCB
 - `add_task` add the TCB to the ready queue
 
 
@@ -495,7 +495,7 @@ Copy the contents of the parent process and construct a new TCB
 ```rust
 pub fn fork(self: &Arc<TaskControlBlock>) -> Arc<TaskControlBlock> {...}
 ```
-- Create a new page table and copy the contents of the parent process address space
+- Create a new page table and copy the content of the parent process address space
 - create new trap context
 - Create a new application kernel stack
 - Create task context
@@ -526,16 +526,16 @@ pub fn exec(&self, elf_data: &[u8]) {...}
 
 Pause the current task and switch to the next one
 - Timing
-    - When the `sys_yield` system call
+    - when uses the `sys_yield` system call
     - when the time slice of the process runs out
 - Operation
     - Execute `suspend_current_and_run_next`  
        - Take out the currently executing task, modify its status, and put it at the end of the ready queue
-       - Then call the schedule function to trigger scheduling and switch tasks
+       - Then call the scheduling function to trigger scheduling and switch tasks
 
 ---
 
-#### Process Resource Recycle Mechanism
+#### Process Resource Reclaiming Mechanism
 
 Process exits `exit_current_and_run_next`
 - Take out current TCB from ``PROCESSOR``, modifying it as a zombie process
@@ -552,12 +552,12 @@ Process exits `exit_current_and_run_next`
 }
 </style>
 
-#### Linking and LoadiProcess Resource Recycle Mechanismng Support for Applications
+#### Process Resource Reclaiming Mechanism
 
 Waiting for child process to exit `sys_waitpid`
 
-- returns -1 IF there is no child process with process ID pid (pid==-1 or > 0)
-- When there is a zombie child process whose process ID is pid, the child process is recycled normally, the child process pid is returned, and the exit code parameter is updated to exit_code
+- returns -1, if there is no child process (pid==-1 or > 0)
+- When there is a zombie child process whose process ID is pid, the child process is reclaimed normally, the child process’s pid is returned, and the exit code  is updated to exit_code
 - returns -2 if  the child process has not exited . After the user library sees that it is -2, it further calls the sys_yield system call to make the parent process enter the waiting state
 - Before returning, release the TCB  of the child process
 
@@ -574,7 +574,7 @@ pub fn sys_read(fd: usize, buf: *const u8, len: usize) -> isize {
 - Call the interface `console_getchar` provided by the sbi submodule to get input from the keyboard
 
 ---
-#### Operating system POS that supports processes
+#### POS that supports processes
 - The relationship between process concept and process realization
 - Process management mechanism
 - Basic scheduling mechanism
@@ -592,11 +592,11 @@ pub fn sys_read(fd: usize, buf: *const u8, len: usize) -> isize {
 
 **Outline**
 
-1. Experimental Objectives and Steps
+1. Lab Objectives and Steps
 2. Code Structure
 3. Application Design
 4. Kernel Programming
-- Linking and Loading Support for Applications
+- Linking and Loading Apps
 - Core data structures
 - Implementation of process management mechanism
 
