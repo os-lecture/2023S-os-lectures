@@ -91,14 +91,14 @@ Priority increases by 10% for every nice level
 
 
 ---
-#### Scheduling Idea in BFS
+#### Scheduling Ideas in BFS
 Using the **bitmap** concept in the O(1) scheduler, all processes are arranged in 103 queues, not by priority but by priority interval, with each interval having a queue.
 <!-- https://www.cnblogs.com/dragonsuc/p/7144265.html -->
 ![bg right 100%](figs/bfs.png)
 
 
 ---
-#### Scheduling Idea in BFS
+#### Scheduling Ideas in BFS
 First, check the queue that is not 0 in the bitmap using the O(1) scheduler method, and then execute O(n) search in that queue to find the process with the smallest virtual deadline for execution.
 
 ![bg right 100%](figs/bfs.png)
