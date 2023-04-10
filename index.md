@@ -79,7 +79,7 @@ backgroundColor: white
 - [Section 3 Real-time Scheduling](./lec7/p3-realtime.html)
 - [Section 4 Practice: Operating System Supporting Processes](./lec7/p4-labs.html)
 
-<!--
+
 ---
 ## Lecture 8 Multiprocessor Scheduling
 - [Section 1 Symmetrical multiprocessing and multi-core architecture](./lec8/p1-multiprocessor-overview.html)
@@ -88,6 +88,8 @@ backgroundColor: white
 - [Section 4 Linux CFS (Completely Fair Schduler) Scheduling](./lec8/p4-linux-cfs-sched.html)
 - [Section 5 Linux/FreeBSD BFS Scheduling](./lec8/p5-linux-bfs-sched.html)
 
+
+<!--
 ---
 ## Lecture 9 File System
 - [Section 1 File System Overview](./lec9/p1-fsoverview.html)
