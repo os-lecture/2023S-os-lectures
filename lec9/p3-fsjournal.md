@@ -11,88 +11,89 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第九讲 文件系统
+# Lecture 9 File System
 
-## 第三节 支持崩溃一致性的文件系统
+## Section 3 File System Supporting Crash Consistency
 
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren
 
-2023年春季
-
----
-
-**提纲**
-
-### 1. 崩溃一致性问题
-- 崩溃一致性
-- 崩溃场景
-2. 文件系统检查程序 fsck
-3. 日志文件系统
+Spring 2023
 
 ---
 
-#### 文件系统的持久数据更新挑战
+**Outline**
 
-如何在出现断电（power loss）或系统崩溃（system crash）的情况下，更新持久数据结构。
-
-崩溃可能导致磁盘文件系统映像中的文件系统数据结构出现**不一致**性。如，有空间泄露、将垃圾数据返回给用户等。
-
----
-
-#### 崩溃一致性问题
-
-**崩溃一致性**问题（crash-consistency problem）也称**一致性更新**问题（consistent-update problem）
-- 特定操作需要更新磁盘上的**两个结构**A和B。
-- 磁盘一次只为一个请求提供服务，因此其中一个请求将首先到达磁盘（A或B）。
-- 如果在一次写入完成后系统崩溃或断电，则磁盘上的结构将处于不一致（inconsistent）的状态。
+### 1. Crash-consistency problem
+- Crash consistency
+- Crash scenario
+2. File system checker fsck
+3. Journaling file system
 
 ---
 
-#### 崩溃一致性的需求
+#### Challenge of persistent data update in file system
 
+How to update persistent data structures in the event of a power loss or system crash
 
-* 目标
-  * 将文件系统从一个一致状态（在文件被追加之前），原子地（atomically）变迁到另一个一致状态（在inode、位图和新数据块被写入磁盘之后）。
-* 困难
-  * 磁盘一次只提交一次写入，更新之间可能会发生崩溃或断电。
+Crashes can cause **inconsistencies** in the filesystem data structures in the disk file system image. For example, there may be space leaks or garbage data returned to users
 
 ---
 
-#### 文件更新过程示例
+#### Crash-consistency problem
 
-一个应用以某种方式更新磁盘结构：将单个数据块附加到原有文件。
-- 通过打开文件，调用`lseek()`将文件偏移量移动到文件末尾，然后在关闭文件之前，向文件发出单个4KB写入来完成追加。
+The **crash-consistency** problem, also known as the **consistent-update** problem
+- Specific operation needs to update **two structures** A and B on the disk
+- As the disk can only serve one request at a time, one of the requests will be served first (A or B)
+- If a system crash or power loss occurs after one write is completed, the structures on the disk will be in an inconsistent state
+---
+
+#### Requirements for crash consistency
+
+
+* Goal
+   * To transition the file system from one consistent state (before the file is appended) to another consistent state (after the inode, bitmap, and new data block are written to the disk) atomically
+* Challenge
+   * The disk can only commit one write at a time, and a crash or power loss may occur between updates
+---
+
+#### Example of file update process
+
+An application updates the disk structure in some way: by appending a single data block to an existing file
+- By opening the file, calling `lseek()` to move the file offset to the end of the file, and issuing a single 4KB write to the file before closing it to complete the append
 
 ---
 
-#### 文件系统数据结构
+#### File system data structure
 
-* inode位图（inode bitmap，只有8位，每个inode一个）
-* 数据位图（data bitmap，也是8位，每个数据块一个）
-* inode（总共8个，编号为0到7，分布在4个块上）
-* 数据块（总共8个，编号为0～7）。
-
+* Inode bitmap (8 bits, one for each inode)
+* Data bitmap (also 8 bits, one for each data block)
+* Inodes (total of 8, numbered 0 to 7, distributed over 4 blocks)
+* Data block (total of 8, numbered 0 to 7)
 <!--
-文件系统的示意图
+Schematic diagram of the file system
 -->
 ![w:1100](figs/crash-ex.jpg)
 
 
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+#### Disk operations in file updates
 
-#### 文件更新中的磁盘操作
-
-一个应用以某种方式更新磁盘结构：将单个数据块附加到原有文件
-- 必须对磁盘执行**3次单独写入**
-  - inode（I[v2]）、位图（B[v2]）和数据块（Db）
-- 发出write()系统调用时，这些写操作通常不会立即发生。
-  - 脏的inode、位图和新数据先在**内存**（页面缓存page cache，或缓冲区缓存buffer cache）中存在一段时间。
-- 当文件系统最终决定将它们写入磁盘时（比如说5s或30s），文件系统将向磁盘发出必要的**写入请求**。
+An application updates the disk structure in some way: by appending a single data block to the existing file
+- **Three separate writes** must be performed to the disk
+   - inode (I[v2]), bitmap (B[v2]) and data block (Db)
+- When a write() system call is issued, these write operations usually do not happen immediately
+   - The dirty inode, bitmap, and new data first exist in **memory** (page cache or buffer cache) for a period of time
+- When the file system eventually decides to write them to the disk (such as 5s or 30s), the file system issues the necessary **write requests** to the disk
 
 <!--![w:900](figs/crash-ex.png)-->
 
@@ -100,364 +101,375 @@ backgroundColor: white
 
 ---
 
-**提纲**
+**Outline**
 
-1. 崩溃一致性问题
-- 崩溃一致性
-### 崩溃场景
-2. 文件系统检查程序 fsck
-3. 日志文件系统
+1. Crash-consistency problem
+- crash consistency
+### - Crash scenario
+2. File system checker fsck
+3. Journaling file system
 
 ---
 
-#### 文件操作中的崩溃
-在文件操作过程中可能会发生崩溃，从而干扰磁盘的这些更新。
-* 如果写入操作中的一个或两个完成后发生崩溃，而不是全部 3个，则文件系统可能处于**有趣**（不一致）的状态。
+#### Crashes in file operations
+A crash may occur during file operations, disrupting these updates to the disk
+* If a crash occurs after one or two of the write operations are completed, instead of all three, then the file system may be in an **interesting** (inconsistent) state
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
 
 ---
 
-#### 崩溃场景一
+#### Crash scenario 1
 
-只将数据块（Db）写入磁盘
-* **数据在磁盘上**，但没有指向它的inode，也没有表示块已分配的位图
-* **好像写入从未发生过**一样
-
-<!-- ![w:900](figs/crash-ex.png) -->
-![w:1100](figs/crash-ex-normal.jpg)
-
----
-
-#### 崩溃场景二 
-
-只有**更新的inode**（I[v2]）写入了磁盘
-* inode指向磁盘块5，其中Db即将写入，但Db尚未写入
-* **从磁盘读取垃圾数据**（磁盘块5的旧内容）。
-
-<!-- ![w:900](figs/crash-ex.png) -->
-![w:1100](figs/crash-ex-normal.jpg)
-
-
-
----
-
-#### 崩溃场景三
-
-只有**更新后的位图**（B [v2]）写入了磁盘
-* 位图指示已分配块5，但没有指向它的inode
-* 这种写入将导致**空间泄露**（space leak），文件系统永远不会使用块5
-
-<!-- ![w:900](figs/crash-ex.png) -->
-![w:1100](figs/crash-ex-normal.jpg)
-
-
----
-
-#### 崩溃场景四
-
-**inode（I[v2]）和位图（B[v2]）写入了磁盘**，但没有写入数据（Db）
-* inode有一个指向块5的指针，位图指示5正在使用，因此从文件系统的元数据的角度来看，一切**看起来很正常**
-* 但**磁盘块5中又是垃圾**。
+Only the data block (Db) is written to the disk
+* **The data is on disk**, but there is no inode pointing to it, nor is there a bitmap indicating that the block has been allocated
+* **It appears as if the write never happened**
 
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
 
 ---
 
-#### 崩溃场景五
+#### Crash scenario 2
 
-**写入了inode（I[v2]）和数据块（Db）**，但没有写入位图（B[v2]）
-* inode指向了磁盘上的正确数据
-* 在inode和位图（B1）的旧版本之间存在**不一致**
+Only the **updated inode** (I[v2]) is written to the disk
+* The inode points to disk block 5, where Db is about to be written, but Db has not yet been written
+* **Garbage data is read from the disk** (old content of disk block 5)
+
+<!-- ![w:900](figs/crash-ex.png) -->
+![w:1100](figs/crash-ex-normal.jpg)
+
+
+
+---
+
+#### Crash scenario 3
+
+Only the **updated bitmap** (B[v2]) is written to the disk
+* The bitmap indicates that block 5 has been allocated, but there is no inode pointing to it
+* This type of write will result in a **space leak**, as the file system will never use block 5
+
+<!-- ![w:900](figs/crash-ex.png) -->
+![w:1100](figs/crash-ex-normal.jpg)
+
+
+---
+
+#### Crash scenario 4
+
+The **inode(I[v2]) and bitmap(B[v2]) are written to disk**, but the data(Db) is not
+* The inode has a pointer to block 5, and the bitmap indicates that block 5 is in use, so everything **appears normal** from the file system's metadata perspective.
+* However, **the disk block 5 contains garbage**
 
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
 
 ---
 
-#### 崩溃场景六
+#### Crash scenario 5
 
-**写入了位图（B[v2]）和数据块（Db）**，但没有写入inode（I[v2]）
-* inode和数据位图之间再次存在**不一致**
-* 不知道它属于哪个文件，因为没有inode指向该块
+The **inode (I[v2]) and data block (Db)** are written, but the bitmap (B[v2]) is not
+* The inode points to the correct data on disk
+* There is a **discrepancy** between the inode and the old version of the bitmap (B1)
+
+<!-- ![w:900](figs/crash-ex.png) -->
+![w:1100](figs/crash-ex-normal.jpg)
+
+---
+
+#### Crash scenario 6
+
+The **bitmap (B[v2]) and data block (Db)** are written, but the inode (I[v2]) is not
+* There is a **discrepancy** between the inode and the data bitmap
+* It is not known which file the block belongs to, as there is no inode pointing to it
 
 ![w:1100](figs/crash-ex.png)
 
 ---
 
-**提纲**
+**Outline**
 
-1. 崩溃一致性问题
-### 2. 文件系统检查程序 fsck
-3. 日志文件系统
-
----
-
-#### 崩溃解决方案
-
-* 文件系统检查程序 fsck
-* 基于预写日志（write ahead log）的文件系统
+1. Crash-consistency problem
+### 2. File system checker fsck
+3. Journaling file system
 
 ---
 
-#### 文件系统检查程序 fsck
+#### Crash solution
 
-早期的文件系统采用了一种简单的方法来处理崩溃一致性。
-* 让不一致的事情发生，然后再修复它们（重启时）
-* 目标：确保文件系统**元数据内部一致**。
+* The file system checker fsck
+* File system based on write ahead log
+
+---
+
+#### File system checker fsck
+
+Early file systems used a simple approach to handle crash consistency
+* Let inconsistent things happen and then fix them (upon restart)
+* Goal: ensure **internal consistency of the file system metadata**
+
+
+---
+<style scoped>
+{
+  font-size: 27px
+}
+</style>
+#### Superblock check
+
+Check if the superblock is reasonable, mainly conducting an integrity check
+* Ensure that the file system size is greater than the number of allocated blocks
+* If the contents of the superblock are found to be **inconsistent (conflicting)**, the system (or administrator) can decide to use the **alternate copy** of the superblock
+
+Note: For file systems with high reliability, there will be multiple disk sectors where superblock backups are placed
+
+![bg right:45% 100%](figs/backup-superblock.png)
+
+---
+
+#### Consistency check between bitmap and inode
+
+Scans inodes, indirect blocks, doubly indirect blocks, etc. to understand the blocks currently allocated in the file system and generate a correct version of the allocation bitmap
+* If there is any inconsistency between the bitmap and the inode, the issue is resolved by trusting the information inside the inode
+* The same type of check is performed for all inodes to ensure that all inodes that appear to be in use are marked in the inode bitmap
 
 
 ---
 
-#### 超级块检查
+#### Inode status check
 
-检查超级块是否合理，主要是进行健全性检查
-* 确保文件系统大小大于分配的块数
-* 找到超级块的**内容不合理（冲突）**，系统（或管理员）可以决定使用超级块的**备用副本**
-
-注：可靠性高的文件系统，会有多处放置超级块备份的磁盘扇区。
-
-![w:650](figs/backup-superblock.png)
+Check if each inode is damaged or has other issues
+* Each allocated inode has a valid type field (i.e. regular file, directory, symbolic link, etc.)
+* If there is an issue with the inode field that is not easy to fix, the inode is considered suspicious and is cleared by fsck, and the inode bitmap is updated accordingly
 
 ---
 
-#### 位图与inode间的一致性检查
+#### Link count check
 
-扫描inode、间接块、双重间接块等，以了解当前在文件系统中分配的块，生成正确版本的分配位图
-* 如果位图和inode之间存在任何不一致，则通过信任inode内的信息来解决它
-* 对所有inode执行相同类型的检查，确保所有看起来像在用的inode，都在inode位图中有标记
-
-
----
-
-#### inode状态检查
-
-检查每个inode是否存在损坏或其他问题
-* 每个分配的inode具有有效的类型字段（即常规文件、目录、符号链接等）
-* 如果inode字段存在问题，不易修复，则inode被认为是可疑的，并被fsck清除，inode位图相应地更新。
+The inode link count indicates the number of different directories containing references (i.e. links) to this particular file
+* Starting from the root directory, scan the entire directory tree and build its own link count for each file and directory in the file system
+* If the newly calculated count does not match the count found in the inode, the count in the inode is usually repaired
+* If an allocated inode is found without a directory referencing it, it is moved to the lost+found directory
 
 ---
 
-#### 链接计数检查
+#### Duplicate pointer check
 
-inode链接计数表示包含此特定文件的引用（即链接）的不同目录的数量。
-* 从根目录开始扫描整个目录树，并为文件系统中的每个文件和目录构建自己的链接计数
-* 如果新计算的计数与inode中找到的计数不匹配，则通常是修复inode中的计数
-* 如果发现已分配的inode但没有目录引用它，则会将其移动到lost + found目录。
-
----
-
-#### 重复指针检查
-
-两个不同的inode引用同一个块的情况
-* 如果一个inode明显错误，可能会被清除或复制指向的块，从而为每个inode提供其自己的文件数据。
-* inode有很多错误可能性，比如其inode内的元数据不一致
-  * inode有文件的长度记录，但其实际指向的数据块大小小于其文件长度。
+The case where two different inodes reference the same block
+* If one inode is obviously wrong, the block it points to may be cleared or duplicated, providing each inode with its own file data
+* There are many possibilities for inode errors, such as inconsistent metadata within the inode
+   * The inode has a length record for the file, but the actual size of the data block it points to is smaller than the file length
 
 ---
 
-#### 坏块检查
+#### Bad block check
 
-在扫描所有指针列表时，检查坏块指针。如果指针显然指向超出其有效范围的某个指针，则该指针被认为是“坏的”。
-* 地址指向大于分区大小的块
-* 从inode或间接块中删除（清除）该指针
-
----
-
-#### 目录检查
-
-fsck不了解用户文件的内容，但目录包含由文件系统本身创建的特定格式的信息。对每个目录的内容执行额外的完整性检查。
-  - 确保“.”和“..”是前面的条目，目录条目中引用的每个inode都已分配
-  - 确保整个层次结构中没有目录的引用超过一次。
+Check for bad block pointers while scanning all pointer lists. If a pointer points obviously beyond its valid range, the pointer is considered "bad"
+* Address pointing to a block larger than the partition size
+* Delete (clear) the pointer from the inode or indirect block
 
 ---
 
-#### 文件系统检查程序 fsck 的不足
+#### Directory check
 
-- 对于非常大的磁盘卷，扫描整个磁盘，以查找所有已分配的块并读取整个目录树，可能需要几分钟或几小时。
-- 可能丢数据！
-
----
-
-**提纲**
-
-1. 崩溃一致性问题
-2. 文件系统检查程序 fsck
-### 3. 日志文件系统
-- 日志
-- 数据日志（data journaling）
-- 日志文件系统的性能优化
+Fsck does not know the content of user files, but directories contain information of a specific format created by the file system itself. Additional integrity checks are performed on the contents of each directory
+   - Ensure that "." and ".." are the first entries and that every inode referenced in directory entries is allocated
+   - Ensure that no directory is referenced more than once in the entire hierarchy
 
 ---
 
-#### 日志（或预写日志）
+#### Shortcomings of the file system checker fsck
 
-预写日志（write-ahead logging）
-- 从数据库管理系统的世界中借鉴的想法
-- 在文件系统中，出于历史原因，通常将预写日志称为日志（journaling）
-- 第一个实现它的文件系统是[Cedar](https://www.microsoft.com/en-us/research/publication/the-cedar-file-system/)
-- 许多现代文件系统都使用这个想法，包括Linux ext3和ext4、reiserfs、IBM的JFS、SGI的XFS和Windows NTFS。
+- For very large disk volumes, scanning the entire disk to find all allocated blocks and reading the entire directory tree may take several minutes or hours.
+- Data loss may occur!
 
 ---
 
-#### 预写日志的思路
+**Outline**
 
-* 更新磁盘时，在覆写结构之前，首先写下一点小注记（在磁盘上的其他地方，在一个众所周知的位置），描述你将要做的事情
-* 写下这个注记就是“预写”部分，把它写入一个结构，并组织成“日志”
-
----
-
-#### 预写日志的崩溃恢复
-
-- 通过将注释写入磁盘，可以保证在更新（覆写）正在更新的结构期间发生崩溃时，能够返回并查看你所做的注记，然后重试
-- 在崩溃后准确知道要修复的内容（以及如何修复它），而不必扫描整个磁盘
-- 日志功能通过在更新期间增加了一些工作量，大大减少了恢复期间所需的工作量
+1. Crash-consistency problem
+2. File system checker fsck
+### 3. Journaling file system
+- Logging
+- Data journaling
+- Performance optimization of journaling file system
 
 ---
 
-**提纲**
+#### Logging (or write-ahead logging)
 
-1. 崩溃一致性问题
-2. 文件系统检查程序 fsck
-3. 日志文件系统
-- 日志
-### 数据日志（data journaling）
-- 日志文件系统的性能优化
+Write-ahead logging
+- Ideas borrowed from the world of database management systems
+- In file systems, for historical reasons, write-ahead logging is usually referred to as journaling
+- The first filesystem to implement it was [Cedar](https://www.microsoft.com/en-us/research/publication/the-cedar-file-system/)
+- Many modern file systems use this idea, including Linux ext3 and ext4, reiserfs, IBM's JFS, SGI's XFS, and Windows NTFS
 
 ---
 
-#### 数据日志（data journaling）
+#### Idea of write-ahead logging
+
+* When updating the disk, before overwriting the structure, write a small note (in another location on the disk, in a well-known location) describing what you are about to do
+* Writing this note is the "write-ahead" part, putting it into a structure and organizing it into a "log"
+
+---
+
+#### Crash recovery with write-ahead logging
+
+- By writing the note to the disk, you can ensure that if a crash occurs while the structure being updated is being overwritten, you can return and look at the note you made and try again
+- Know exactly what needs to be fixed (and how to fix it) after a crash without having to scan the entire disk
+- The log function greatly reduces the amount of work required during recovery by adding some extra work during updates
+
+---
+
+**Outline**
+
+1. Crash-consistency problem
+2. File system checker fsck
+3. Journaling file system
+- Logging
+### Data journaling
+- Performance optimization of journaling file system
+
+---
+
+#### Data journaling
 
 ![w:900](figs/ext3-journal-struct.png)
-- TxB: transaction 开始
-- TxE: transaction 结束
-- logical logging: 中间 3 块数据
+- TxB: transaction begins
+- TxE: transaction ends
+- Logical logging: intermediate 3 blocks of data
 ---
 
 
-#### 数据日志（data journaling）
+#### Data journaling
 
 ![w:900](figs/ext3-journal-struct.png)
-- 数据日志写到磁盘上
-- 更新磁盘，覆盖相关结构 (checkpoint)
-  - I[V2] B[v2] Db
+- Data journal written to disk
+- Update the disk, cover the relevant structure (checkpoint)
+   - I[V2] B[v2] Db
 
 ---
 
-#### 写入日志期间发生崩溃
+#### A crash occurs while writing to the log
 
-磁盘内部可以（1）写入TxB、I[v2]、B[v2]和TxE，然后才写入Db。
-* 如果磁盘在（1）和（2）之间断电，那么磁盘上会变成：
+Internally on the disk, TxB, I[v2], B[v2], and TxE are written before Db
+* If the disk crashes between (1) and (2), the disk will be like:
 
 ![w:1000](figs/ext3-journal-struct-err.png)
 
 ---
 
-#### 数据日志的两步事务写入
+#### Two-step transaction write of data log
 
-为避免该问题，文件系统分两步发出事务写入。
-- 将除TxE块之外的所有块写入日志，同时发出这些写入操作
-- 当这些写入完成时，日志将看起来像这样（假设又是文件追加的工作负载）：
+To avoid this problem, the file system issues transaction writes in two steps
+- Write all blocks except TxE block to the log and issue these writes
+- When these writes are complete, the log will look like this (assuming it is a file append workload):
 ![w:1000](figs/ext3-journal-write.png)
 
 ---
 
-#### 数据日志的两步事务写入
+#### Two-step transaction write of data log
 
-当这些写入完成时，文件系统会发出TxE块的写入，从而使日志处于最终的安全状态：
+When these writes are complete, the file system issues a write of the TxE block, putting the log in its final, secure state:
 ![w:900](figs/ext3-journal-commit.png)
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+#### Data log update process
 
-#### 数据日志的更新流程
-
-当前更新文件系统的协议如下，3个阶段中的每一个都标上了名称。
-1. **日志写入**
-   - 将事务的内容（包括TxB、元数据和数据）写入日志，等待这些写入完成。
-2. **日志提交**
-   - 将事务提交块（包括TxE）写入日志，等待写完成，事务被认为已提交（committed）。
-3. **加检查点**
-   - 将更新内容（元数据和数据）写入其最终的磁盘位置。
-
----
-
-#### 数据日志的崩溃恢复
-
-在此更新序列期间的任何时间都可能发生崩溃。
-
-- 如果崩溃发生在将事务安全地写入日志之前
-- 如果崩溃是在事务提交到日志之后，但在检查点完成之前发生
-
-太多写，慢！
+The current protocol for updating the file system is as follows, with each of the three stages labeled
+1. **Log write**
+    - Write the contents of the transaction (including TxB, metadata, and data) to the log and wait for these writes to complete
+2. **Log commit**
+    - Write the transaction commit block (including TxE) to the log and wait for the write to complete, and the transaction is considered committed
+3. **Add Checkpoint**
+    - Write the updated contents (metadata and data) to their final disk location
 
 ---
 
-**提纲**
+#### Crash recovery with data log
 
-1. 崩溃一致性问题
-2. 文件系统检查程序 fsck
-3. 日志文件系统
-- 日志
-- 数据日志（data journaling）
-### 日志文件系统的性能优化
+A crash can occur at any time during this update sequence
+
+- If the crash occurs before the transaction is safely written to the log
+- If the crash occurs after the transaction has been committed to the log but before the checkpoint is complete
+
+Too many writes, slow!
 
 ---
 
-#### 日志超级块 journal superblock
+**Outline**
 
-- 批处理日志更新
-- 使日志有限：循环日志
+1. Crash-consistency problem
+2. File system checker fsck
+3. Journaling file system
+- Logging
+- Data journaling
+### Performance optimization for journaling file systems
+
+---
+
+#### Journal superblock
+
+- Batched journal updates
+- Limiting the log: circular log
 
 ![w:900](figs/ext3-journal-batch.png)
 ![w:900](figs/ext3-journal-superblock.png)
 
 ---
 
-#### 日志超级块的更新过程
+#### Update process of journal superblock
 - Journal write
 - Journal commit
 - Checkpoint
-- Free: 一段时间后，通过更新日记帐，超级块将交易记录标记为空闲
+- Free: After a period of time, the superblock marks the transaction record as free by updating the journal
 
 
 ---
 
-#### 元数据日志 Metadata Journaling
+#### Metadata journaling
 
-什么时候应该将数据块 Db 写入磁盘？
-  - 数据写入的顺序对于仅元数据的日志记录很重要
-  - 如果在事务（包含 I [v2] 和 B [v2]）完成后将 Db 写入磁盘，这样有问题吗？
+When should data block Db be written to disk?
+   - The order of data writes is important for metadata journaling only
+   - Is there a problem with writing the Db to disk after the transaction (including I [v2] and B [v2]) is completed?
 
 ---
 
-#### 元数据日志的更新过程
+#### Update process of metadata journaling 
 - Data write
 - Journal metadata write
 - Journal commit
 - Checkpoint metadata
 - Free
 
-通过强制首先写入数据，文件系统可保证指针永远不会指向垃圾数据。
+By forcing data to be written first, the file system can ensure that pointers never point to garbage data
 
+---
 
---- 
-
-#### Data Journaling时间线 v.s. Metadata Journaling时间线	
+#### Data journaling timeline v.s. metadata journaling timeline
 ![bg 90%](figs/ext3-journal-data-timeline.png)
 
 
 ![bg 90%](figs/ext3-journal-metadata-timeline.png)
 
 ---
+<style scoped>
+{
+  font-size: 32px
+}
+</style>
+### Summary
 
-### 小结
-
-1. 崩溃一致性问题
-- 崩溃一致性
-- 崩溃场景
-2. 文件系统检查程序 fsck
-3. 日志文件系统
-- 日志
-- 数据日志（data journaling）
-- 日志文件系统的性能优化
+1. Crash-consistency problem
+- Crash consistency
+- Crash scenario
+2. File system checker fsck
+3. Journaling file system
+- Logging
+- Data journaling
+- Performance optimization of journaling file system
