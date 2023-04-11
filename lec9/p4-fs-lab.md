@@ -1,11 +1,14 @@
 ---
+noteId: "db866d32d86511edb7d82f06d610f713"
+tags: []
 marp: true
-theme: default
+theme: "default"
 paginate: true
 _paginate: false
-header: ''
-footer: ''
-backgroundColor: white
+header: ""
+footer: ""
+backgroundColor: "white"
+
 ---
 
 <!-- theme: gaia -->

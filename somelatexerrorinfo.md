@@ -1,3 +1,9 @@
+---
+noteId: "db87a5b4d86511edb7d82f06d610f713"
+tags: []
+
+---
+
 # latex 常见错误提示及原因简析
 
 from https://blog.csdn.net/dlaicxf/article/details/52527367

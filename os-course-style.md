@@ -1,3 +1,9 @@
+---
+noteId: "db877ea3d86511edb7d82f06d610f713"
+tags: []
+
+---
+
 # 远程上课方式
 ## 课前
 * 鼓励课前预习：浏览下次课[视频和](http://os.cs.tsinghua.edu.cn/oscourse/OS2020spring/#A.2Bi.2F56C4uyTkk-)[slides](http://os.cs.tsinghua.edu.cn/oscourse/OS2020spring/#A.2Bi.2F56C4uyTkk-)，以及相关的[课堂问题](https://github.com/LearningOS/os_course_exercises/blob/2020spring/SUMMARY.md)。

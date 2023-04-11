@@ -1,3 +1,9 @@
+---
+noteId: "db87a5b1d86511edb7d82f06d610f713"
+tags: []
+
+---
+
 
 
 | 知识点   | RISC-V   | X86   |

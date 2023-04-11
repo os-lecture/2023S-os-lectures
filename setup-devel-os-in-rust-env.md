@@ -1,3 +1,9 @@
+---
+noteId: "db87a5b2d86511edb7d82f06d610f713"
+tags: []
+
+---
+
 
 # for devel os kernel in rust, in ubuntu 20.04 x86-64
 

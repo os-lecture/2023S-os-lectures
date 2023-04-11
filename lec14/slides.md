@@ -1,5 +1,8 @@
 ---
-layout: cover
+noteId: "daf1a740d86511edb7d82f06d610f713"
+tags: []
+layout: "cover"
+
 ---
 
 # 第一讲 操作系统概述
