@@ -1,8 +1,10 @@
 ---
-
-excalidraw-plugin: parsed
+noteId: "db45e1c1d86511edb7d82f06d610f713"
+tags: []
+excalidraw-plugin: "parsed"
 
 ---
+
 ==⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of this document. ⚠==
 
 
