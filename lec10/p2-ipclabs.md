@@ -11,9 +11,9 @@ backgroundColor: white
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# Lecture 10 Inter Process Communication
+# Lecture 10 Inter Process Communication(IPC)
 
-## Section 2 IPC-Supporting OS(IPC OS, IOS)
+## Section 2.  IPC-Supporting OS(IPC OS, IOS)
 
 <br>
 <br>
