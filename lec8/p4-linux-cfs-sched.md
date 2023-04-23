@@ -337,4 +337,4 @@ signed char d = b - 250;
      * spawn system call
      * stride scheduling algorithm
 * Experiment submission requirements
-     * The 11th day after the task is assigned ;
+     * May 7, 2023;
