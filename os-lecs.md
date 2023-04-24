@@ -92,7 +92,6 @@ backgroundColor: "white"
 - [Section 5 Linux/FreeBSD BFS Scheduling](./lec8/p5-linux-bfs-sched.html)
 
 
-<!--
 ---
 ## Lecture 9 File System
 - [Section 1 File System Overview](./lec9/p1-fsoverview.html)
@@ -101,6 +100,7 @@ backgroundColor: "white"
 - [Section 4 Practice: Operating System Supporting Files](./lec9/p4-fs-lab.html)
 
 
+<!--
 ---
 ## Lecture 10 Threads and coroutines
 - [Part 1 Thread](./lec11/p1-thread.html)
