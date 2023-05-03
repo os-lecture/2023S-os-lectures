@@ -1,218 +1,255 @@
 ---
-noteId: "daa38742d86511edb7d82f06d610f713"
-tags: []
 marp: true
-theme: "default"
+theme: default
 paginate: true
 _paginate: false
-header: ""
-footer: ""
-backgroundColor: "white"
-
+header: ''
+footer: ''
+backgroundColor: white
 ---
 
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第十一讲 线程与协程
+# Lecture 11 Threads and coroutines
 
-## 第二节 协程
+## Section 2 Coroutine
 
 
 <br>
 <br>
 
-向勇 陈渝 李国良 任炬 
+Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
 
-2023年春季
+Spring 2023
+
 
 ---
 
-**提纲**
+**Outline**
 
-### 1. 协程的概念
-2. 协程的实现
-3. 协程示例
-4. 协程与操作系统内核
+### 1. The concept of coroutines
+2. The implementation of coroutines
+3. The example pf Coroutine
+4. Coroutines and Operating System Kernel
 
 ![bg right:60% 70%](figs/coroutine-2.png)
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 线程存在的不足
+#### Insufficient threads
 
-<!-- 什么是协程？ https://zhuanlan.zhihu.com/p/172471249 -->
-- 线程有啥不足？
-  -  大规模并发I/O操作场景
-     -  大量线程**占内存**总量大
-     -  管理线程程开销大
-        - 创建/删除/切换
-     -  访问共享数据易错
+<!-- What is a coroutine? https://zhuanlan.zhihu.com/p/172471249 -->
+- What's wrong with threads?
+   - Large-scale concurrent I/O operation scenarios
+      - A large number of threads ** occupy a large amount of memory **
+      - High manageent overhead of threads
+         - creation/termination/switching
+      - Accessing shared data is prone to errors.
 ![bg right:51% 100%](figs/thread-issue1.png)
 
 
 ---
-#### 协程(coroutine)的提出
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-<!-- 并发编程漫谈之 协程详解--以python协程入手（三） https://blog.csdn.net/u013597671/article/details/89762233 -->
-协程由Melvin Conway在1963年提出并实现
-- 作者对协程的描述是“行为与主程序相似的子例程(subroutine)”
-- 协程采用同步编程方式支持大规模并发I/O异步操作
+#### Proposal of coroutine
 
-Donald  Knuth ：子例程是协程的特例
+<!-- Detailed explanation of coroutines in concurrent programming -- starting with python coroutines (3) https://blog.csdn.net/u013597671/article/details/89762233 -->
+Coroutines were proposed and implemented by Melvin Conway in 1963
+- The authors describe coroutines as "subroutines that behave like the main program"
+- The coroutine uses synchronous programming to support large-scale concurrent I/O asynchronous operations
+
+Donald Knuth: Subroutines are a special case of coroutines
 ![bg right:42% 100%](figs/coroutine-3.png)
 
-<!-- 协程的概念最早由Melvin Conway在1963年提出并实现，用于简化COBOL编译器的词法和句法分析器间的协作，当时他对协程的描述是“行为与主程序相似的子例程”。 -->
+<!-- The concept of a coroutine was first proposed and implemented by Melvin Conway in 1963 to simplify the cooperation between the lexical and syntactic analyzers of the COBOL compiler. At that time, his description of the coroutine was "similar to the main program subroutine". -->
 
 ---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-#### 协程的定义
+#### Definition of coroutine
 
-<!-- 并发编程漫谈之 协程详解--以python协程入手（三） https://blog.csdn.net/u013597671/article/details/89762233 -->
-- Wiki的定义：协程是一种程序组件，是由子例程（过程、函数、例程、方法、子程序）的概念泛化而来的，子例程只有一个入口点且只返回一次，协程允许多个入口点，可在指定位置挂起和恢复执行。
+<!-- Detailed explanation of coroutines in concurrent programming -- starting with python coroutines (3) https://blog.csdn.net/u013597671/article/details/89762233 -->
+- Wiki definition: Coroutines are a type of program component that are generalized from the concept of subroutines (procedures, functions, routines, methods, subprograms). Subroutines have only one entry point and return only once, while coroutines allow multiple entry points and can be suspended and resumed at specified positions during execution.
 
-协程的核心思想：控制流的主动让出与恢复
 
-<!-- 协程(Coroutine)-ES中关于Generator/async/await的学习思考 https://blog.csdn.net/shenlei19911210/article/details/61194617 -->
+core idea: active surrender and recovery of control flow
+
+<!-- Learning thinking about Generator/async/await in Coroutine-ES https://blog.csdn.net/shenlei19911210/article/details/61194617 -->
 
 ![bg right:35% 100%](figs/coroutine-3.png)
 
 ---
-#### 协程（异步函数）与函数（同步函数）
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-<!-- C++20协程原理和应用 https://zhuanlan.zhihu.com/p/498253158 -->
-- 相比普通函数，协程的函数体可以挂起并在任意时刻恢复执行
-  - **无栈协程是普通函数的泛化**
-  - **本课程**中的协程限指无栈协程(Stackless Coroutine)
+#### Coroutine (asynchronous function) and function (synchronous function)
 
-![w:900](figs/function-coroutine.png)
+<!-- C++20 coroutine principle and application https://zhuanlan.zhihu.com/p/498253158 -->
+- Compared with ordinary functions, the function body of coroutines can be suspended and resumed at any time
+   - **Stackless coroutine is a generalization of ordinary functions**
+   - The coroutines in **this course** are limited to stackless coroutines 
+
+![bg right:50% 100%](figs/function-coroutine.png)
 
 ---
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
 
-#### 协程(无栈协程)与用户线程的比较
+#### Comparison between coroutines (stackless coroutines) and user threads
 
-- 协程的内存占用比线程小
-  - 线程数量越多，协程的性能优势越明显
-- 不需要多线程的锁机制，不存在同时写变量冲突，在协程中控制共享资源不加锁，只需要判断状态，所以执行效率比多线程高很多。
+- Coroutines have a smaller memory footprint than threads
+   - The larger the number of threads, the more obvious the performance advantage of the coroutine
+- There is no need for a multi-threaded locking mechanism, and there is no conflict of writing variables at the same time. In the coroutine, shared resources are controlled without locking, and only the status needs to be judged, so the execution efficiency is much higher than that of multi-threading.
 ![w:750](figs/coroutinevsthread.png)
 
 ---
 
-#### 协程示例
+#### The example pf Coroutine
 
 ```
-def func()://普通函数
+def func()://normal function
+    print("a")
+    print("b")
+    print("c")
+```
+```
+def func()://coroutine function
    print("a")
+   yield
    print("b")
+   yield
    print("c")
-```
-```
-def func()://协程函数
-  print("a")
-  yield
-  print("b")
-  yield
-  print("c")
 ```
 
 ![bg right:55% 80%](figs/coroutine2.png)
 
 ---
 
-**提纲**
+**Outline**
 
-1. 协程的概念
-### 2. 协程的实现
-3. 协程示例
-4. 协程与操作系统内核
+1. The concept of coroutine
+### 2. The implementation of coroutines
+3. The example pf Coroutine
+4. Coroutines and Operating System Kernel
 
-![bg right:60% 70%](figs/coroutine-2.png)
-
----
-
-#### 协程的实现方式
-
-<!-- 并发编程漫谈之 协程详解--以python协程入手（三） https://blog.csdn.net/u013597671/article/details/89762233 -->
-2004年Lua的作者Ana Lucia de Moura和Roberto Ierusalimschy发表论文“[Revisiting Coroutines](https://www.researchgate.net/publication/2934331_Revisiting_Coroutines)”，提出依照三个因素来对协程进行分类：
-- 控制传递（Control-transfer）机制
-- 栈式（Stackful）构造
-- 编程语言中第一类（First-class）对象
+![bg right:50% 70%](figs/coroutine-2.png)
 
 ---
 
-#### 基于控制传递的协程
+#### The implementation of coroutines
 
-控制传递机制：对称（Symmetric） v.s. 非对称（Asymmetric）协程
-- 对称协程：
-   - 只提供一种传递操作，用于在协程间直接传递控制
-   - 对称协程都是等价的，控制权直接在对称协程之间进行传递
-   - 对称协程在挂起时主动指明另外一个对称协程来接收控制权
-- 非对称协程（半对称（Semi-symmetric）协程）：
-  - 提供调用和挂起两种操作，非对称协程挂起时将控制返回给调用者
-  - 调用者或上层管理者根据某调度策略调用其他非对称协程进行工作
+<!-- Detailed explanation of coroutines in concurrent programming -- starting with python coroutines (3) https://blog.csdn.net/u013597671/article/details/89762233 -->
+In 2004, Ana Lucia de Moura and Roberto Ierusalimschy, the authors of Lua, published the paper "[Revisiting Coroutines](https://www.researchgate.net/publication/2934331_Revisiting_Coroutines)", proposing to classify coroutines according to three factors:
+- Control-transfer mechanism
+- Stackful structure
+- First-class objects in programming languages
 
-<!-- 出于支持并发而提供的协程通常是对称协程，用于表示独立的执行单元，如golang中的协程。用于产生值序列的协程则为非对称协程，如迭代器和生成器。
-这两种控制传递机制可以相互表达，因此要提供通用协程时只须实现其中一种即可。但是，两者表达力相同并不意味着在易用性上也相同。对称协程会把程序的控制流变得相对复杂而难以理解和管理，而非对称协程的行为在某种意义上与函数类似，因为控制总是返回给调用者。使用非对称协程写出的程序更加结构化。 -->
+---
+<style scoped>
+{
+  font-size: 26px
+}
+</style>
+
+#### Coroutine based on control transfer
+
+Control Transfer Mechanism: Symmetric v.s. Asymmetric Coroutines
+- Symmetric coroutines:
+    - Provides only one transfer operation for directly transfer control between coroutines
+    - The symmetric coroutines are all equivalent, and the control is directly transferred between the symmetric coroutines
+    - When the symmetric coroutine is suspended, it actively specifies another symmetric coroutine to receive control
+- Asymmetric coroutines (Semi-symmetric coroutines):
+   - Provide call and suspend operations, return control to the caller when the asymmetric coroutine suspends
+   - The caller or upper-level manager calls other asymmetric coroutines to work according to a certain scheduling policy
+
+<!-- The coroutines provided to support concurrency are usually symmetric coroutines, which are used to represent independent execution units, such as coroutines in golang. Coroutines that produce sequences of values are asymmetric coroutines, such as iterators and generators.
+These two control transfer mechanisms can express each other, so only one of them needs to be implemented to provide a common coroutine. However, the same expressive power does not mean that the two are also the same in ease of use. Symmetric coroutines make the control flow of the program relatively complex and difficult to understand and manage, while asymmetric coroutines behave like functions in a sense because control is always returned to the caller. Programs written using asymmetric coroutines are more structured. -->
 
 ---
 
-#### 基于控制传递的协程
+#### Coroutine based on control transfer
 
 ![w:900](figs/coroutine-sym.png)
 
 ---
 
-#### 基于控制传递的协程
+#### Coroutine based on control transfer
 
 ![w:850](figs/coroutine-asym.png)
 
 ---
 
-#### 有栈协程和无栈协程
+#### Stackful coroutines and stackless coroutines
 
-<!-- 有栈协程和无栈协程 https://cloud.tencent.com/developer/article/1888257 -->
-栈式（Stackful）构造：有栈(stackful)协程 v.s. 无栈(stackless)协程
-- 无栈协程：指可挂起/恢复的函数
-   - 无独立的上下文空间（栈），数据保存在堆上 
-   - 开销： 函数调用的开销
-- 有栈协程：用户态管理并运行的线程
-  - 有独立的上下文空间（栈）
-  - 开销：用户态切换线程的开销
-- 是否可以在任意嵌套函数中被挂起？
-  - 有栈协程：可以；无栈协程：不行
+<!-- Stacked coroutines and stackless coroutines https://cloud.tencent.com/developer/article/1888257 -->
+Stackful structure: stackful coroutines vs. Stackful structure
+- Stackless coroutine: refers to a function that can be suspended/resumed
+    - No independent context space (stack), data is stored on the heap
+    - Overhead: the overhead of the function call
+- Stackful oroutines: threads that are managed and run in user mode
+   - Has an independent context space (stack)
+   - Overhead: the overhead of switching threads in user mode
+- Can it be suspended in arbitrary nested functions?
+   - Stackful structure: yes; Stackful structure: no
 <!-- ![bg right:40% 100%](figs/function-coroutine.png) -->
 
-<!-- 
+<!--
 https://zhuanlan.zhihu.com/p/25513336
-Coroutine从入门到劝退
+Coroutine from entry to persuasion
 
-除此之外，wiki上还对coroutine做了分类：
-非对称式协程，asymmetric coroutine。
-对称式协程，symmetric coroutine。
-半协程，semi-coroutine。 
+In addition, the wiki also classifies coroutines:
+Asymmetric coroutine, asymmetric coroutine.
+Symmetric coroutine, symmetric coroutine.
+Semi-coroutine, semi-coroutine.
 
 -->
 
 ---
-#### 基于第一类语言对象的协程
-<!-- 有栈协程和无栈协程 https://cloud.tencent.com/developer/article/1888257 -->
-第一类（First-class）语言对象：First-class对象 v.s. 受限协程 (**是否可以作为参数传递**)
-- First-class对象 : 协程被在语言中作为first-class对象
-   - 可以作为参数被传递，由函数创建并返回，并存储在一个数据结构中供后续操作
-   - 提供了良好的编程表达力，方便开发者对协程进行操作
--  受限协程
-   -  特定用途而实现的协程，协程对象限制在指定的代码结构中
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+#### Coroutines based on first-class language objects
+<!-- Stacked coroutines and stackless coroutines https://cloud.tencent.com/developer/article/1888257 -->
+First-class language objects: First-class objects v.s. restricted coroutines (**can't be passed as a parameter**)
+- First-class object: the coroutine is used as a first-class object in the language
+    - Can be passed as a parameter, created and returned by a function, and stored in a data structure for subsequent operations
+    - Provides good programming expression, which is convenient for developers to operate on coroutines
+- Constrained coroutines
+    - A coroutine implemented for a specific purpose, the coroutine object is limited to a specified code structure
  
 ---
-#### 第一类（First-class）语言对象
-- 可以被赋值给一个变量
-- 可以嵌入到数据结构中
-- 可以作为参数传递给函数
-- 可以作为值被函数返回
+#### First-class language objects
+- Can be assigned to a variable
+- Can be embedded in data structures
+- Can be passed as an argument to a function
+- Can be returned by a function as a value
 
 ---
 
-#### Rust语言中的协程Future
+#### Coroutine Future in Rust 
 
 <!--
 Ref: https://os.phil-opp.com/async-await/#example
@@ -220,20 +257,20 @@ Ref: https://os.phil-opp.com/async-await/#example
 
 A future is a representation of some operation which will **complete in the future**.
 
-![bg right:54% 95%](figs/async-example.png)
+![bg right:50% 95%](figs/async-example.png)
 
 ---
 
-#### 基于有限状态机的Rust协程实现
+#### Implementation of Rust coroutine based on finite state machine
 
 ```rust
 async fn example(min_len: usize) -> String {
-    let content = async_read_file("foo.txt").await;
-    if content.len() < min_len {
-        content + &async_read_file("bar.txt").await
-    } else {
-        content
-    }
+     let content = async_read_file("foo.txt").await;
+     if content.len() < min_len {
+         content + &async_read_file("bar.txt").await
+     } else {
+         content
+     }
 }
 ```
 
@@ -245,131 +282,137 @@ async fn example(min_len: usize) -> String {
 
 * Three phases in asynchronous task:
 
-  1. **Executor**: A Future is **polled** which result in the task progressing
-     - Until a point where it can no longer make progress
-  2. **Reactor**: Register an **event source** that a Future is waiting for
-     - Makes sure that it will wake the Future when event is ready
-  3. **Waker**: The event happens and the Future is **woken up**
-     - Wake up to the executor which polled the Future
-     - Schedule the future to be polled again and make further progress
+   1. **Executor**: A Future is **polled** which result in the task progressing
+      -Until a point where it can no longer make progress
+   2. **Reactor**: Register an **event source** that a Future is waiting for
+      - Makes sure that it will wake the Future when event is ready
+   3. **Waker**: The event happens and the Future is **woken up**
+      - Wake up to the executor which polled the Future
+      - Schedule the future to be polled again and make further progress
 
 ---
 -->
 
-#### 基于轮询的 Future的异步执行过程
+#### Asynchronous execution process  of future based on polling 
 
 <!--
-基于轮询的 Future的异步执行过程
+Asynchronous execution process based on polling Future
 
-- 执行器会轮询 `Future`，直到最终 `Future` 需要执行某种 I/O 
-- 该 `Future` 将被移交给处理 I/O 的反应器，即 `Future` 会等待该特定 I/O 
-- I/O 事件发生时，反应器将使用传递的`Waker` 参数唤醒 `Future` ，传回执行器
-- 循环上述三步，直到最终`future`任务完成（resolved）
-- 任务完成并得出结果时，执行器释放句柄和整个`Future`，整个调用过程就完成了
-  -->
+- The executor polls the `Future` until eventually the `Future` needs to perform some kind of I/O
+- The `Future` will be handed off to the reactor that handles the I/O, i.e. the `Future` will wait for that specific I/O
+- When an I/O event occurs, the reactor will use the passed `Waker` parameter to wake up the `Future` and pass it back to the executor
+- Loop the above three steps until the final `future` task is completed (resolved)
+- When the task is completed and the result is obtained, the executor releases the handle and the entire `Future`, and the entire calling process is completed
+   -->
 
 ![width:750px](figs/future-loop.jpg)
 
 ---
 
-#### 协程的优点
-- 协程创建成本小，降低了内存消耗
-- 协程自己的调度器，减少了 CPU 上下文切换的开销，提高了 CPU 缓存命中率
-- 减少同步加锁，整体上提高了性能
-- 可按照同步思维写异步代码
-  - 用同步的逻辑，写由协程调度的回调
+#### Advantages of coroutines
+- The cost of coroutine creation is small, reducing memory consumption
+- The coroutine's own scheduler reduces the overhead of CPU context switching and improves the CPU cache hit rate
+- Reduce synchronization locks and improve overall performance
+- Can write asynchronous code according to synchronous thinking
+   - Write callbacks scheduled by coroutines with synchronous logic
 
 ---
-#### 协程 vs 线程 vs 进程 
-- 切换
-  - 进程：页表，堆，栈，寄存器
-  - 线程：栈，寄存器
-  - 协程：寄存器，不换栈
+#### Coroutines vs Threads vs Processes
+- switching
+   - Process: page table, heap, stack, registers
+   - Thread: stack, registers
+   - Coroutine: register, no stack change
 
 ![w:560](figs/threadvsroutine1.png)![w:580](figs/threadvsroutine2.png)
 
 ---
 
-#### 协程 vs 线程 vs 进程 
+#### Coroutines vs Threads vs Processes
 
-协程适合IO密集型场景
+Coroutines are suitable for IO-intensive scenarios
 
 ![w:1200](figs/coroutine-asym3.jpeg)
 
 ---
 
-**提纲**
+**Outline**
 
-1. 协程的概念
-2. 协程的实现
-### 3. 协程示例
-4. 协程与操作系统内核
+1. The concept of coroutine
+2. The implementation of coroutines
+### 3. The example pf Coroutine
+4. Coroutines and Operating System Kernel
 
 ![bg right:60% 70%](figs/coroutine-2.png)
 
 ---
 
-#### 支持协程的编程语言
-- 无栈协程：Rust、C++20、C Python、Java、Javascript等
-- 有栈协程（即线程）：Go、Java2022、Python、Lua
+#### Programming languages that support coroutines
+- Stackless coroutines: Rust, C++20, C Python, Java, Javascript, etc.
+- Stackful coroutines (threads): Go, Java2022, Python, Lua
    
 ![w:1100](figs/coroutine-langs.png)
-<!-- 
-https://wiki.brewlin.com/wiki/compiler/rust%E5%8D%8F%E7%A8%8B_%E8%B0%83%E5%BA%A6%E5%99%A8%E5%AE%9E%E7%8E%B0/
+<!--
+https://wiki.brewlin.com/wiki/compiler/rust%E5%8D%8F%E7%A8%8B_%E8%B0%83%E5%BA%A6%E5%99%A8%E5%AE% 9E%E7%8E%B0/
 
-理解协程的核心就是暂停和恢复，rust的协程通过状态机做到这一点，golang通过独立的栈做到这一点。理解这一点很重要 -->
+The core of understanding coroutines is to suspend and resume. Rust's coroutines do this through a state machine, and golang does this through an independent stack. It is important to understand this -->
 
-<!-- Java 协程要来了 https://cloud.tencent.com/developer/article/1949981 -->
-<!-- 深入Lua：协程的实现 https://zhuanlan.zhihu.com/p/99608423 -->
+<!-- Java coroutines are coming https://cloud.tencent.com/developer/article/1949981 -->
+<!-- In-depth Lua: The implementation of coroutines https://zhuanlan.zhihu.com/p/99608423 -->
 
-<!-- Rust中的协程: Future与async/await https://zijiaw.github.io/posts/a7-rsfuture/ -->
+<!-- Coroutines in Rust: Future and async/await https://zijiaw.github.io/posts/a7-rsfuture/ -->
 
 ---
-### 使用协程 -- go
-<!-- Go by Example 中文版: 协程
+### Using coroutines -- go
+<!-- Go by Example Chinese Version: Coroutines
 https://gobyexample-cn.github.io/goroutines -->
 
 ```go
 ... //https://gobyexample-cn.github.io/goroutines
 func f(from string) {
-    for i := 0; i < 3; i++ {
-        fmt.Println(from, ":", i)
-    }
+     for i := 0; i < 3; i++ {
+         fmt. Println(from, ":", i)
+     }
 }
 func main() {
-    f("direct")
-    go f("goroutine")
-    go func(msg string) {
-        fmt.Println(msg)
-    }("going")
-    time.Sleep(time.Second)
-    fmt.Println("done")
+     f("direct")
+     go f("goroutine")
+     go func(msg string) {
+         fmt.Println(msg)
+     }("going")
+     time. Sleep(time. Second)
+     fmt.Println("done")
 }
 ```
 
 ![bg right:30% 100%](figs/go-ex1.png)
 
 ---
-<!-- 
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+<!--
 Making multiple HTTP requests using Python (synchronous, multiprocessing, multithreading, asyncio)
 https://www.youtube.com/watch?v=R4Oz8JUuM4s
 https://github.com/nikhilkumarsingh/async-http-requests-tut -->
-### 使用协程 -- python
-<!-- asyncio 是 Python 3.4 引入的标准库，直接内置了对异步 IO 的支持。只要在一个函数前面加上 async 关键字就可以将一个函数变为一个协程。 -->
+### Using coroutines -- python
+<!-- asyncio is a standard library introduced by Python 3.4, which directly has built-in support for asynchronous IO. Just add the async keyword in front of a function to turn a function into a coroutine. -->
 
 ```python
 URL = 'https://httpbin.org/uuid'
 async def fetch(session, url):
-    async with session.get(url) as response:
-        json_response = await response.json()
-        print(json_response['uuid'])
+     async with session. get(url) as response:
+         json_response = await response.json()
+         print(json_response['uuid'])
 async def main():
-    async with aiohttp.ClientSession() as session:
-        tasks = [fetch(session, URL) for _ in range(100)]
-        await asyncio.gather(*tasks)
+     async with aiohttp.ClientSession() as session:
+         tasks = [fetch(session, URL) for _ in range(100)]
+         await asyncio. gather(*tasks)
 def func():
-    asyncio.run(main())
-```    
+     asyncio. run(main())
+```
 ```
 // https://github.com/nikhilkumarsingh/async-http-requests-tut/blob/master/test_asyncio.py
 b6e20fef-5ad7-49d9-b8ae-84b08e0f2d35
@@ -377,7 +420,7 @@ b6e20fef-5ad7-49d9-b8ae-84b08e0f2d35
 1.5898115579998375
 ```
 
-<!-- 进程，线程和协程 (Process, Thread and Coroutine) 理论篇，实践篇，代码 python
+<!-- Process, Thread and Coroutine (Process, Thread and Coroutine) theory, practice, code python
 https://leovan.me/cn/2021/04/process-thread-and-coroutine-theory/
 https://leovan.me/cn/2021/04/process-thread-and-coroutine-python-implementation/
 https://github.com/leovan/leovan.me/tree/master/scripts/cn/2021-04-03-process-thread-and-coroutine-python-implementation -->
@@ -385,7 +428,7 @@ https://github.com/leovan/leovan.me/tree/master/scripts/cn/2021-04-03-process-th
 
 
 ---
-### 使用协程 -- rust
+### Using coroutines -- rust
 
 <!-- https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html -->
 
@@ -393,113 +436,113 @@ https://github.com/leovan/leovan.me/tree/master/scripts/cn/2021-04-03-process-th
 use futures::executor::block_on;
 
 async fn hello_world() {
-    println!("hello, world!");
+     println!("hello, world!");
 }
 
 fn main() {
-    let future = hello_world(); // Nothing is printed
-    block_on(future); // `future` is run and "hello, world!" is printed
+     let future = hello_world(); // Nothing is printed
+     block_on(future); // `future` is run and "hello, world!" is printed
 }
 ```
 ```
-https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html 
+https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html
 ```
 
-<!-- 
-用python 写一个os
+<!--
+Write an os with python
 http://www.dabeaz.com/coroutines/
 http://www.dabeaz.com/coroutines/Coroutines.pdf -->
 ---
-### 进程/线程/协程性能比较
-<!-- 
+### Process/thread/coroutine performance comparison
+<!--
 https://www.youtube.com/watch?v=R4Oz8JUuM4s
 https://github.com/nikhilkumarsingh/async-http-requests-tut
-git@github.com:nikhilkumarsingh/async-http-requests-tut.git -->
-单进程：28秒
+git@github.com: nikhilkumarsingh/async-http-requests-tut.git -->
+Single process: 28 seconds
 ```python
 import requests
 from timer import timer
 URL = 'https://httpbin.org/uuid'
 def fetch(session, url):
-    with session.get(url) as response:
-        print(response.json()['uuid'])
+     with session.get(url) as response:
+         print(response. json()['uuid'])
 @timer(1, 1)
 def main():
-    with requests.Session() as session:
-        for _ in range(100):
-            fetch(session, URL)
+     with requests.Session() as session:
+         for _ in range(100):
+             fetch(session, URL)
 
 ```
 ---
-### 进程/线程/协程性能比较
-<!-- 
+### Process/thread/coroutine performance comparison
+<!--
 https://www.youtube.com/watch?v=R4Oz8JUuM4s
 https://github.com/nikhilkumarsingh/async-http-requests-tut
-git@github.com:nikhilkumarsingh/async-http-requests-tut.git -->
-多进程：7秒
+git@github.com: nikhilkumarsingh/async-http-requests-tut.git -->
+Multi-process: 7 seconds
 ```python
 from multiprocessing.pool import Pool
 import requests
 from timer import timer
 URL = 'https://httpbin.org/uuid'
 def fetch(session, url):
-    with session.get(url) as response:
-        print(response.json()['uuid'])
+     with session.get(url) as response:
+         print(response. json()['uuid'])
 @timer(1, 1)
 def main():
-    with Pool() as pool:
-        with requests.Session() as session:
-            pool.starmap(fetch, [(session, URL) for _ in range(100)])
+     with Pool() as pool:
+         with requests.Session() as session:
+             pool.starmap(fetch, [(session, URL) for _ in range(100)])
 ```
 
 ---
-### 进程/线程/协程性能比较
-<!-- 
+### Process/thread/coroutine performance comparison
+<!--
 https://www.youtube.com/watch?v=R4Oz8JUuM4s
 https://github.com/nikhilkumarsingh/async-http-requests-tut
-git@github.com:nikhilkumarsingh/async-http-requests-tut.git -->
-线程：4秒
+git@github.com: nikhilkumarsingh/async-http-requests-tut.git -->
+Thread: 4 seconds
 ```python
 from concurrent.futures import ThreadPoolExecutor
 import requests
 from timer import timer
 URL = 'https://httpbin.org/uuid'
 def fetch(session, url):
-    with session.get(url) as response:
-        print(response.json()['uuid'])
+     with session.get(url) as response:
+         print(response. json()['uuid'])
 @timer(1, 1)
 def main():
-    with ThreadPoolExecutor(max_workers=100) as executor:
-        with requests.Session() as session:
-            executor.map(fetch, [session] * 100, [URL] * 100)
-            executor.shutdown(wait=True)
+     with ThreadPoolExecutor(max_workers=100) as executor:
+         with requests.Session() as session:
+             executor. map(fetch, [session] * 100, [URL] * 100)
+             executor. shutdown(wait=True)
 ```
 
 ---
-### 进程/线程/协程性能比较
-<!-- 
+### Process/thread/coroutine performance comparison
+<!--
 https://www.youtube.com/watch?v=R4Oz8JUuM4s
 https://github.com/nikhilkumarsingh/async-http-requests-tut
-git@github.com:nikhilkumarsingh/async-http-requests-tut.git -->
-协程：2秒
+git@github.com: nikhilkumarsingh/async-http-requests-tut.git -->
+Coroutine: 2 seconds
 ```python
 ...
 URL = 'https://httpbin.org/uuid'
 async def fetch(session, url):
-    async with session.get(url) as response:
-        json_response = await response.json()
-        print(json_response['uuid'])
+     async with session. get(url) as response:
+         json_response = await response.json()
+         print(json_response['uuid'])
 async def main():
-    async with aiohttp.ClientSession() as session:
-        tasks = [fetch(session, URL) for _ in range(100)]
-        await asyncio.gather(*tasks)
+     async with aiohttp.ClientSession() as session:
+         tasks = [fetch(session, URL) for _ in range(100)]
+         await asyncio. gather(*tasks)
 @timer(1, 1)
 def func():
-    asyncio.run(main())
+     asyncio. run(main())
 ```
 <!-- import asyncio
 import aiohttp
-from timer import timer 
+from timer import timer
 
 requirements.txt
 requests
@@ -508,109 +551,108 @@ aiohttp
 -->
 
 ---
-#### Rust线程与协程的[示例](https://deepu.tech/concurrency-in-modern-languages/)
+#### [Example](https://deepu.tech/concurrency-in-modern-languages/) of Rust threads and coroutines
 
 Multi-threaded concurrent webserver
 
 ```rust
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").unwrap(); // bind listener
-    let pool = ThreadPool::new(100); // same number as max concurrent requests
+     let listener = TcpListener::bind("127.0.0.1:8080").unwrap(); // bind listener
+     let pool = ThreadPool::new(100); // same number as max concurrent requests
 
-    let mut count = 0; // count used to introduce delays
+     let mut count = 0; // count used to introduce delays
 
-    // listen to all incoming request streams
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        count = count + 1;
-        pool.execute(move || {
-            handle_connection(stream, count); // spawning each connection in a new thread
-        });
-    }
+     // listen to all incoming request streams
+     for stream in listener.incoming() {
+         let stream = stream. unwrap();
+         count = count + 1;
+         pool. execute(move || {
+             handle_connection(stream, count); // spawning each connection in a new thread
+         });
+     }
 }
 ```
 
 ---
 
-#### Rust线程与协程的[示例](https://deepu.tech/concurrency-in-modern-languages/)
+#### [Example](https://deepu.tech/concurrency-in-modern-languages/) of Rust threads and coroutines
 
 Asynchronous concurrent webserver
 
 ```rust
 #[async_std::main]
 async fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap(); // bind listener
-    let mut count = 0; // count used to introduce delays
+     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap(); // bind listener
+     let mut count = 0; // count used to introduce delays
 
-    loop {
-        count = count + 1;
-        // Listen for an incoming connection.
-        let (stream, _) = listener.accept().await.unwrap();
-        // spawn a new task to handle the connection
-        task::spawn(handle_connection(stream, count));
-    }
+     loop {
+         count = count + 1;
+         // Listen for an incoming connection.
+         let (stream, _) = listener. accept(). await. unwrap();
+         // spawn a new task to handle the connection
+         task::spawn(handle_connection(stream, count));
+     }
 }
 ```
 ---
 
-#### Rust线程与协程的[示例](https://deepu.tech/concurrency-in-modern-languages/)
+#### [Example](https://deepu.tech/concurrency-in-modern-languages/) of Rust threads and coroutines
 
 
 
 ```rust
 fn main() { //Asynchronous multi-threaded concurrent webserver
-    let listener = TcpListener::bind("127.0.0.1:8080").unwrap(); // bind listener
+     let listener = TcpListener::bind("127.0.0.1:8080").unwrap(); // bind listener
 
-    let mut pool_builder = ThreadPoolBuilder::new();
-    pool_builder.pool_size(100);
-    let pool = pool_builder.create().expect("couldn't create threadpool");
-    let mut count = 0; // count used to introduce delays
+     let mut pool_builder = ThreadPoolBuilder::new();
+     pool_builder. pool_size(100);
+     let pool = pool_builder.create().expect("couldn't create threadpool");
+     let mut count = 0; // count used to introduce delays
 
-    // Listen for an incoming connection.
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        count = count + 1;
-        let count_n = Box::new(count);
+     // Listen for an incoming connection.
+     for stream in listener.incoming() {
+         let stream = stream. unwrap();
+         count = count + 1;
+         let count_n = Box::new(count);
 
-        // spawning each connection in a new thread asynchronously
-        pool.spawn_ok(async {
-            handle_connection(stream, count_n).await;
-        });
-    }
+         // spawning each connection in a new thread asynchronously
+         pool.spawn_ok(async {
+             handle_connection(stream, count_n).await;
+         });
+     }
 }
 ```
 
 ---
 
-#### 线程/协程性能比较
+#### Thread/coroutine performance comparison
 
 ![width:950px](figs/webserver-Thread-Coroutine-Performance.png)
 
 ---
 
-**提纲**
+**Outline**
 
-1. 协程的概念
-2. 协程的实现
-3. 协程示例
-### 4. 协程与操作系统内核
+1. The concept of coroutine
+2. The implementation of coroutines
+3. The example pf Coroutine
+### 4. Coroutines and Operating System Kernel
 
 ![bg right:52% 95%](figs/coroutine-2.png)
 
 ---
 
-#### [线程与协程的统一调度](https://lexiangla.com/teams/k100041/classes/14e3d0ba33e211ecb668e28d1509205c/courses/8b52ee1233e111ecbcb4be09afb7b0ee)
+#### [Unified scheduling of threads and coroutines] 
+1. Flexible binding between coroutines and threads;
+2. Realize the concurrent execution of the coroutine (future) on a single CPU; it can be executed in parallel on multiple CPUs;
+3. Threads and coroutines can adopt different scheduling strategies;
+4. Following the processing process of thread interruption, **coroutine can be forcely interrupted**;
 
-1. 协程与线程灵活绑定；
-2. 实现协程（future）在单CPU上并发执行；可在多CPU上并行执行；
-3. 线程和协程可采取不同的调度策略；
-4. 沿用线程中断的处理过程，**协程可被强制中断**；
-
-![width:800px](figs/thread-corouting-scheduler.png)
+![width:600px](figs/thread-corouting-scheduler.png)
 
 ---
 
-#### 用户态的协程控制块(CCB, Coroutine Control Block)
+#### User Mode Coroutine Control Block (CCB, Coroutine Control Block)
 
 ![bg right:60% 90%](figs/coroutine-CCB.png)
 
@@ -618,33 +660,33 @@ Ref: [A Design and Implementation of Rust Coroutine with priority in Operating S
 
 ---
 
-#### 内核态的进程调度
+#### Process scheduling in kernel mode
 
 ![width:850px](figs/coroutine-scheduler-bitmap.png)
 
 ---
 
-#### 线程和协程的性能比较
+#### Performance comparison between threads and coroutines
 
 ![width:950px](figs/pipe-thread-coroutine-performance.png)
 
 ---
-#### 参考信息
+#### Reference Information
 - https://www.youtube.com/watch?v=R4Oz8JUuM4s
 - https://github.com/nikhilkumarsingh/async-http-requests-tut
 - http://www.dabeaz.com/coroutines/
-- https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html 
+- https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html
 - https://github.com/nikhilkumarsingh/async-http-requests-tut/blob/master/test_asyncio.py
-- https://gobyexample-cn.github.io/goroutines 
+- https://gobyexample-cn.github.io/goroutines
 - https://zijiaw.github.io/posts/a7-rsfuture/
 
 ---
 
-### 小结
+### Summary
 
-1. 协程的概念
-2. 协程的实现
-3. 协程示例
-4. 协程与操作系统内核
+1. The concept of coroutine
+2. The implementation of coroutines
+3. The example pf Coroutine
+4. Coroutines and Operating System Kernel
 
 ![bg right:40% 100%](figs/coroutine-2.png)
