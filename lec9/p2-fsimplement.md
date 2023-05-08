@@ -76,17 +76,17 @@ Spring 2023
 
 
 ---
-#### The function of virtual file system 
-- Purpose: abstracts all different file systems
-- Function
-   - Provides the same file and file system interface
-   - Manages all data structures associated with files and file systems
-   - Efficient query routines, traverse file systems
-   - Interacts with specific file system modules
+#### The functions of virtual file system 
+- Purpose: provide the abstraction of different file systems
+- Functions
+   - Provide the same file and file system interface
+   - Manage the data structures associated with files and file systems
+   - Efficient query, traverse file systems
+   - Interact with specific file system modules
 
 
 ---
-#### The Virtual File System unifies the access interface of different file systems
+#### The Virtual File System unifies the access interfaces of different file systems
 ![w:700](figs/vfs-app.png)
 
 
@@ -103,7 +103,7 @@ Spring 2023
 ---
 
 #### The storage view of file system
-- File volume control block (`superblock`)
+- Volume control block (`superblock`)
 - File control block ( `inode`/`vnode`)
 - Directory entry (`dir_entry`)
 - Data block (`data block`)
@@ -111,7 +111,7 @@ Spring 2023
 
 ---
 
-#### The organizational view of file system
+#### The organization view of file system
 
 ![bg 90%](figs/fsorg.png)
 ![bg 90%](figs/fsall.png)
@@ -119,7 +119,7 @@ Spring 2023
 
 ---
 
-#### Basic data structure of file system
+#### Basic data structures of file system
 ![w:700](figs/fsoverall.png)
 
 
@@ -129,13 +129,13 @@ Spring 2023
   font-size: 30px
 }
 </style>
-#### File volume control block (`superblock`)
+#### Volume control block (`superblock`)
 
-One file volume control block for each file system
+One volume control block for each file system
 - Detailed information about the file system
 - Block size, number of free blocks, etc
 - Total number of blocks and inodes, number of unused and used ones
-- File system mount time, last write time, and last disk check (fsck) time
+- The time of a file system was mounted, last write time, and last disk check (fsck) time
 ![bg right:45% 100%](figs/efs-superblock.png)
 
 
@@ -145,11 +145,11 @@ One file volume control block for each file system
   font-size: 30px
 }
 </style>
-#### File control block inode
+#### File control block (inode)
 Each file has an inode (`inode`/`vnode`)
    - Size, data block position (points to one or more data blocks)
    - Access mode (read/write/excute)
-   - Owner and group (owner/group)
+   - Owner and group 
    - Time information: time of creation or status change, time of last read/modified
    - **File name in the directory's data block**
 <!--![bg right 10% 50%](figs/efs-inode.png)-->
@@ -161,17 +161,17 @@ Each file has an inode (`inode`/`vnode`)
 ---
 #### Bitmap block
 Bitmap block ( `bitmap inode/dnode`)
-- Flags indicating whether inode is used or unused
-- Flags indicating whether dnode is used or unused
+- Flag indicating whether inode is used or unused
+- Flag indicating whether dnode is used or unused
 
 ---
-#### Data block dnode( `data node`)
+#### Data block (dnode)
 - Data blocks for directories and files
      - Contains directory and file contents
-     - Fixed size of data block determined during formatting
-     - Each block is numbered for inode reference
-     - Inode is generally 128B
-     - Data block is generally 4KB
+     - Determining the fixed size of a data block during volume formatting
+     - Each block has a number for the reference of inode
+     - The size of an inode is generally 128B
+     - The size of a data block is generally 4KB
 
 ---
 #### Data block of directory
@@ -187,9 +187,9 @@ Bitmap block ( `bitmap inode/dnode`)
 </style>
 #### Directory entry (`dir_entry`)
 - Directory entries are generally cached in memory
-   - Each directory entry represents a directory or file
-   - Directory entry data structure and tree layout are encoded into a tree data structure
-   - Points to the file control block, parent directory, child directory, etc.
+   - Each directory has a memory cache (linking to directories or files)
+   - The data structure of a directory entry and the tree layout are encoded into a tree data structure
+   - Point to the file control block, parent directory, child directory, etc.
 ![bg right 100%](figs/efs-direntry.png)
 
 ![bg right 100%](figs/fslayout.png)
@@ -199,7 +199,7 @@ Bitmap block ( `bitmap inode/dnode`)
 **Outline**
 
 1. Overview
-2. Basic data structure of file system
+2. Basic data structures of file system
 ### 3. File cache
 4. File allocation
 5. Example of file access process
@@ -216,14 +216,14 @@ Bitmap block ( `bitmap inode/dnode`)
 }
 </style>
 #### Data block cache
-- Data blocks **are read into memory as needed** 
-   - Provides read() operation
-   - Prefetch: Pre-read the next data block
+- Data blocks **are read into memory on demand** 
+   - `read()` operation
+   - Prefetch: Pre-read next data blocks
 - Data blocks are **cached** after use
-   - Assumes data will be used again
-   - Write operations may be cached and delayed writes
+   - Assume data will be used again
+   - Write operations may be cached and delayed
  
-  Page cache: cache data blocks and memory pages uniformly
+  Page cache: keep the cached data blocks and memory pages consistent
 
 ![bg right:45% 90%](figs/datacache.png)
 
@@ -250,7 +250,7 @@ Virtual page storage -- page cache
 ---
 #### Virtual page storage -- page cache
 
-Virtual pages in the virtual address space can be mapped to local external storage files
+Virtual pages in the virtual address space can be mapped to local disk (external storage) files
 - Page cache for file data blocks
    - File data blocks are mapped into pages in virtual memory
    - File read/write operations are converted into accesses to memory
@@ -286,7 +286,7 @@ Some file systems provide file locks to coordinate file access by multiple proce
 **Outline**
 
 1. Overview
-2. Basic data structure of file system
+2. Basic data structures of file system
 3. File cache
 ### 4. File allocation
 5. Example of file access process
@@ -299,7 +299,7 @@ Some file systems provide file locks to coordinate file access by multiple proce
    - Data block space cannot be too large
 - Some files are very large
    - Can support large files
-   - Can read and write efficiently
+   - Read and write efficiently
 ![bg right:50% 90%](figs/fd-openfiletable.png)
 
 
@@ -335,9 +335,9 @@ The file header specifies the starting block and length
 
 - Allocation strategy: first fit, best fit, etc
 - Pros: 
-   - Efficient sequential and random read access
+   - Efficient sequential and random read
 - Cons
-   - Frequent allocation leads to fragmentation; large file content overhead
+   - Frequent allocation leads to fragmentation; large overhead for adding file content
 
 
 
@@ -347,7 +347,7 @@ Data blocks are stored in a linked list
 
 ![w:800](figs/linkalloc.png)
 
-- Pros: easy to create, enlarge, and shrink; almost no fragmentation
+- Pros: easy to create and scale; almost no fragmentation
 - Cons:
     - Low efficiency for random access; poor reliability
     - If a link is broken, the subsequent data blocks are lost
@@ -371,14 +371,14 @@ Data blocks are stored in a linked list
 #### Indexed allocation
 
 - The file header contains a pointer to the index data block
-- The index in the index data block is the pointer to the file data block
+- The index of the index data block is the pointer to the file data block
 ![w:800](figs/indexalloc.png)
 - Pros
-   - Easy to create, enlarge, and shrink; almost no fragmentation; supports direct access
+   - Easy to create and scale; almost no fragmentation; supports direct access
 - Cons
-   - When the file is small, the storage overhead of indexing is relatively large
+   - When the file is small, the storage overhead of index is relatively large
 
-How to handle with large files?
+How to store large files?
 
 
 ---
@@ -434,8 +434,8 @@ Accessing data blocks in large files requires a large number of queries
 }
 </style>
 #### Free space management
-Track and record unallocated data blocks in file volumes: data structure?
-- Bitmap: Representing the list of free data blocks using a bitmap
+Track and record free data blocks in a volume: data structure?
+- Bitmap: use a bitmap to denote the list of free data blocks
    - 11111111001110101011101111...
    - $D_i = 0$ indicates that data block $i$ is free, otherwise, it is allocated
    - 160GB disk --> 40M data block --> 5MB bitmap
@@ -457,7 +457,7 @@ Track and record unallocated data blocks in file volumes: data structure?
 **Outline**
 
 1. Overview
-2. Basic data structure of file system
+2. Basic data structures of file system
 3. File cache
 4. File allocation
 ### 5. Example of file access process
@@ -489,7 +489,7 @@ Track and record unallocated data blocks in file volumes: data structure?
 ### Summary
 
 1. Overview
-2. Basic data structure of file system
+2. Basic data structures of file system
 3. File cache
 4. File allocation
 5. Example of file access process
