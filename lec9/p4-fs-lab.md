@@ -16,7 +16,7 @@ backgroundColor: "white"
 
 # Lecture 9 File System
 
-## Section 4 OS that supports the file
+## Section 4 OS with File System
 
 Filesystem OS (FOS)
 
@@ -79,11 +79,11 @@ Support **data persistence**
 
 ---
 #### History
-- 1965: Describes the future MULTICS OS
+- 1965: MULTICS describes the future OS
    - Pointed the way forward
      - Described **file** data as an unformatted byte stream
      - Introduced the concept of a **hierarchical file system** for the first time
-   - Inspired and nurtured UNIX
+   - Inspired the design of UNIX
       - The UNIX file system sees **everything as a file**
 ---
 
@@ -104,14 +104,14 @@ Support **data persistence**
 
 #### Issues to consider:
 
-- How is the file system organized on the hard drive? What is the hard drive layout?
+- How is the file system organized on the hard disk? What is the layout of hard disk?
 - How are free disk blocks managed?
 - How are files/directories represented?
    - What is a file? What is a directory?
 - How is file/directory data content represented?
-- How is a file accessed?
+- How to access a file?
 
-![bg right:40% 95%](figs/fs-intro.png)
+![bg right:38% 95%](figs/fs-intro.png)
 
 
 
@@ -255,7 +255,7 @@ Rust user shell
 ```
 After the operating system boots the ``shell``, users can execute applications by typing in the application name in the ``shell``
 
-From the user interface, there is no trace of the file system
+From the user interface, we cannot see anything about the file system
 
 
 ---
@@ -272,7 +272,7 @@ It will output "Hello, world!" to another file "filea", and read the contents to
 ---
 #### Practical steps
 
-We can also use the command line tool "cat_filea" to view the contents of "filea" more intuitively:
+We can also use the command line tool "cat_filea" to view the content of "filea" more intuitively:
 ```
 >> cat_filea
 Hello, world!
@@ -350,7 +350,7 @@ Improve OS
 │ ├── fs (Modification: Add support for regular files in the file system)
 │ │ ├── inode.rs (new: encapsulate the Inode abstraction provided by easy-fs into the OSInode seen by the kernel
 │ │ and implement the File Trait of the fs submodule)
-│ ├── loader.rs (removed: application loader loader submodule, this chapter begins to load applications from the file system)
+│ ├── loader.rs (removed: application loader submodule, this chapter begins to load applications from the file system)
 │ ├── mm
 │ │ ├── memory_set.rs (modification: insert MMIO virtual page when creating address space)
 │ ├── syscall
@@ -688,54 +688,8 @@ pub struct Bitmap {
 </style>
 #### DiskInode
 
-- ``read_at`` and ``write_at`` convert the file offset and buf length to a series of block numbers and read and write data blocks through ``get_block_cache``.
-- ``get_block_id`` method embodies the most important data block index function of Disk Inode. It can find the block number of the block used to save the file content for the block_id-th data block in the index, so that subsequent access to this data block can be performed
-
-![bg right:42% 95%](figs/inode-fsdisk.png)
-
-
----
-
-#### DiskInode
-
-DiskInode describes file information and data
-```rust
-pub struct DiskInode {
-     pub size: u32,
-     pub direct: [u32; INODE_DIRECT_COUNT],
-     pub indirect1: u32,
-     pub indirect2: u32,
-     type_: DiskInodeType,
-}
-```
-![bg right:55% 95%](figs/inode-fsdisk.png)
-
-
----
-
-#### Data blocks and directory entries
-
-```rust
-type DataBlock = [u8; BLOCK_SZ];
-
-pub struct DirEntry {
-     name: [u8; NAME_LENGTH_LIMIT + 1],
-     inode_number: u32,
-}
-```
-![bg right:55% 95%](figs/fs-fsdisk.png)
-
-
----
-<style scoped>
-{
-  font-size: 30px
-}
-</style>
-#### DiskInode
-
-- ``read_at`` and ``write_at`` cconvert the file offset and buf length to a series of block numbers and read/write data blocks through ``get_block_cache``
-- ``get_block_id`` method embodies the most important data block index function of Disk Inode. It can find the block number of the block used to save the file content for the block_id-th data block in the index, so that subsequent access to this data block can be performed
+- ``read_at`` and ``write_at`` convert the file offset and buf length to a series of block numbers, then read and write data blocks through ``get_block_cache``.
+- ``get_block_id`` method shows the most important function of DiskInode (i.e., indexing data block). It can find the number of the block used to save the file content, so that subsequent access to this data block can be performed
 
 ![bg right:42% 95%](figs/inode-fsdisk.png)
 
@@ -774,7 +728,7 @@ pub struct DirEntry {
 
 ---
 
-#### Block cache ``BlockCache``
+#### Block cache 
 
 ```rust
 pub const BLOCK_SZ: usize = 512;
@@ -788,7 +742,7 @@ pub struct BlockCache {
 }
 ```
 ``get_block_cache``: get a block cache numbered ``block_id``
-![bg right:55% 95%](figs/fs-fsdisk.png)
+![bg right:40% 95%](figs/fs-fsdisk.png)
 
 
 
@@ -831,7 +785,7 @@ lazy_static! {
  …
 lazy_static! {
      pub static ref ROOT_INODE: Arc<Inode> = {
-         let efs = EasyFileSystem::open(BLOCK_DEVICE. clone());
+         let efs = EasyFileSystem::open(BLOCK_DEVICE.clone());
          Arc::new(EasyFileSystem::root_inode(&efs))
 ```
 
@@ -851,7 +805,7 @@ pub fn sys_open(path: *const u8, flags: u32) -> isize {
          fd as isize // return fd
      ...
 ```
-If failed, reture `-1`
+If failed, return `-1`
 
 ---
 
@@ -897,7 +851,7 @@ Find a file in the root directory ``ROOT_INODE``, return ``OSInode``
 ```rust
 pub fn sys_close(fd: usize) -> isize {
      let task = current_task().unwrap();
-     let mut inner = task. inner_exclusive_access();
+     let mut inner = task.inner_exclusive_access();
       …
      inner.fd_table[fd].take();
      0
