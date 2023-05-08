@@ -32,17 +32,17 @@ Spring 2023
 
 ### 1. Crash-consistency problem
 - Crash consistency
-- Crash scenario
-2. File system checker fsck
+- Crash scenarios
+2. File system checker -  fsck
 3. Journaling file system
 
 ---
 
 #### Challenge of persistent data update in file system
 
-How to update persistent data structures in the event of a power loss or system crash
+How to update persistent data structures under a power loss or system crash?
 
-Crashes can cause **inconsistencies** in the filesystem data structures in the disk file system image. For example, there may be space leaks or garbage data returned to users
+Crashes can cause **inconsistencies** in the data structures of a file system. For example, there may be space leakage or returning garbage data to users.
 
 ---
 
@@ -51,7 +51,7 @@ Crashes can cause **inconsistencies** in the filesystem data structures in the d
 The **crash-consistency** problem, also known as the **consistent-update** problem
 - Specific operation needs to update **two structures** A and B on the disk
 - As the disk can only serve one request at a time, one of the requests will be served first (A or B)
-- If a system crash or power loss occurs after one write is completed, the structures on the disk will be in an inconsistent state
+- If a system crash or power loss occurs after one write is completed, the structures on the disk will be inconsistent
 ---
 
 #### Requirements for crash consistency
@@ -65,8 +65,8 @@ The **crash-consistency** problem, also known as the **consistent-update** probl
 
 #### Example of file update process
 
-An application updates the disk structure in some way: by appending a single data block to an existing file
-- By opening the file, calling `lseek()` to move the file offset to the end of the file, and issuing a single 4KB write to the file before closing it to complete the append
+An application updates the disk structure by appending a single data block to an existing file
+- By opening the file, calling `lseek()` to move the offset to the end of the file, and issuing a single 4KB write to the file before closing it to complete the appending
 
 ---
 
@@ -91,12 +91,12 @@ Schematic diagram of the file system
 </style>
 #### Disk operations in file updates
 
-An application updates the disk structure in some way: by appending a single data block to the existing file
+An application updates the disk structure by appending a single data block to the existing file
 - **Three separate writes** must be performed to the disk
    - inode (I[v2]), bitmap (B[v2]) and data block (Db)
 - When a write() system call is issued, these write operations usually do not happen immediately
-   - The dirty inode, bitmap, and new data first exist in **memory** (page cache or buffer cache) for a period of time
-- When the file system eventually decides to write them to the disk (such as 5s or 30s), the file system issues the necessary **write requests** to the disk
+   - The dirty inode, bitmap, and new data will be cached in **memory** (page cache or buffer cache) for a period of time
+- When the file system eventually decides to write them to the disk (e.g., after 5s or 30s), the file system issues the **write requests** to the disk
 
 <!--![w:900](figs/crash-ex.png)-->
 
@@ -108,7 +108,7 @@ An application updates the disk structure in some way: by appending a single dat
 
 1. Crash-consistency problem
 - crash consistency
-### - Crash scenario
+### - Crash scenarios
 2. File system checker fsck
 3. Journaling file system
 
@@ -126,7 +126,7 @@ A crash may occur during file operations, disrupting these updates to the disk
 
 Only the data block (Db) is written to the disk
 * **The data is on disk**, but there is no inode pointing to it, nor is there a bitmap indicating that the block has been allocated
-* **It appears as if the write never happened**
+* **It appears as if the write was never happened**
 
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
@@ -136,7 +136,7 @@ Only the data block (Db) is written to the disk
 #### Crash scenario 2
 
 Only the **updated inode** (I[v2]) is written to the disk
-* The inode points to disk block 5, where Db is about to be written, but Db has not yet been written
+* The inode points to disk block 5, where Db should be written, but Db has not yet completed
 * **Garbage data is read from the disk** (old content of disk block 5)
 
 <!-- ![w:900](figs/crash-ex.png) -->
@@ -150,7 +150,7 @@ Only the **updated inode** (I[v2]) is written to the disk
 
 Only the **updated bitmap** (B[v2]) is written to the disk
 * The bitmap indicates that block 5 has been allocated, but there is no inode pointing to it
-* This type of write will result in a **space leak**, as the file system will never use block 5
+* This type of write will result in a **space leakage**, as the file system will never use block 5
 
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
@@ -162,7 +162,7 @@ Only the **updated bitmap** (B[v2]) is written to the disk
 
 The **inode(I[v2]) and bitmap(B[v2]) are written to disk**, but the data(Db) is not
 * The inode has a pointer to block 5, and the bitmap indicates that block 5 is in use, so everything **appears normal** from the file system's metadata perspective.
-* However, **the disk block 5 contains garbage**
+* However, **the disk block 5 is still garbage data**
 
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
@@ -173,7 +173,7 @@ The **inode(I[v2]) and bitmap(B[v2]) are written to disk**, but the data(Db) is 
 
 The **inode (I[v2]) and data block (Db)** are written, but the bitmap (B[v2]) is not
 * The inode points to the correct data on disk
-* There is a **discrepancy** between the inode and the old version of the bitmap (B1)
+* **Inconsistency** between the inode and the old version of the bitmap (B1)
 
 <!-- ![w:900](figs/crash-ex.png) -->
 ![w:1100](figs/crash-ex-normal.jpg)
@@ -183,7 +183,7 @@ The **inode (I[v2]) and data block (Db)** are written, but the bitmap (B[v2]) is
 #### Crash scenario 6
 
 The **bitmap (B[v2]) and data block (Db)** are written, but the inode (I[v2]) is not
-* There is a **discrepancy** between the inode and the data bitmap
+* **Inconsistency** between the inode and the data bitmap
 * It is not known which file the block belongs to, as there is no inode pointing to it
 
 ![w:1100](figs/crash-ex.png)
@@ -193,19 +193,19 @@ The **bitmap (B[v2]) and data block (Db)** are written, but the inode (I[v2]) is
 **Outline**
 
 1. Crash-consistency problem
-### 2. File system checker fsck
+### 2. File system checker - fsck
 3. Journaling file system
 
 ---
 
 #### Crash solution
 
-* The file system checker fsck
+* The file system checker - fsck
 * File system based on write ahead log
 
 ---
 
-#### File system checker fsck
+#### File system checker - fsck
 
 Early file systems used a simple approach to handle crash consistency
 * Let inconsistent things happen and then fix them (upon restart)
@@ -224,7 +224,7 @@ Check if the superblock is reasonable, mainly conducting an integrity check
 * Ensure that the file system size is greater than the number of allocated blocks
 * If the contents of the superblock are found to be **inconsistent (conflicting)**, the system (or administrator) can decide to use the **alternate copy** of the superblock
 
-Note: For file systems with high reliability, there will be multiple disk sectors where superblock backups are placed
+Note: For the file systems with high reliability, there will be multiple disk sectors used for superblock backup
 
 ![bg right:45% 100%](figs/backup-superblock.png)
 
@@ -232,18 +232,18 @@ Note: For file systems with high reliability, there will be multiple disk sector
 
 #### Consistency check between bitmap and inode
 
-Scans inodes, indirect blocks, doubly indirect blocks, etc. to understand the blocks currently allocated in the file system and generate a correct version of the allocation bitmap
-* If there is any inconsistency between the bitmap and the inode, the issue is resolved by trusting the information inside the inode
-* The same type of check is performed for all inodes to ensure that all inodes that appear to be in use are marked in the inode bitmap
+Scan inodes, indirect blocks, secondary indirect blocks, etc., to get the information of block allocation in the file system and generate a correct version of the allocation bitmap.
+* If there is any inconsistency between the bitmap and an inode, the issue is resolved by trusting the information of the inode
+* The same type of check is performed for all the inodes to ensure that all the inodes that appear to be in use are marked in the inode bitmap
 
 
 ---
 
 #### Inode status check
 
-Check if each inode is damaged or has other issues
-* Each allocated inode has a valid type field (i.e. regular file, directory, symbolic link, etc.)
-* If there is an issue with the inode field that is not easy to fix, the inode is considered suspicious and is cleared by fsck, and the inode bitmap is updated accordingly
+Check if each inode is damaged or has other problems
+* Each allocated inode has a valid type field (i.e., regular file, directory, symbolic link, etc.)
+* If there is an problem with an inode, which is not easy to fix, the inode is considered suspicious and will be cleared by fsck. Then, the inode bitmap will be updated accordingly
 
 ---
 
@@ -258,9 +258,9 @@ The inode link count indicates the number of different directories containing re
 
 #### Duplicate pointer check
 
-The case where two different inodes reference the same block
-* If one inode is obviously wrong, the block it points to may be cleared or duplicated, providing each inode with its own file data
-* There are many possibilities for inode errors, such as inconsistent metadata within the inode
+The case where two different inodes link to the same block
+* If one inode is obviously wrong, the block it points to may be cleared. Otherwise, the block will be duplicated, providing each inode with its own file data
+* Errors in an inode can be various, such as inconsistent metadata within the inode
    * The inode has a length record for the file, but the actual size of the data block it points to is smaller than the file length
 
 ---
@@ -268,15 +268,15 @@ The case where two different inodes reference the same block
 #### Bad block check
 
 Check for bad block pointers while scanning all pointer lists. If a pointer points obviously beyond its valid range, the pointer is considered "bad"
-* Address pointing to a block larger than the partition size
+* The address of a block is larger than the size of disk partition
 * Delete (clear) the pointer from the inode or indirect block
 
 ---
 
 #### Directory check
 
-Fsck does not know the content of user files, but directories contain information of a specific format created by the file system itself. Additional integrity checks are performed on the contents of each directory
-   - Ensure that "." and ".." are the first entries and that every inode referenced in directory entries is allocated
+Fsck does not know the content of user files, but directories contain specific format information created by the file system itself. Additional integrity checks are performed on the content of each directory.
+   - Ensure that "." and ".." are the first two entries and that every inode referenced in directory entries is allocated
    - Ensure that no directory is referenced more than once in the entire hierarchy
 
 ---
@@ -284,14 +284,14 @@ Fsck does not know the content of user files, but directories contain informatio
 #### Shortcomings of the file system checker fsck
 
 - For very large disk volumes, scanning the entire disk to find all allocated blocks and reading the entire directory tree may take several minutes or hours.
-- Data loss may occur!
+- Data loss may still occur!
 
 ---
 
 **Outline**
 
 1. Crash-consistency problem
-2. File system checker fsck
+2. File system checker - fsck
 ### 3. Journaling file system
 - Logging
 - Data journaling
@@ -302,7 +302,7 @@ Fsck does not know the content of user files, but directories contain informatio
 #### Logging (or write-ahead logging)
 
 Write-ahead logging
-- Ideas borrowed from the world of database management systems
+- Ideas inspired by database management systems
 - In file systems, for historical reasons, write-ahead logging is usually referred to as journaling
 - The first filesystem to implement it was [Cedar](https://www.microsoft.com/en-us/research/publication/the-cedar-file-system/)
 - Many modern file systems use this idea, including Linux ext3 and ext4, reiserfs, IBM's JFS, SGI's XFS, and Windows NTFS
@@ -311,7 +311,7 @@ Write-ahead logging
 
 #### Idea of write-ahead logging
 
-* When updating the disk, before overwriting the structure, write a small note (in another location on the disk, in a well-known location) describing what you are about to do
+* When updating the disk, before overwriting the structure, write a small note (in another location on the disk, a pre-determined location) describing what you are about to do
 * Writing this note is the "write-ahead" part, putting it into a structure and organizing it into a "log"
 
 ---
@@ -320,14 +320,14 @@ Write-ahead logging
 
 - By writing the note to the disk, you can ensure that if a crash occurs while the structure being updated is being overwritten, you can return and look at the note you made and try again
 - Know exactly what needs to be fixed (and how to fix it) after a crash without having to scan the entire disk
-- The log function greatly reduces the amount of work required during recovery by adding some extra work during updates
+- The log greatly reduces the complexity of recovery by adding some extra work during updates
 
 ---
 
 **Outline**
 
 1. Crash-consistency problem
-2. File system checker fsck
+2. File system checker - fsck
 3. Journaling file system
 - Logging
 ### Data journaling
@@ -355,7 +355,7 @@ Write-ahead logging
 
 #### A crash occurs while writing to the log
 
-Internally on the disk, TxB, I[v2], B[v2], and TxE are written before Db
+In the disk, (1) TxB, I[v2], B[v2], and TxE can be written before (2) writing Db
 * If the disk crashes between (1) and (2), the disk will be like:
 
 ![w:1000](figs/ext3-journal-struct-err.png)
@@ -364,9 +364,9 @@ Internally on the disk, TxB, I[v2], B[v2], and TxE are written before Db
 
 #### Two-step transaction write of data log
 
-To avoid this problem, the file system issues transaction writes in two steps
+To avoid this problem, the file system writes the transaction in two steps
 - Write all blocks except TxE block to the log and issue these writes
-- When these writes are complete, the log will look like this (assuming it is a file append workload):
+- When these writes are complete, the log will look like this (assuming it is a file appending workload):
 ![w:1000](figs/ext3-journal-write.png)
 
 ---
@@ -384,9 +384,9 @@ When these writes are complete, the file system issues a write of the TxE block,
 </style>
 #### Data log update process
 
-The current protocol for updating the file system is as follows, with each of the three stages labeled
+The current protocol for updating the file system is as follows
 1. **Log write**
-    - Write the contents of the transaction (including TxB, metadata, and data) to the log and wait for these writes to complete
+    - Write the content of the transaction (including TxB, metadata, and data) to the log and wait for these writes to complete
 2. **Log commit**
     - Write the transaction commit block (including TxE) to the log and wait for the write to complete, and the transaction is considered committed
 3. **Add Checkpoint**
@@ -408,7 +408,7 @@ Too many writes, slow!
 **Outline**
 
 1. Crash-consistency problem
-2. File system checker fsck
+2. File system checker - fsck
 3. Journaling file system
 - Logging
 - Data journaling
@@ -438,7 +438,7 @@ Too many writes, slow!
 #### Metadata journaling
 
 When should data block Db be written to disk?
-   - The order of data writes is important for metadata journaling only
+   - When to write data block is important for metadata journaling only
    - Is there a problem with writing the Db to disk after the transaction (including I [v2] and B [v2]) is completed?
 
 ---
@@ -470,8 +470,8 @@ By forcing data to be written first, the file system can ensure that pointers ne
 
 1. Crash-consistency problem
 - Crash consistency
-- Crash scenario
-2. File system checker fsck
+- Crash scenarios
+2. File system checker - fsck
 3. Journaling file system
 - Logging
 - Data journaling
