@@ -133,3 +133,4 @@ backgroundColor: "white"
 ---
 ### OS course introduction
 - [Tsinghua Computer Department 2023 Spring OS Course](./course-intro.html)
+- [Tsinghua CS OS Lab Introduction](./meeting/os-course-thcs-20220820.html)
