@@ -13,7 +13,7 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 操作系统课程建设的分析与实践探索
+# 操作系统课程实验建设的分析与探索
 
 
 <br>
@@ -22,11 +22,11 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 
 <br>
 
-2022年8月2日
+2023年5月12日
 
 <br>
 
-人才培养与核心课程建设研讨会  
+101计划系统类课程联合研讨会 @ 天津大学 
 
 ---
 ### 报告内容
@@ -227,7 +227,7 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 ---
 ### 课程建设的具体实施 -- OS设计
 
-- 原理与实践结合
+- 原理与实践结合 [原理教学课时：实践教学课时 = 2：1]
     - 提供十几个由简单到相对复杂功能进化的OS实例
     - 提供OS的详细设计实现文档、多种测试用例、自动测试环境
    -  课程上讲的OS原理和概念在实践或实验中基本上有对应
@@ -235,117 +235,265 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
    -  通过原理和实践来深化对操作系统全局与细节的理解
 
 ---
-### 课程建设的具体实施 -- OS设计
-**设计实现满足应用APP逐步递增需求的逐步进化的OS**
-操作系统 | 功能      | 系统调用个数 
----------|----------|----------
- LibOS | 让APP与HW隔离，简化应用访问硬件的难度和复杂性 | 0
- BatchOS | 让APP与OS隔离，加强系统安全，提高执行效率 | 2
-multiprogOS | 让APP共享CPU资源 | 3
+### 1. 裸机程序：LibOS             
+  - 软硬件启动，栈的建立、函数调用，SBI调用
+![w:600](../lec2/figs/os-as-lib.png)
+- 理解RISC-V的特权模式，理解SBI访问，编写裸机程序
 
 
 ---
-### 课程建设的具体实施 -- OS设计
-**设计实现满足应用APP逐步递增需求的逐步进化的OS**
-操作系统 | 功能 | 系统调用个数 
----------|----------|----------
-TimeSharing OS | 让APP共享CPU资源 | 4
-Address Space OS | 隔离APP访问的内存地址空间，加强APP间的安全 | 4
-Process OS | 支持APP动态创建新进程，增强进程管理和资源管理能力 |9
+### 2. Batch OS  
+  - 特权级: U-Mode, S-Mode
+  - 特权级切换
+  - 陷入上下文
+  - 编译多应用+OS的镜像
+  - 加载并执行应用
+
+![bg right 100%](../lec3/figs/batch-os-detail.png)
 
 
 ---
-### 课程建设的具体实施
-**设计实现满足应用APP逐步递增需求的逐步进化的OS**
-操作系统 | 功能  | 系统调用个数 
----------|----------|----------
-Filesystem OS | 支持APP对数据的持久保存 | 11
-IPC OS | 支持多个APP进程间数据交互与事件通知 | 17
-TreadOS | 支持线程APP，简化切换与数据共享  | 18
-SyncMutex OS | 在多线程APP中支持对共享资源的同步互斥访问 | 27
+### 3. MultiProg OS  
+   - 任务的概念
+   - 任务的设计实现
+   - 协作/抢占式调度
+   -  任务上下文 
+   -  陷入上下文
+   - 切换任务
+   - 切换特权级
+![bg right:60% 100%](../lec4/figs/more-task-multiprog-os-detail.png) 
 
+--- 
+### 4. TimeSharing OS  
+   - 中断
+   - 中断响应
+   - 协作/抢占式调度
+   -  陷入上下文
+   -  任务上下文 
+   - 切换任务
+   - 切换特权级
+![bg right:60% 100%](../lec4/figs/time-task-multiprog-os-detail.png) 
 
-<!-- 1 LibOS: 让APP与HW隔离，简化应用访问硬件的难度和复杂性
-    2 BatchOS： 让APP与OS隔离，加强系统安全，提高执行效率
-    3 multiprog&time-sharing OS: 让APP共享CPU资源
-    4 Address Space OS: 隔离APP访问的内存地址空间，加强APP间的安全
-    5 Process OS: 支持APP动态创建新进程，增强进程管理和资源管理能力
-    6 Filesystem OS：支持APP对数据的持久保存
-    7 IPC OS：支持多个APP进程间数据交互与事件通知 
-    8 Tread&Coroutine OS：支持线程和协程APP，简化切换与数据共享  
-    9 SyncMutex OS：在多线程APP中支持对共享资源的同步互斥访问
-    10 Device OS：提高APP的I/O效率，支持基于外设中断的串口/块设备 -->
+---
+### 5. AddrSpace OS  
+- APP的地址空间布局
+- 地址空间
+- 物理地址
+- 页表
+-  陷入上下文
+-  任务上下文 
+-  中断响应
+
+![bg right:60% 100%](../lec5/figs/addr-space-os-detail.png) 
+
 
 
 ---
-### 课程建设的具体实施 -- OS设计 -- 系统调用
-**30个系统调用**
+### 5. AddrSpace OS  
+- 应用地址空间
+- 内核地址空间
+- 切换任务
+- 切换特权级
+- 切换页表
+  
 
-- 进程相关： 13个
-- 文件相关：5个
-- 地址空间相关：2个
-- 同步互斥相关：9个
 
-<!-- ---
-### 课程建设的具体实施
-**30个系统调用**
-```rust
-const SYSCALL_DUP: usize = 24;
-const SYSCALL_OPEN: usize = 56;
-const SYSCALL_CLOSE: usize = 57;
-const SYSCALL_PIPE: usize = 59;
-const SYSCALL_READ: usize = 63;
-const SYSCALL_WRITE: usize = 64;
-const SYSCALL_EXIT: usize = 93;
-const SYSCALL_SLEEP: usize = 101;
-const SYSCALL_YIELD: usize = 124;
-```
----
-### 课程建设的具体实施
-**30个系统调用**
-```rust
-const SYSCALL_KILL: usize = 129;
-const SYSCALL_SIGACTION: usize = 134;
-const SYSCALL_SIGPROCMASK: usize = 135;
-const SYSCALL_SIGRETURN: usize = 139;
-const SYSCALL_GET_TIME: usize = 169;
-const SYSCALL_GETPID: usize = 172;
-const SYSCALL_FORK: usize = 220;
-const SYSCALL_EXEC: usize = 221;
-const SYSCALL_WAITPID: usize = 260;
-```
+![bg right:60% 100%](../lec5/figs/trampoline.png)
+
 
 ---
-### 课程建设的具体实施
-**30个系统调用**
-```rust
-const SYSCALL_KILL: usize = 129;
-const SYSCALL_SIGACTION: usize = 134;
-const SYSCALL_SIGPROCMASK: usize = 135;
-const SYSCALL_SIGRETURN: usize = 139;
-const SYSCALL_GET_TIME: usize = 169;
-const SYSCALL_GETPID: usize = 172;
-const SYSCALL_FORK: usize = 220;
-const SYSCALL_EXEC: usize = 221;
-const SYSCALL_WAITPID: usize = 260;
-const SYSCALL_THREAD_CREATE: usize = 1000;
-const SYSCALL_GETTID: usize = 1001;
-const SYSCALL_WAITTID: usize = 1002;
-```
+### 6. Process OS  
+  - 进程的动态概念
+
+  - 四个进程相关的系统调用
+    - fork, exec, exit, wait
+![bg right:65% 100%](../lec7/figs/process-os-detail.png) 
+
 ---
-### 课程建设的具体实施
-**设计实现满足应用APP逐步递增需求的逐步进化的OS**
-```rust
-const SYSCALL_MUTEX_CREATE: usize = 1010;
-const SYSCALL_MUTEX_LOCK: usize = 1011;
-const SYSCALL_MUTEX_UNLOCK: usize = 1012;
-const SYSCALL_SEMAPHORE_CREATE: usize = 1020;
-const SYSCALL_SEMAPHORE_UP: usize = 1021;
-const SYSCALL_SEMAPHORE_DOWN: usize = 1022;
-const SYSCALL_CONDVAR_CREATE: usize = 1030;
-const SYSCALL_CONDVAR_SIGNAL: usize = 1031;
-const SYSCALL_CONDVAR_WAIT: usize = 1032;
-``` -->
+### 6. Process OS   
+   - PCB 
+![bg right:65% 100%](../lec7/figs/process-os-key-structures.png)
+
+
+---
+### 7. Filesystem OS  
+- 文件系统在操作系统中的位置
+- 进程的文件描述符表
+- 文件相关系统调用
+![bg right:65% 100%](../lec9/figs/filesystem-os-detail.png)
+
+
+
+---
+### 8. IPC OS
+支持进程间通信和异步消息机制
+- 管道（PIPE）
+- 信号（Signal）
+![bg right:70% 100%](../lec10/figs/ipc-os-detail-2.png)
+
+
+---
+### 8. IPC OS
+对进程控制块的扩展
+- 管道也是一种文件
+- 支持I/O重定向
+![bg right:60% 100%](../lec10/figs/process-os-key-structures-file-ipc.png)
+
+
+
+---
+### 9. Thread OS
+- 用户态管理的用户态运行的线程
+- 内核态管理的用户态运行的线程
+![bg right:65% 100%](../lec11/figs/thread-coroutine-os-detail.png)
+
+
+---
+### 9. Thread OS
+- 协程结构
+- 线程结构
+- 进程结构
+
+![bg right:60% 100%](../lec11/figs/task-abstracts.png)
+
+
+---
+### 10. SyncMutex OS
+对进程控制块扩展，支持线程同步互斥访问共享变量
+- Mutex
+- Semphore
+- Condvar
+![bg right:69% 100%](../lec12/figs/syncmutex-os-detail.png)
+
+
+---
+### 10. SyncMutex OS
+对进程控制块扩展，支持线程同步互斥访问共享变量
+- Mutex
+- Semphore
+- Condvar
+
+![bg right:69% 100%](../lec12/figs/syncmutex-os-key-structures.png)
+
+
+
+---
+### 11. Device OS
+支持块设备/串口等外设
+- 内核态中断响应
+- DMA
+- 轮询
+- 设备<-->内存间数据传输
+- 同步互斥保护
+
+
+![bg right:60% 100%](../lec13/figs/os-io-lifetime.png)
+
+
+---
+### 必做实验 1 ：获取任务信息
+
+- 预先学习 1-4的OS源码
+
+#### 实验要求内容
+
+我们的系统已经能够支持多个任务分时轮流运行，我们希望引入一个新的系统调用 sys_task_info 以获取当前任务的信息
+
+
+---
+### 必做实验 2 ：完成mmap和munmap系统调用功能
+
+- 预先学习 1-5的OS源码
+
+#### 实验要求内容
+
+- 引入虚存机制后，原来内核的 sys_get_time 和 sys_task_info 函数实现就无效了。请你重写这个函数，恢复其正常功能。
+- mmap 在 Linux 中主要用于在内存中映射文件， 本次实验简化它的功能，仅用于申请内存。请实现 mmap 和 munmap 系统调用
+
+
+---
+### 必做实验 3 ：完成spawn系统调用功能
+
+- 预先学习 1-6的OS源码
+
+#### 实验要求内容
+
+实现一个完全 DIY 的系统调用 spawn，用以创建一个新进程。
+
+
+---
+### 必做实验 4 ：实现文件的硬链接功能
+
+- 预先学习 1-7的OS源码
+
+#### 实验要求内容
+
+硬链接要求两个不同的目录项指向同一个文件，在我们的文件系统中也就是两个不同名称目录项指向同一个磁盘块。要求实现三个系统调用 sys_linkat、sys_unlinkat、sys_stat 。
+
+---
+### 必做实验 5 ：实现文件的硬链接功能
+
+- 预先学习 1-10的OS源码
+
+#### 实验要求内容
+
+完成对基于信号量/条件变量的同步互斥多线程程序的死锁检测
+
+---
+### 成绩评定
+
+#### 选择1：（总分不超过100分）
+- 必做实验1-5占35%，期中考试15%，期末考试50%
+- 加分项：完成拓展实验（可只做一题），加0~7分，避免内卷
+- 期中和期末考试内容，大约40%出自课堂介绍的OS实践
+
+#### 选择2：
+- 五周内完成必做实验1-5：35%
+- 课程设计（即大实验）：65% （中途退出必须参加考试）
+
+---
+### 拓展实验（加分项）
+
+#### 基于Address OS实现
+- 惰性页面分配（Lazy page allocation）（4分）
+- 局部页面置换算法：改进的Clock页面置换算法（4分）
+- 全局页面置换算法：工作集置换策略（5分）
+- 全局页面置换算法：缺页率置换策略（5分）
+
+---
+### 拓展实验（加分项）
+ 
+#### 基于Process OS实现
+- 相同页面共享（Same page sharing）fork时的Copy on Write（6分）
+- 实现多种(>3种)调度算法：可动态提升/降低优先级的多级反馈队列、实时调度等（4分）
+- 多核支持与多核调度（支持进程迁移和多核模式执行应用程序，但在内核中没有抢占和多核支持）（7分）
+
+---
+### 拓展实验（加分项）
+ 
+#### 基于FileSystem OS实现
+- 按需加载执行文件(Demanding Paging)（6分）
+- log-easyfs：实现基于日志的可靠文件系统（可参考xv6-fs）（7分）
+
+---
+### 拓展实验（加分项）
+
+#### 基于SyncMutex OS实现
+- 基于多核的OS内核线程支持，内核支持抢占，支持多核方式下的同步互斥（7分）
+- 提升多核的OS内核性能，实现内核中的并行性能优化（fs中的缓冲区管理并行化, 物理内存分配的并行化）（7分）
+- 更通用的内核+应用的死锁检查（参考Linux）（7分）
+
+
+---
+### 课程设计（大实验）
+
+- 基于uCore/rCore的功能模块扩展
+- 基于模块化操作系统ArceOS的功能拓展
+- 全国大学生系统能力大赛（OS内核与功能赛道）赛题
+- 任课老师的研究课题
+- ···
+
+#### 选择大实验的学生比例大约在10%，愿意在研究生阶段从事OS相关研究的学生一般选择大实验
 
 
 ---
@@ -361,33 +509,6 @@ const SYSCALL_CONDVAR_WAIT: usize = 1032;
 - [深入了解计算机系统](https://hansimov.gitbook.io/csapp/)，[RISC-V Reader中文版](http://riscvbook.com/chinese/RISC-V-Reader-Chinese-v2p1.pdf)
 
 
----
-### 课程建设的具体实施 -- 在线学习建设
-- 当前还存在一些需要改进的地方
-  - 学习内容的逐步递进
-    - 进一步细化知识粒度和衔接 
-  - 学习效果的及时反馈
-    - 在线IDE
-    - 在线评测  
-  - 学习问题的及时解答 
-    - 在线答疑
-    - 鼓励机制
-
-![bg right:25% 100%](./figs/online-os.png)
-
----
-### 课程建设的具体实施 --  课程设计
-- 课程内容
-  - 48学时，16次课（13讲） 
-- 实践内容
-  - 16~32学时，5次实验
-- 扩展讲解和训练
-  - 最新技术进展
-  - 实验代替考试
-  - 操作系统比赛
-
-![bg right:50% 100%](./figs/build-os-course-goal.png)
-
 
 ---
 <!-- theme: gaia -->
@@ -397,7 +518,7 @@ const SYSCALL_CONDVAR_WAIT: usize = 1032;
 
 开源操作系统训练营
 
-https://github.com/LearningOS/rust-based-os-comp2022
+https://github.com/LearningOS/rust-based-os-comp2023 
 
 一年三期：春季学期、秋季学期、暑假
 
@@ -408,8 +529,6 @@ https://github.com/LearningOS/rust-based-os-comp2022
 
 # 备份材料
 - 十三讲的课程内容设计+知识点设计
-- 十一个教学OS的实践设计
-- 五个实验设计
 
 ---
 #### 第一讲 操作系统概述
@@ -705,256 +824,3 @@ https://github.com/LearningOS/rust-based-os-comp2022
 
 </div>
 <div>
-
----
-### 实践 1: UNIX/Linux APP 
-
-  - "系统调用"
-  - 例子，用C语言，来自UNIX（例如Linux、macOS、FreeBSD）
-
-            fd = open("out", 1);
-            write(fd, "hello\n", 6);
-            pid = fork()
-- 能理解和编写包含操作系统进程/文件等相关的简单命令行Linux程序
-
----
-### 实践 2: 裸机程序：LibOS             
-  - 软硬件启动，栈的建立、函数调用，SBI调用
-![w:600](../lec2/figs/os-as-lib.png)
-- 理解RISC-V的特权模式，理解SBI访问，编写裸机程序
-
-
----
-### 实践 3: Batch OS  
-  - 特权级: U-Mode, S-Mode
-  - 特权级切换
-  - 陷入上下文
-  - 编译多应用+OS的镜像
-  - 加载并执行应用
-
-![bg right 100%](../lec3/figs/batch-os-detail.png)
-
-
----
-### 实践 4-1: MultiProg OS  
-   - 任务的概念
-   - 任务的设计实现
-   - 协作/抢占式调度
-   -  任务上下文 
-   -  陷入上下文
-   - 切换任务
-   - 切换特权级
-![bg right:60% 100%](../lec4/figs/more-task-multiprog-os-detail.png) 
-
---- 
-### 实践 4-2: TimeSharing OS  
-   - 中断
-   - 中断响应
-   - 协作/抢占式调度
-   -  陷入上下文
-   -  任务上下文 
-   - 切换任务
-   - 切换特权级
-![bg right:60% 100%](../lec4/figs/time-task-multiprog-os-detail.png) 
-
-
----
-### 实践 5： AddrSpace OS   
-App/OS内存布局
-- .text: 数据段
-- .data：可修改的全局数据。
-- 未初始化数据段 .bss
-- 堆 （heap）向高地址增长
-- 栈 （stack）向低地址增长
-![bg right 120%](../lec2/figs/memlayout.png)
-
----
-### 实践 5： AddrSpace OS  
-- 地址空间
-- 物理地址
-- 页表
--  陷入上下文
--  任务上下文 
--  中断响应
-
-![bg right:60% 100%](../lec5/figs/addr-space-os-detail.png) 
-
-
-
----
-### 实践 5： AddrSpace OS  
-- 应用地址空间
-- 内核地址空间
-- 切换任务
-- 切换特权级
-- 切换页表
-  
-
-
-![bg right:65% 100%](../lec5/figs/trampoline.png)
-
-
----
-### 实践 6：Process OS  
-  - Process
-    - Trap
-    - Task
-    - Address Space
-    - state
-    - relations
-    - exit code
-![bg right:65% 100%](../lec7/figs/process-os-detail.png) 
-
----
-### 实践 6：Process OS  
-  - fork
-  - exec
-  - exit
-  - wait
-
-![bg right:70% 100%](../lec7/figs/fork-exec.png) 
-
----
-### 实践 6：Process OS   
-   - PCB 
-![bg right:70% 100%](../lec7/figs/process-os-key-structures.png)
-
----
-### 实践 7: Filesystem OS  
-- 文件系统层次结构
-- 块设备驱动
-- 块缓冲区
-- EasyFS
-- Virtual FS
-- 进程的文件描述符表
-- 文件相关系统调用
-![bg right:60% 100%](../lec9/figs/fs-intro.png)
-
-
----
-### 实践 7: Filesystem OS  
-- 文件系统在操作系统中的位置
-![bg right:70% 100%](../lec9/figs/filesystem-os-detail.png)
-
----
-### 实践 7: Filesystem OS  
-- 进程的文件描述符表
-- 文件相关系统调用
-![bg right:70% 100%](../lec9/figs/process-os-key-structures-file.png)
-
-
-
----
-### 实践 8: IPC OS
-支持进程间通信和异步消息机制
-- 管道（PIPE）
-- 信号（Signal）
-![bg right:70% 100%](../lec10/figs/ipc-os-detail-2.png)
-
-
----
-### 实践 8: IPC OS
-对进程控制块的扩展
-- 管道也是一种文件
-- 支持I/O重定向
-![bg right:60% 100%](../lec10/figs/process-os-key-structures-file-ipc.png)
-
-
-
----
-### 实践 9: Thread OS
-- 用户态管理的用户态运行的线程
-- 内核态管理的用户态运行的线程
-![bg right:65% 100%](../lec11/figs/thread-coroutine-os-detail.png)
-
-
----
-### 实践 9: Thread OS
-- 协程结构
-- 线程结构
-- 进程结构
-
-![bg right:60% 100%](../lec11/figs/task-abstracts.png)
-
-
----
-### 实践 10: SyncMutex OS
-对进程控制块扩展，支持线程同步互斥访问共享变量
-- Mutex
-- Semphore
-- Condvar
-![bg right:70% 100%](../lec12/figs/syncmutex-os-detail.png)
-
-
----
-### 实践 10: SyncMutex OS
-对进程控制块扩展，支持线程同步互斥访问共享变量
-- Mutex
-- Semphore
-- Condvar
-
-![bg right:70% 100%](../lec12/figs/syncmutex-os-key-structures.png)
-
-
-
----
-### 实践 11: Device OS
-支持块设备/串口等外设
-- 内核态中断响应
-- DMA
-- 轮询
-- 设备<-->内存间数据传输
-- 同步互斥保护
-
-
-![bg right:60% 100%](../lec13/figs/os-io-lifetime.png)
-
-
----
-### 实验 1 ：获取任务信息
-
-- 预先学习完成 实践 1--4
-
-#### 内容
-
-我们的系统已经能够支持多个任务分时轮流运行，我们希望引入一个新的系统调用 sys_task_info 以获取当前任务的信息
-
-
----
-### 实验 2 ：完成mmap和munmap系统调用功能
-
-- 预先学习完成 实践 1--5
-
-#### 内容
-
-- 引入虚存机制后，原来内核的 sys_get_time 和 sys_task_info 函数实现就无效了。请你重写这个函数，恢复其正常功能。
-- mmap 在 Linux 中主要用于在内存中映射文件， 本次实验简化它的功能，仅用于申请内存。请实现 mmap 和 munmap 系统调用
-
-
----
-### 实验 3 ：完成spawn系统调用功能
-
-- 预先学习完成 实践 1--6
-- 
-#### 内容
-
-实现一个完全 DIY 的系统调用 spawn，用以创建一个新进程。
-
-
----
-### 实验 4 ：实现文件的硬链接功能
-
-- 预先学习完成 实践 1--7
-
-#### 内容
-
-硬链接要求两个不同的目录项指向同一个文件，在我们的文件系统中也就是两个不同名称目录项指向同一个磁盘块。要求实现三个系统调用 sys_linkat、sys_unlinkat、sys_stat 。
-
----
-### 实验 5 ：实现文件的硬链接功能
-
-- 预先学习完成 实践 1--10
-
-内容
-
-完成对基于信号量/条件变量的同步互斥多线程程序的死锁检测
