@@ -30,9 +30,7 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 
 ---
 ### 报告内容
-- 背景介绍
-   - 历史
-   - 当前基本情况  
+
 - 课程建设
    - 目标+策略
    - 基本思路
@@ -42,33 +40,6 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 清华大学相关院系的操作系统课程
 
 ![w:800](./figs/os-course-in-tsinghua.png)
-
-
----
-### 背景介绍 -- 历史
-
-**铁打的课程，流水的老师**
-
-时间 | 任课老师 | 教材 | 实验 
----------|----------|--------- |----------
- 1997前 | 史美林 张尧学 伍尚广 | 计算机操作系统 |  /
- 1998 | 向勇 | 无固定教材 |  Nachos MIPS
- 2008~2017 | 向勇 陈渝 | 无固定教材 |  uCore x86
- 2018~至今 | 向勇 陈渝 李国良 任炬 | 无固定教材 |  uCore/rCore RISC-V
-
-
-
----
-### 背景介绍 -- 历史
-
-**铁打的课程，流水的老师**
-
-
-- 任课老师：李国良(2021)、任炬(2023)
-- 相关课程：
-   - 大四本科：操作系统专题训练（2008年开始）  
-   - 研究生：高级操作系统（2009开始）
-   - MOOC：学堂在线（2015年开始）
 
 ---
 ### 背景介绍 -- 当前基本情况
@@ -102,38 +73,6 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 </div>
 </div>
 
----
-### 背景介绍 -- 当前基本情况
-学生反馈
-- 太难，量太大，不会编程
-- 觉得时间投入太大
-- 部分同学为了学分而学
-- 趣味性不足，缺少及时反馈
-- 碰到问题难以及时获得帮助
-- 就业并不看好
- 
-
-![bg right 60%](./figs/study-os.png)
-
----
-### 背景介绍 -- 当前基本情况
-参考教材
-- **Operating Systems: Three Easy Pieces**, Remzi H. Arpaci-Dusseau and Andrea C. Arpaci-Dusseau
-- **Operating system concepts**,Abraham Silberschatz, Peter Baer Galvin,Greg Gagne
-- **Operating Systems: Internals and Design Principles**,William Stallings,
-- [rCore-Tutorial-Book, 清华OS课程教学组](http://rcore-os.cn/rCore-Tutorial-Book-v3/)
----
-### 背景介绍 -- 当前基本情况 -- 教学大纲
-特点：粗看：**几十年基本不变**
-* 操作系统结构
-* 中断及系统调用
-* 内存管理
-* 进程管理
-* 处理机调度
-* 同步互斥
-* 文件系统
-
-![bg right 100%](../lec1/figs/ucorearch.png)
 
 ---
 ### 背景介绍 -- 当前基本情况 -- 教学内容
@@ -143,25 +82,6 @@ style: @import url('https://unpkg.com/tailwindcss@^2/dist/utilities.min.css');
 **肉** -- 方法技术：调度、页表、文件系统、同步互斥、指令集、配套实验设计...
 
 ![bg right 100%](./figs/os-labs-choice.png)
-
-
-  
----
-### 课程建设的基本思路
-- 理解式学习：编写应用，并通过分析应用与OS的执行过程，掌握OS原理
-  - 几行~几十行的**应用程序**，理解应用需求
-  - 十几个**系统调用**，理解接口
-  - OS的系统调用**实现功能**的流程图，理解OS的设计思路
-  - **动态调试**应用程序-->系统调用-->操作系统内核的**全系统执行**过程，从而理解操作系统的全局
-  
----
-### 课程建设的基本思路
-- 构造式学习：深入OS内部实现，参考/基于这些OS，扩展某些相对完整的OS功能
-  - 几行~几十行的**应用程序**，理解应用需求
-  - 十几个**系统调用**，理解接口
-  - OS的系统调用**实现功能**的流程图，理解OS的设计思路
-  - **动态调试**应用程序-->系统调用-->操作系统内核的**全系统执行**过程，从而理解操作系统的全局
-  - 参考已有实现，**扩展/实现**操作系统的新功能/性能优化，从而具备操作系统的设计实现能力，并掌握操作系统
 
 ---
 ### 课程建设的具体实施 -- OS设计
