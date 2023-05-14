@@ -1,310 +1,344 @@
 ---
-noteId: "daf06ec1d86511edb7d82f06d610f713"
-tags: []
 marp: true
-theme: "default"
+theme: default
 paginate: true
 _paginate: false
-header: ""
-footer: ""
-backgroundColor: "white"
-
+header: ''
+footer: ''
+backgroundColor: white
 ---
 
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第十二讲 同步与互斥
+# Lecture 12 Synchronization and mutual exclusion
 
-## 第四节 同步互斥实例问题
+## Section 4 Synchronization Mutex Instance Problem
 
 ---
-### 哲学家就餐问题
-- 5个哲学家围绕一张圆桌而坐
-- 桌子上放着5支叉子
-- 每两个哲学家之间放一支叉子
-- 哲学家的动作包括思考和进餐
-- 进餐时需同时用左右两边的叉子
-- 思考时将两支叉子放回原处
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
 
-如何保证哲学家们的动作有序进行？
-如：不出现有人永远拿不到叉子
+### Dining philosophers problem
+- 5 philosophers sit around a round table
+- There are 5 forks on the table
+- Put a fork between every two philosophers
+- Philosopher actions include thinking and eating
+- You need to use the left and right forks at the same time when eating
+- Put the two forks back in place while thinking
+
+How to ensure the orderly progression of actions among philosophers?
+Such as: no one will never get a fork
 
 ![bg right:40% 100%](figs/philosopher.png)
 
 ---
-### 哲学家就餐问题 -- 方案1
+### Dining Philosophers Problem -- Option 1
 ![w:900](figs/philo-1.png)
 
-不正确，可能导致死锁
+ may cause deadlock if incorrect
 
 ---
-### 哲学家就餐问题 -- 方案2
+### Dining Philosophers Problem -- Solution 2
 ![w:900](figs/philo-2-1.png)
 
 ---
-### 哲学家就餐问题 -- 方案2
+### Dining Philosophers Problem -- Solution 2
 ![w:900](figs/philo-2-2.png)
 
 ---
-### 哲学家就餐问题 -- 方案2
+### Dining Philosophers Problem -- Solution 2
 ![w:900](figs/philo-2-3.png)
 
 ---
-### 哲学家就餐问题 -- 方案2
+### Dining Philosophers Problem -- Solution 2
 ![w:900](figs/philo-2-4.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案2
+### Dining Philosophers Problem -- Solution 2
 ![w:800](figs/philo-2-5.png)
-互斥访问正确，但每次只允许一人进餐
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
+
+Mutual exclusive access is correct, but only one person is allowed to eat at a time
 
 
 ---
-### 哲学家就餐问题 -- 方案3
+### Dining Philosophers Problem -- Scheme 3
 ![w:800](figs/philo-3-1.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案3
+### Dining Philosophers Problem -- Scheme 3
 ![w:800](figs/philo-3-2.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案3
+### Dining Philosophers Problem -- Scheme 3
 ![w:800](figs/philo-3-3.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案3
+### Dining Philosophers Problem -- Scheme 3
 ![w:800](figs/philo-3-4.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案3
+### Dining Philosophers Problem -- Scheme 3
 ![w:800](figs/philo-3-5.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案3
+### Dining Philosophers Problem -- Scheme 3
 ![w:750](figs/philo-3-6.png)
-没有死锁，可有多人同时就餐
+There is no deadlock, and multiple people can eat at the same time
 
 ---
-### 哲学家就餐问题 -- 方案4
+### Dining Philosophers Problem -- Scheme 4
 
 ![w:900](figs/philo-4-1.png)
 
 ---
-### 哲学家就餐问题 -- 方案4
-<!-- https://blog.csdn.net/weixin_43237362/article/details/104712647 AND型信号量 -->
-
-AND型信号量集是指同时需要多个资源且每种占用一个资源时的信号量操作。
-
-当一段代码需要同时获取两个或多个临界资源时，就可能出现由于各线程分别获得部分临界资源并等待其余的临界资源的局面。各线程都会“各不相让”，从而出现死锁。
-
-解决这个问题的一个基本思路是：在一个原语中申请整段代码需要的多个临界资源，要么全部分配给它，要么一个都不分配给它。这就是AND型信号量集的基本思想。
-
----
-### 哲学家就餐问题 -- 方案4
-<!-- https://blog.csdn.net/weixin_43237362/article/details/104712647 AND型信号量 -->
-AND型信号量集
-```
-P(S1, S2, …, Sn)
+<style scoped>
 {
-    While(TRUE)
-    {
-        if (S1 >=1 and … and Sn>=1 ){
-            for( i=1 ;i<=n; i++) Si--;
-        break;
-        }
-        else{
-             Place the thread in the waiting queue associated  with the first Si 
-             found with Si < 1   
-        }
-    }
+  font-size: 30px
 }
-```
+</style>
+
+### Dining Philosophers Problem -- Scheme 4
+<!-- https://blog.csdn.net/weixin_43237362/article/details/104712647 AND type semaphore -->
+
+The AND-type semaphore set refers to the semaphore operation when multiple resources are required at the same time and each resource occupies one resource.
+
+When a piece of code needs to acquire two or more critical resources simultaneously, it may result in a situation where each thread acquires some critical resources and waits for the rest. Each thread refuses to give up its resources, leading to a deadlock.
+
+A basic idea to solve this problem is: apply for multiple critical resources required by the entire code in a primitive, or allocate all of them to it, or allocate none of them to it. This is the basic idea of AND-type semaphore sets.
 
 ---
-### 哲学家就餐问题 -- 方案4
-<!-- https://blog.csdn.net/weixin_43237362/article/details/104712647 AND型信号量 -->
-AND型信号量集
+### Dining Philosophers Problem -- Solution 4
+<!-- https://blog.csdn.net/weixin_43237362/article/details/104712647 AND type semaphore -->
+AND type semaphore set
 ```
-V(S1, S2, …, Sn){ 
-    for (i=1; i<=n; i++) {
-            Si++ ;
-            Remove all the thread waiting in the queue associated with Si into 
-            the ready queue                
+P(S1, S2, ..., Sn)
+{
+     While(TRUE)
+     {
+         if (S1 >=1 and … and Sn>=1 ){
+             for( i=1 ;i<=n; i++) Si--;
+         break;
+         }
+         else {
+              Place the thread in the waiting queue associated with the first Si
+              found with Si < 1
+         }
      }
 }
 ```
+
 ---
-### 哲学家就餐问题 -- 方案5
+### Dining Philosophers Problem -- Solution 4
+<!-- https://blog.csdn.net/weixin_43237362/article/details/104712647 AND type semaphore -->
+AND type semaphore set
+```
+V(S1, S2, ..., Sn){
+     for (i=1; i<=n; i++) {
+             Si++;
+             Remove all the thread waiting in the queue associated with Si into
+             the ready queue
+      }
+}
+```
+---
+### Dining Philosophers Problem -- Scheme 5
 
 ![w:1000](figs/philo-5-1.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案5
+### Dining Philosophers Problem -- Scheme 5
 
 ![w:1000](figs/philo-5-2.png)
 
 
 ---
-### 哲学家就餐问题 -- 方案5
+### Dining Philosophers Problem -- Scheme 5
 
 ![w:1000](figs/philo-5-3.png)
 
 ---
-### 哲学家就餐问题 -- 方案5
-方案5不仅没有死锁，而且对于任意位哲学家的情况都能获得最大的并行度。算法中使用一个数组`state`跟踪每一个哲学家是在进餐、思考还是饥饿状态（正在试图拿叉子）。一个哲学家只有在两个邻居都没有进餐时才允许进入到进餐状态。
+<style scoped>
+{
+  font-size: 28px
+}
+</style>
 
-每个线程将函数`philosopher`作为主代码运行，而其他函数`take_forks`、`put_forks`和`test`只是普通的函数，而非单独的线程。
+### Dining Philosophers Problem -- Scheme 5
+Scheme 5 not only has no deadlock, but also can obtain the maximum degree of parallelism for any philosopher. 
+The algorithm uses an array `state` to keep track of whether each philosopher is eating, thinking, or hungry (trying to pick up a fork). A philosopher is only allowed to enter the eating state if both neighbors are not eating.
+
+Each thread runs the function `philosopher` as the main code, while the other functions `take_forks`, `put_forks` and `test` are just normal functions, not separate threads.
 
 ![bg right:40% 100%](figs/philo-5.png)
 
 ---
-### 读者-写者问题
-- 共享数据的两类使用者
-  - 读者：只读不修改数据
-  - 写者：读取和修改数据
-- 对共享数据的读写
-  - 多个：“读－读”-- 允许
-  - 单个：“读－写”-- 互斥
-  - 单个：“写－写”-- 互斥
-
-![bg right:50% 100%](figs/reader-writer.png)
-
----
-### 读者-写者问题
-- 读者优先策略
-   - 只要有读者正在读状态，后来的读者都能直接进入
-   - 如读者持续不断进入，则写者就处于饥饿
- - 写者优先策略
-   - 只要有写者就绪，写者应尽快执行写操作
-   - 如写者持续不断就绪，则读者就处于饥饿
+### The Reader-Writer Problem
+- Two types of users sharing data
+   - Reader: Read only, does not modify data
+   - Writer: read, modify data
+- Read and write to shared data
+   - multiple: "read-read" -- allow
+   - Single: "read-write" -- mutual exclusion
+   - Single: "write-write" -- mutual exclusion
 
 ![bg right:40% 100%](figs/reader-writer.png)
 
 ---
-### 读者-写者问题 -- 方案1
-用信号量描述每个约束
-- 信号量WriteMutex：控制读写操作的互斥，初始化为1
-- 读者计数Rcount ：正在进行读操作的读者数目，初始化为0
-- 信号量CountMutex：控制对读者计数的互斥修改，初始化为1
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+### The Reader-Writer Problem
+- Reader first strategy
+    - As long as a reader is reading the state, subsequent readers can directly enter
+    - If readers keep coming in, writers are starving
+  - Writer first policy
+    - Writers should perform write operations as soon as there are writers ready
+    - Readers are starving if writers are continuously ready
+
 ![bg right:40% 100%](figs/reader-writer.png)
 
 ---
-### 读者-写者问题 -- 方案1(信号量)
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+### Reader-Writer Problem -- Scenario 1
+Describe each constraint with a semaphore
+- WriteMutex: Controls the mutual exclusion of read and write operations, initialized to 1
+- Rcount: the number of readers who are reading, initialized to 0
+-  CountMutex: Controls the mutually exclusive modification of the reader count, initialized to 1
+![bg right:40% 100%](figs/reader-writer.png)
+
+---
+### Reader-Writer Problem -- Solution 1 (Semaphore)
 ![w:800](figs/wr-1.png)
 
 ---
-### 读者-写者问题 -- 方案1(信号量)
+### Reader-Writer Problem -- Solution 1 (Semaphore)
 ![w:800](figs/wr-2.png)
 
 ---
-### 读者-写者问题 -- 方案1(信号量)
+### Reader-Writer Problem -- Solution 1 (Semaphore)
 ![w:800](figs/wr-3.png)
 
 ---
-### 读者-写者问题 -- 方案1(信号量)
+### Reader-Writer Problem -- Solution 1 (Semaphore)
 ![w:800](figs/wr-4.png)
 
 ---
-### 读者-写者问题 -- 方案1(信号量)
+### Reader-Writer Problem -- Solution 1 (Semaphore)
 ![w:800](figs/wr-5.png)
 
 ---
-### 读者-写者问题 -- 方案1(信号量)
+### Reader-Writer Problem -- Solution 1 (Semaphore)
 ![w:700](figs/wr-6.png)
-此实现中，读者优先
+In this implementation, readers take precedence
 
 
 ---
-### 读者-写者问题 -- 方案2(管程)
+### Reader-Writer Problem -- Solution 2 (Monitor)
 ![w:900](figs/mwr-1.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程)
+### Reader-Writer Problem -- Solution 2 (Monitor)
 ![w:900](figs/mwr-2.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-3.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-4.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-5.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-6.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-7.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-8.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-9.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --读者
+### Reader-writer problem -- Option 2 (monitor) --reader
 ![w:900](figs/mwr-10.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --写者
+### Reader-Writer Problem -- Solution 2 (Monitor) -- Writer
 ![w:900](figs/mwr-11.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --写者
+### Reader-Writer Problem -- Solution 2 (Monitor) -- Writer
 ![w:900](figs/mwr-12.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --写者
+### Reader-Writer Problem -- Solution 2 (Monitor) -- Writer
 ![w:900](figs/mwr-13.png)
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --写者
+### Reader-Writer Problem -- Solution 2 (Monitor) -- Writer
 ![w:900](figs/mwr-14.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --写者
+### Reader-Writer Problem -- Solution 2 (Monitor) -- Writer
 ![w:900](figs/mwr-15.png)
 
 
 
 ---
-### 读者-写者问题 -- 方案2(管程) --写者
+### Reader-Writer Problem -- Solution 2 (Monitor) -- Writer
 ![w:900](figs/mwr-16.png)

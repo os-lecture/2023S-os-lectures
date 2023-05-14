@@ -1,596 +1,608 @@
 ---
-noteId: "daf06ec3d86511edb7d82f06d610f713"
-tags: []
 marp: true
-theme: "default"
+theme: default
 paginate: true
 _paginate: false
-header: ""
-footer: ""
-backgroundColor: "white"
-
+header: ''
+footer: ''
+backgroundColor: white
 ---
 
 <!-- theme: gaia -->
 <!-- _class: lead -->
 
-# 第十二讲 同步与互斥
+# Lecture 12 Synchronization and mutual exclusion
 
-## 第六节 支持同步互斥的OS(SMOS)
+## Section 6 OS(SMOS) Supporting Synchronous Mutex
 
 
 ---
-### 实践：SMOS
-- **进化目标**
-- 总体思路
-- 历史背景
-- 实践步骤
-- 程序设计
+### Practice: SMOS
+- **Evolution Goal**
+- General idea
+- History background
+- Practical steps
+- Programming
 
 ![bg right:65% 100%](figs/thread-coroutine-os-detail.png)
 
 
 ---
-### 实践：SMOS -- 以往目标
-提高性能、简化开发、加强安全、支持数据持久保存、支持应用的灵活性，支持进程间交互，支持线程和协程
-- TCOS：支持线程和协程  ； IPC OS：进程间交互
-- Filesystem OS：支持数据持久保存
-- Process OS: 增强进程管理和资源管理
-- Address Space OS: 隔离APP访问的内存地址空间
-- multiprog & time-sharing OS: 让APP共享CPU资源
-- BatchOS： 让APP与OS隔离，加强系统安全，提高执行效率
-- LibOS: 让APP与HW隔离，简化应用访问硬件的难度和复杂性
+### Practice: SMOS -- past goals
+<style scoped>
+{
+  font-size: 29px
+}
+</style>
+Improve performance, simplify development, enhance security, support data persistence, support application flexibility, support inter-process interaction, support threads and coroutines
+- TCOS: Support threads and coroutines; IPC OS: Inter-process interaction
+- Filesystem OS: support for persistent data storage
+- Process OS: Enhanced process management and resource management
+- Address Space OS: Isolate the memory address space accessed by APP
+- Multiprog & time-sharing OS: Let APP share CPU resources
+- BatchOS: isolate APP from OS, strengthen system security, and improve execution efficiency
+- LibOS: Isolate APP from HW, simplifying the difficulty and complexity of applications accessing hardware
 
 ---
-### 实践：SMOS -- 进化目标
-在多线程中支持对共享资源的同步互斥访问
-- 互斥锁机制
-- 信号量机制
-- 管程与条件变量机制
+### Practice: SMOS -- Evolutionary Goals
+Supports synchronized mutex access to shared resources in multiple threads
+- Mutex lock mechanism
+- Semaphore mechanism
+- The mechanism of locking and condition variables.
 
-
----
-### 实践：SMOS 
-### 同学的进化目标
-- 理解同步互斥的各种机制
-- 理解用同步互斥机制解决同步互斥问题
-- 会写支持线程间同步互斥的OS
-
-
-<!-- 慈母龙英文名(maiasaura)的含义是“好妈妈蜥蜴”。1979年在美国蒙大拿，科学家们发现了一些恐龙窝，其中有小恐龙的骨架。于是他们把这种恐龙命名为慈母龙。。 -->
-
-![bg right 80%](figs/maiasaura.png)
-
----
-### 实践：SMOS
-- 进化目标
-- **总体思路**
-    - **同步互斥**
-- 历史背景
-- 实践步骤
-- 程序设计
-
-![bg right:70% 100%](figs/syncmutex-os-key-structures.png)
-
----
-### 实践：SMOS
-- 进化目标
-- **总体思路**
-    - **同步互斥**
-- 历史背景
-- 实践步骤
-- 程序设计
-
-![bg right:70% 100%](figs/syncmutex-os-detail.png)
 
 
 ---
-### 实践：SMOS
-历史背景
-- 1963年前后，当时的数学家 Edsger Dijkstra和他的团队正在为Electrologica X8计算机开发一个操作系统（THE多道程序系统）的过程中，提出了信号（Semaphore）是一种变量或抽象数据类型，用于控制多个线程对共同资源的访问。
-- Brinch Hansen(1973)和Hoare(1974)结合操作系统和Concurrent Pascal编程语言，提出了一种高级同步原语，称为管程(monitor)。一个管程是一个由过程（procedures，Pascal语言的术语，即函数）、共享变量等组成的集合。线程可调用管程中的过程。
+### Practice: SMOS
+### Classmate's evolutionary goal
+- Understand the various mechanisms of synchronous mutual exclusion
+- Understand how to use the synchronization mutual exclusion mechanism to solve the synchronization mutual exclusion problem
+- Can write an OS that supports synchronization and mutual exclusion between threads
+
+
+<!-- The English name of the loving mother dragon (maiasaura) means "good mother lizard". In Montana, USA in 1979, scientists discovered some dinosaur nests, which contained the skeletons of small dinosaurs. So they named this dinosaur Cimosaurus. . -->
+
+![bg right:30% 100%](figs/maiasaura.png)
 
 ---
-### 实践步骤
+### Practice: SMOS
+- Evolution goals
+- **General idea**
+     - **Synchronous mutex**
+- History background
+- Practical steps
+- Programming
+
+![bg right:60% 100%](figs/syncmutex-os-key-structures.png)
+
+---
+### Practice: SMOS
+- Evolution goals
+- **General idea**
+     - **Synchronous mutex**
+- History background
+- Practical steps
+- Programming
+
+![bg right:60% 100%](figs/syncmutex-os-detail.png)
+
+
+---
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+### Practice: SMOS
+History background
+- Around 1963, when the mathematician Edsger Dijkstra and his team were developing an operating system (THE multiprogramming system) for the Electrologica X8 computer, they proposed that the signal (Semaphore) is a variable or abstract data type, Used to control access to common resources by multiple threads.
+- Brinch Hansen (1973) and Hoare (1974) combined the operating system and the Concurrent Pascal programming language to propose a high-level synchronization primitive called a monitor. A monitor is a collection of procedures (procedures, Pascal term, function), shared variables, etc. A thread can call a procedure in a monitor.
+
+---
+### Practical steps
 ```
 git clone https://github.com/rcore-os/rCore-Tutorial-v3.git
 cd rCore-Tutorial-v3
 git checkout ch8
 ```
-包含了多个同步互斥相关的多线程应用程序
+Includes multiple multi-threaded applications that are related to synchronization and mutual exclusion.
+
 ```
 user/src/bin/
-├──  mpsc_sem.rs          # 基于信号量的生产者消费者问题
-├──  phil_din_mutex.rs    # 基于互斥锁的哲学家问题
-├──  race_adder_*.rs      # 各种方式的全局变量累加问题
-├──  sync_sem.rs          # 基于信号量的同步操作
-├──  test_condvar.rs      # 基于条件变量的同步操作
+├── mpsc_sem.rs # Producer-consumer problem based on semaphore
+├── phil_din_mutex.rs # Philosopher's problem based on mutex
+├── race_adder_*.rs # Global variable accumulation problems in various ways
+├── sync_sem.rs # Synchronous operation based on semaphore
+├── test_condvar.rs # Synchronous operation based on condition variable
 ```
 
 ---
-### 实践步骤
-内核代码的主要改进部分
+### Practical steps
+Major improvements to the kernel code
 ```
 os/src/
 ├── sync
-│   ├── condvar.rs        //条件变量
-│   ├── mod.rs 
-│   ├── mutex.rs          //互斥锁
-│   ├── semaphore.rs      //信号量
-│   └── up.rs
+│ ├── condvar.rs //Condition variable
+│ ├── mod.rs
+│ ├── mutex.rs // mutex
+│ ├── semaphore.rs //Semaphore
+│ └── up.rs
 ├── syscall
-│   ├── sync.rs //增加了互斥锁、信号量和条件变量相关系统调用
+│ ├── sync.rs // Added system calls related to mutexes, semaphores and condition variables
 ├── task
-│   ├── process.rs //进程控制块增加了互斥锁、信号量和条件变量
-├── timer.rs     // 添加与定时相关的TimerCondVar类条件变量
+│ ├── process.rs //The process control block adds mutexes, semaphores and condition variables
+├── timer.rs // Add timer-related condition variables of the TimerCondVar class
 ```
 
 ---
-### 实践步骤
-比如执行哲学家问题的应用程序，展示了5个哲学家用5把叉子进行思考/进餐/休息的过程。
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
+
+### Practical steps
+For example, an application that implements the philosopher's problem shows the process of 5 philosophers thinking/eating/resting with 5 forks.
 ```
 Rust user shell
 >> phil_din_mutex
 time cost = 7271
 '-' -> THINKING; 'x' -> EATING; ' ' -> WAITING
-#0: -------                 xxxxxxxx----------       xxxx-----  xxxxxx--xxx
-#1: ---xxxxxx--      xxxxxxx----------    x---xxxxxx
-#2: -----          xx---------xx----xxxxxx------------        xxxx
-#3: -----xxxxxxxxxx------xxxxx--------    xxxxxx--   xxxxxxxxx
-#4: ------         x------          xxxxxx--    xxxxx------   xx
-#0: -------                 xxxxxxxx----------       xxxx-----  xxxxxx--xxx
+#0: -------xxxxxxxx----------xxxx-----xxxxxx--xxx
+#1: ---xxxxxx--xxxxxx-------- x---xxxxxx
+#2: -----xx---------xx----xxxxxx------------xxxx
+#3: -----xxxxxxxxxx---xxxxx--------xxxxxx--xxxxxxxxx
+#4: ------ x------ xxxxxx-- xxxxx------ xx
+#0: -------xxxxxxxx----------xxxx-----xxxxxx--xxx
 >>
 ```
 
 ---
-### 实践步骤
-全局变量累加问题的多线程应用 `race_adder.rs`
-```
-A           //全局变量 
-A=A+1       //多个线程对A进行累加 
-```
-多个线程执行上述代码，真的会出现Race Condition（竞争条件）吗？
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-- 并发、无序的线程在使用有限、独占、不可抢占的资源而产生矛盾称为竞争（Race）
-- 多个线程无序竞争不能被同时访问的资源而出现执行出错的问题，称为竞争条件（Race Condition）
+### Practical steps
+`race_adder.rs` : a Multi-threaded application for global variable accumulation problem
+```
+A //global variable
+A=A+1 //Multiple threads accumulate A
+```
+Multiple threads execute the above code, will there really be a Race Condition?
+
+- **Race**:Concurrent and disordered threads use limited, exclusive, and non-preemptive resources to create conflicts 
+- **Race Condition** : multiple threads competitively access a resource that cannot be accessed simultaneously, causing execution errors in an unordered manner.
+
+
 
 ---
-### 实践步骤
-全局变量累加问题的多线程应用 `race_adder.rs`
-```rust
+### Practical steps
+`race_adder.rs` : a Multi-threaded application for global variable accumulation problem
+```
 pub fn main() -> i32 {
-    let start = get_time();
-    let mut v = Vec::new();
-    for _ in 0..THREAD_COUNT {
-        v.push(thread_create(f as usize, 0) as usize);  // f函数是线程主体
-    }
-    let mut time_cost = Vec::new();
-    for tid in v.iter() {
-        time_cost.push(waittid(*tid));
-    }
-    println!("time cost is {}ms", get_time() - start);
-    assert_eq!(unsafe { A }, PER_THREAD * THREAD_COUNT); //比较累计值A
-    0
+     let start = get_time();
+     let mut v = Vec::new();
+     for _ in 0..THREAD_COUNT {
+         v.push(thread_create(f as usize, 0) as usize); // f function is the thread body
+     }
+     let mut time_cost = Vec::new();
+     for tid in v. iter() {
+         time_cost.push(waittid(*tid));
+     }
+     println!("time cost is {}ms", get_time() - start);
+     assert_eq!(unsafe { A }, PER_THREAD * THREAD_COUNT); //Compare the accumulated value A
+     0
 }
 ```
 
 
 ---
-### 实践步骤
-全局变量累加问题的多线程应用 `race_adder.rs`
+### Practical steps
+`race_adder.rs` : a Multi-threaded application for global variable accumulation problem
 ```rust
 unsafe fn f() -> ! {
-    let mut t = 2usize;
-    for _ in 0..PER_THREAD {    
-        let a = &mut A as *mut usize;    // “缓慢执行”A=A+1 
-        let cur = a.read_volatile();     // “缓慢执行”A=A+1
-        for _ in 0..500 {  t = t * t % 10007; } // 增加切换概率
-        a.write_volatile(cur + 1);      // “缓慢执行”A=A+1
-    }
-    exit(t as i32)
+     let mut t = 2usize;
+     for _ in 0..PER_THREAD {
+         let a = &mut A as *mut usize; // "slow execution" A=A+1
+         let cur = a.read_volatile(); // "slow execution" A=A+1
+         for _ in 0..500 { t = t * t % 10007; } // increase switching probability
+         a.write_volatile(cur + 1); // "slow execution" A=A+1
+     }
+     exit(t as i32)
 }
 ```
 ---
-### 实践步骤
-全局变量累加问题的多线程应用 `race_adder.rs`
+### Practical steps
+`race_adder.rs` : a Multi-threaded application for global variable accumulation problem
 ```
 >> race_adder
 time cost is 31ms
 Panicked at src/bin/race_adder.rs:40, assertion failed: `(left == right)`
-  left: `15788`,
- right: `16000`
+   left: `15788`,
+  right: `16000`
 [kernel] Aborted, SIGABRT=6
 ```
-每次都会执行都会出现Race Condition（竞争条件）！
+Race Condition will appear every time it is executed!
 
 
 ---
-### 实践步骤
-基于原子操作的全局变量累加问题的多线程应用 `race_adder_atomic.rs`
+### Practical steps
+`race_adder_atomic.rs` :A Multi-thread application for global variable accumulation problem based on atomic operation
 ```rust
 unsafe fn f() -> ! {
-    for _ in 0..PER_THREAD {
-        while OCCUPIED
-            .compare_exchange(false, true, Ordering::Relaxed, Ordering::Relaxed)
-            .is_err()  {  yield_(); }           // 基于CAS操作的近似spin lock操作
-        let a = &mut A as *mut usize;           // “缓慢执行”A=A+1 
-        let cur = a.read_volatile();            // “缓慢执行”A=A+1 
-        for _ in 0..500 { t = t * t % 10007; }  // 增加切换概率
-        a.write_volatile(cur + 1);              // “缓慢执行”A=A+1 
-        OCCUPIED.store(false, Ordering::Relaxed);  // unlock操作
-    }
-    ...
+     for _ in 0..PER_THREAD {
+         while OCCUPIED
+             .compare_exchange(false, true, Ordering::Relaxed, Ordering::Relaxed)
+             .is_err() { yield_(); } // Approximate spin lock operation based on CAS operation
+         let a = &mut A as *mut usize; // "slow execution" A=A+1
+         let cur = a.read_volatile(); // "slow execution" A=A+1
+         for _ in 0..500 { t = t * t % 10007; } // increase switching probability
+         a.write_volatile(cur + 1); // "slow execution" A=A+1
+         OCCUPIED.store(false, Ordering::Relaxed); // unlock operation
+     }
+     ...
 ```
 ---
-### 实践步骤
-基于原子操作的全局变量累加问题的多线程应用 `race_adder_atomic.rs`
+### Practical steps
+`race_adder_atomic.rs` :A Multi-thread application for global variable accumulation problem based on atomic operation
 
 ```
 >> race_adder_atomic
 time cost is 29ms
 >> race_adder_loop
 ```
-可以看到，执行速度快，且正确。
+As you can see, the execution is fast and correct.
 
 ---
-### 实践步骤
-基于互斥锁的多线程应用 `race_adder_mutex_[spin|block]`
+### Practical steps
+`race_adder_mutex_[spin|block]`:multi-thread application  based on Mutex
 ```rust
 unsafe fn f() -> ! {
-    let mut t = 2usize;
-    for _ in 0..PER_THREAD {
-        mutex_lock(0); //lock(id)
-        let a = &mut A as *mut usize;   // “缓慢执行”A=A+1 
-        let cur = a.read_volatile();    // “缓慢执行”A=A+1 
-        for _ in 0..500 {  t = t * t % 10007; } // 增加切换概率
-        a.write_volatile(cur + 1);      // “缓慢执行”A=A+1 
-        mutex_unlock(0); //unlock(id)
-    }
-    exit(t as i32)
+     let mut t = 2usize;
+     for _ in 0..PER_THREAD {
+         mutex_lock(0); //lock(id)
+         let a = &mut A as *mut usize; // "slow execution" A=A+1
+         let cur = a.read_volatile(); // "slow execution" A=A+1
+         for _ in 0..500 { t = t * t % 10007; } // increase switching probability
+         a.write_volatile(cur + 1); // "slow execution" A=A+1
+         mutex_unlock(0); //unlock(id)
+     }
+     exit(t as i32)
 }
 ```
 ---
-### 实践步骤
-基于互斥锁的全局变量累加问题的多线程应用 `race_adder_mutex_spin`
+### Practical steps
+`race_adder_mutex_spin` : A Multi-thread application for  global variable accumulation problem based on mutex
 ```
->> race_adder_mutex_spin  
+>> race_adder_mutex_spin
 time cost is 249ms
-# 执行系统调用，且进行在就绪队列上的取出/插入/等待操作
+# Execute system calls, and perform fetch/insert/wait operations on the ready queue
 ```
 
-基于互斥锁的全局变量累加问题的多线程应用 `race_adder_mutex_block`
+`race_adder_mutex_block` : A Multi-thread application for  global variable accumulation problem based on mutex
 ```
 >> race_adder_mutex_blocking
-time cost is 919ms  
-# 执行系统调用，且进行在就绪队列+等待队列上的取出/插入/等待操作
+time cost is 919ms
+# Execute system calls, and perform fetch/insert/wait operations on the ready queue + waiting queue
 ```
 
 ---
-###  程序设计
-spin mutex和 block mutex 的核心数据结构： `UPSafeCell`
+###  Programming
+The core data structure of spin mutex and block mutex: `UPSafeCell`
 ```rust
-pub struct UPSafeCell<T> { //允许在单核上安全使用可变全局变量
-    inner: RefCell<T>,  //提供内部可变性和运行时借用检查
+pub struct UPSafeCell<T> { // Allow safe use of mutable global variables on a single core
+     inner: RefCell<T>, //provides internal mutability and runtime borrow checking
 }
-unsafe impl<T> Sync for UPSafeCell<T> {} //声明支持全局变量安全地在线程间共享
+unsafe impl<T> Sync for UPSafeCell<T> {} //Declaration supports global variables to be safely shared between threads
 impl<T> UPSafeCell<T> {
-    pub unsafe fn new(value: T) -> Self {
-        Self { inner: RefCell::new(value) }
-    }
-    pub fn exclusive_access(&self) -> RefMut<'_, T> {
-        self.inner.borrow_mut()  //得到它包裹的数据的独占访问权
-    }
+     pub unsafe fn new(value: T) -> Self {
+         Self { inner: RefCell::new(value) }
+     }
+     pub fn exclusive_access(&self) -> RefMut<'_, T> {
+         self.inner.borrow_mut() //Get exclusive access to the data it wraps
+     }
 }
 ```
 
 ---
-###  程序设计
-spin mutex和 block mutex 的核心数据结构
+###  Programming
+The core data structure of spin mutex and block mutex
 ```rust
 pub struct MutexSpin {
-    locked: UPSafeCell<bool>,  //locked是被UPSafeCell包裹的布尔全局变量
+     locked: UPSafeCell<bool>, //locked is a Boolean global variable wrapped by UPSafeCell
 }
 pub struct MutexBlocking {
-    inner: UPSafeCell<MutexBlockingInner>,
+     inner: UPSafeCell<MutexBlockingInner>,
 }
 pub struct MutexBlockingInner {
-    locked: bool,
-    wait_queue: VecDeque<Arc<TaskControlBlock>>, //等待获取锁的线程等待队列
+     locked: bool,
+     wait_queue: VecDeque<Arc<TaskControlBlock>>, //The thread waiting to acquire the lock waits for the queue
 }
 ```
 
 
- ---
-###  程序设计
-spin mutex的相关函数
+  ---
+###  Programming
+Related functions of spin mutex
 ```rust
-pub trait Mutex: Sync + Send { //Send表示跨线程 move，Sync表示跨线程share data
-    fn lock(&self);
-    fn unlock(&self);
+pub trait Mutex: Sync + Send { //Send means cross-thread move, Sync means cross-thread share data
+     fn lock(&self);
+     fn unlock(&self);
 }
 
-    fn unlock(&self) {
-        let mut locked = self.locked.exclusive_access(); //独占访问locked
-        *locked = false; //
-    }
+     fn unlock(&self) {
+         let mut locked = self.locked.exclusive_access(); //exclusive access locked
+         *locked = false; //
+     }
 ```
 
 ---
-###  程序设计
-spin mutex的相关函数
+###  Programming
+Related functions of spin mutex
 ```rust
 impl Mutex for MutexSpin {
-    fn lock(&self) {
-        loop {
-            let mut locked = self.locked.exclusive_access(); //独占访问locked
-            if *locked {
-                drop(locked);
-                suspend_current_and_run_next(); //把当前线程放到就绪队列末尾
-                continue;
-            } else {
-                *locked = true; //得到锁了，可以继续进入临界区执行
-                return;
-        ...
- ```   
+     fn lock(&self) {
+         loop {
+             let mut locked = self.locked.exclusive_access(); //exclusive access locked
+             if *locked {
+                 drop(locked);
+                 suspend_current_and_run_next(); //put the current thread at the end of the ready queue
+                 continue;
+             } else {
+                 *locked = true; //Get the lock, you can continue to execute in the critical section
+                 return;
+         ...
+  ```
 
 
 ---
-###  程序设计
-block mutex的相关函数
+###  Programming
+Related functions of block mutex
 ```rust
 impl Mutex for MutexBlocking {
-    fn lock(&self) {
-        let mut mutex_inner = self.inner.exclusive_access(); //独占访问mutex_inner
-        if mutex_inner.locked {
-            //把当前线程挂到此lock相关的等待队列中
-            mutex_inner.wait_queue.push_back(current_task().unwrap());
-            drop(mutex_inner);
-            //把当前线程从就绪队列中取出，设置为阻塞态，切换到另一就绪线程执行
-            block_current_and_run_next();
-        } else {
-            mutex_inner.locked = true; //得到锁了，可以继续进入临界区执行
-        }
-    }
+     fn lock(&self) {
+         let mut mutex_inner = self.inner.exclusive_access(); //Exclusive access to mutex_inner
+         if mutex_inner. locked {
+             //Put the current thread in the waiting queue related to this lock
+             mutex_inner.wait_queue.push_back(current_task().unwrap());
+             drop(mutex_inner);
+             //Take the current thread out of the ready queue, set it to a blocked state, and switch to another ready thread for execution
+             block_current_and_run_next();
+         } else {
+             mutex_inner.locked = true; //Get the lock, you can continue to execute in the critical section
+         }
+     }
 ```
 
 
 ---
-###  程序设计
-block mutex的相关函数
+###  Programming
+Related functions of block mutex
 ```rust
-    fn unlock(&self) {
-        let mut mutex_inner = self.inner.exclusive_access();
-        assert!(mutex_inner.locked);
-        //从等待队列中取出线程，并放入到就绪队列中
-        if let Some(waking_task) = mutex_inner.wait_queue.pop_front() {
-            add_task(waking_task); 
-        } else {
-            mutex_inner.locked = false; //释放锁
-        }
-    }
+     fn unlock(&self) {
+         let mut mutex_inner = self. inner. exclusive_access();
+         assert!(mutex_inner.locked);
+         //Take the thread from the waiting queue and put it into the ready queue
+         if let Some(waking_task) = mutex_inner.wait_queue.pop_front() {
+             add_task(waking_task);
+         } else {
+             mutex_inner.locked = false; //release the lock
+         }
+     }
 ```
 ---
-### 实践步骤
-基于信号量的多线程应用 `sync_sem`
+### Practical steps
+`sync_sem`: multi-threaded application based on semaphore
 ```rust
 pub fn main() -> i32 {
-    // create semaphores
-    assert_eq!(semaphore_create(0) as usize, SEM_SYNC);
-    // create threads
-    let threads = vec![
-        thread_create(first as usize, 0),
-        thread_create(second as usize, 0),
-    ];
-    // wait for all threads to complete
-    for thread in threads.iter() {
-        waittid(*thread as usize);
-    }
+     // create semaphores
+     assert_eq!(semaphore_create(0) as usize, SEM_SYNC);
+     // create threads
+     let threads = vec![
+         thread_create(first as usize, 0),
+         thread_create(second as usize, 0),
+     ];
+     // wait for all threads to complete
+     for thread in threads. iter() {
+         waittid(*thread as usize);
+     }
 ...
 ```
 
 ---
-### 实践步骤
-基于信号量的多线程应用 `sync_sem`
+### Practical steps
+`sync_sem`: multi-threaded application based on semaphore
 ```rust
 unsafe fn first() -> ! {
-    sleep(10);
-    println!("First work and wakeup Second");
-    semaphore_up(SEM_SYNC);
-    exit(0)
+     sleep(10);
+     println!("First work and wakeup Second");
+     semaphore_up(SEM_SYNC);
+     exit(0)
 }
 unsafe fn second() -> ! {
-    println!("Second want to continue,but need to wait first");
-    semaphore_down(SEM_SYNC);
-    println!("Second can work now");
-    exit(0)
+     println!("Second want to continue, but need to wait first");
+     semaphore_down(SEM_SYNC);
+     println!("Second can work now");
+     exit(0)
 }
 ```
 
 ---
-### 实践步骤
-基于信号量的多线程应用 `sync_sem`
+### Practical steps
+`sync_sem`: multi-threaded application based on semaphore
 ```
 >> sync_sem
-Second want to continue,but need to wait first
+Second want to continue, but need to wait first
 First work and wakeup Second
 Second can work now
 sync_sem passed!
 ```
-- 信号量初值设为0
-- semaphore_down() ：线程会挂起/阻塞（suspend/block）
-- semaphore_up()：会唤醒挂起的线程
+- The initial value of the semaphore is set to 0
+- semaphore_down() : The thread will suspend/block
+- semaphore_up(): will wake up the suspended thread
 
 ---
-###  程序设计
-semaphore的核心数据结构
+###  Programming
+The core data structure of semaphore
 ```rust
 pub struct Semaphore {
-    pub inner: UPSafeCell<SemaphoreInner>, //UPSafeCell包裹的内部可变结构
+     pub inner: UPSafeCell<SemaphoreInner>, //The internal variable structure wrapped by UPSafeCell
 }
 
 pub struct SemaphoreInner {
-    pub count: isize, //信号量的计数值
-    pub wait_queue: VecDeque<Arc<TaskControlBlock>>, //信号量的等待队列
+     pub count: isize, //count value of semaphore
+     pub wait_queue: VecDeque<Arc<TaskControlBlock>>, //Waiting queue for semaphore
 }
 ```
 
 ---
-###  程序设计
-semaphore的相关函数
+###  Programming
+Related functions of semaphore
 ```rust
-    pub fn down(&self) {
-        let mut inner = self.inner.exclusive_access();
-        inner.count -= 1; //信号量的计数值减一
-        if inner.count < 0 {
-            inner.wait_queue.push_back(current_task().unwrap()); //放入等待队列
-            drop(inner);
-            //把当前线程从就绪队列中取出，设置为阻塞态，切换到另一就绪线程执行
-            block_current_and_run_next();
-        }
-    }
+     pub fn down(&self) {
+         let mut inner = self. inner. exclusive_access();
+         inner.count -= 1; //The count value of the semaphore is reduced by one
+         if inner.count < 0 {
+             inner.wait_queue.push_back(current_task().unwrap()); //put into the waiting queue
+             drop(inner);
+             //Take the current thread out of the ready queue, set it to a blocked state, and switch to another ready thread for execution
+             block_current_and_run_next();
+         }
+     }
 ```
 
 
 ---
-###  程序设计
-semaphore的相关函数
-```rust
-    pub fn up(&self) {
-        let mut inner = self.inner.exclusive_access();
-        inner.count += 1;//信号量的计数值加一
-        if inner.count <= 0 {
-            //从等待队列中取出线程，并放入到就绪队列中
-            if let Some(task) = inner.wait_queue.pop_front() {
-                add_task(task);
-            }
-        }
-    }
-```
+<style scoped>
+{
+  font-size: 30px
+}
+</style>
 
-
-
----
-### 实践步骤
-基于互斥锁和条件变量的多线程应用 `test_condvar`
+### Practical steps
+`test_condvar` :Multi-threaded application based on mutex and condition variable
 ```rust
 pub fn main() -> i32 {
-    // create condvar & mutex
-    assert_eq!(condvar_create() as usize, CONDVAR_ID);
-    assert_eq!(mutex_blocking_create() as usize, MUTEX_ID);
-    // create threads
-    let threads = vec![ thread_create(first as usize, 0),
-                        thread_create(second as usize, 0),];
-    // wait for all threads to complete
-    for thread in threads.iter() {
-        waittid(*thread as usize);
-    }
-    ...
+     // create condvar & mutex
+     assert_eq!(condvar_create() as usize, CONDVAR_ID);
+     assert_eq!(mutex_blocking_create() as usize, MUTEX_ID);
+     // create threads
+     let threads = vec![ thread_create(first as usize, 0),
+                         thread_create(second as usize, 0),];
+     // wait for all threads to complete
+     for thread in threads. iter() {
+         waittid(*thread as usize);
+     }
+     ...
 ```
 
 ---
-### 实践步骤
-基于互斥锁和条件变量的多线程应用 `test_condvar`
+### Practical steps
+`test_condvar` :Multi-threaded application based on mutex and condition variable
 ```rust
 unsafe fn second() -> ! {
-    println!("Second want to continue,but need to wait A=1");
-    mutex_lock(MUTEX_ID);
-    while A == 0 {
-        println!("Second: A is {}", A);
-        condvar_wait(CONDVAR_ID, MUTEX_ID);
-    }
-    mutex_unlock(MUTEX_ID);
-    println!("A is {}, Second can work now", A);
-    exit(0)
+     println!("Second want to continue, but need to wait A=1");
+     mutex_lock(MUTEX_ID);
+     while A == 0 {
+         println!("Second: A is {}", A);
+         condvar_wait(CONDVAR_ID, MUTEX_ID);
+     }
+     mutex_unlock(MUTEX_ID);
+     println!("A is {}, Second can work now", A);
+     exit(0)
 }
 ```
 
 ---
-### 实践步骤
-基于互斥锁和条件变量的多线程应用 `test_condvar`
+### Practical steps
+`test_condvar` :Multi-threaded application based on mutex and condition variable
 ```rust
 unsafe fn first() -> ! {
-    sleep(10);
-    println!("First work, Change A --> 1 and wakeup Second");
-    mutex_lock(MUTEX_ID);
-    A = 1;
-    condvar_signal(CONDVAR_ID);
-    mutex_unlock(MUTEX_ID);
-    exit(0)
+     sleep(10);
+     println!("First work, Change A --> 1 and wakeup Second");
+     mutex_lock(MUTEX_ID);
+     A = 1;
+     condvar_signal(CONDVAR_ID);
+     mutex_unlock(MUTEX_ID);
+     exit(0)
 }
 ```
 
 ---
-### 实践步骤
-基于互斥锁和条件变量的多线程应用 `test_condvar`
+### Practical steps
+Multi-threaded application `test_condvar` based on mutex and condition variable
 ```
 >> test_condvar
 Second: A is 0
 First work, Change A --> 1 and wakeup Second
 A is 1, Second can work now
 ```
-- `second`先执行，但由于`A==0`，使得等在条件变量上
-- `first`后执行，但会先于`second`，并通过条件变量唤醒`second`
+- `second` is executed first, but because `A==0`, it waits on the condition variable
+- `first` is excuted later, but before `second`, and wake up `second` through the condition variable
 
 ---
-###  程序设计
-condvar的核心数据结构
+###  Programming
+The core data structure of condvar
 ```rust
 pub struct Condvar {
-    pub inner: UPSafeCell<CondvarInner>, //UPSafeCell包裹的内部可变结构
+     pub inner: UPSafeCell<CondvarInner>, //The internal variable structure wrapped by UPSafeCell
 }
 
 pub struct CondvarInner {
-    pub wait_queue: VecDeque<Arc<TaskControlBlock>>,//等待队列
+     pub wait_queue: VecDeque<Arc<TaskControlBlock>>, //wait for queue
 }
 ```
 
 ---
-###  程序设计
-condvar的相关函数
+###  Programming
+Related functions of condvar
 ```rust
-    pub fn wait(&self, mutex: Arc<dyn Mutex>) {
-        mutex.unlock(); //释放锁
-        let mut inner = self.inner.exclusive_access();
-        inner.wait_queue.push_back(current_task().unwrap()); //放入等待队列
-        drop(inner);
-        //把当前线程从就绪队列中取出，设置为阻塞态，切换到另一就绪线程执行
-        block_current_and_run_next();
-        mutex.lock();
-    }
+     pub fn wait(&self, mutex: Arc<dyn Mutex>) {
+         mutex.unlock(); //release the lock
+         let mut inner = self. inner. exclusive_access();
+         inner.wait_queue.push_back(current_task().unwrap()); //put into the waiting queue
+         drop(inner);
+         //Take the current thread out of the ready queue, set it to a blocked state, and switch to another ready thread for execution
+         block_current_and_run_next();
+         mutex. lock();
+     }
 ```
 
 ---
-###  程序设计
-condvar的相关函数
+###  Programming
+Related functions of condvar
 ```rust
-    pub fn signal(&self) {
-        let mut inner = self.inner.exclusive_access();
-        //从等待队列中取出线程，并放入到就绪队列中
-        if let Some(task) = inner.wait_queue.pop_front() {
-            add_task(task);
-        }
-    }
+     pub fn signal(&self) {
+         let mut inner = self. inner. exclusive_access();
+         //Take the thread from the waiting queue and put it into the ready queue
+         if let Some(task) = inner.wait_queue.pop_front() {
+             add_task(task);
+         }
+     }
 ```
 
 ---
-###  程序设计
-sleep的设计实现
+###  Programming
+The design and implementation of sleep
 ```rust
 pub fn sys_sleep(ms: usize) -> isize {
-    let expire_ms = get_time_ms() + ms;
-    let task = current_task().unwrap();
-    add_timer(expire_ms, task);
-    block_current_and_run_next();
-    0
+     let expire_ms = get_time_ms() + ms;
+     let task = current_task().unwrap();
+     add_timer(expire_ms, task);
+     block_current_and_run_next();
+     0
 }
 ```
 ---
-### 小结
-- 学习掌握面向多线程应用的同步互斥机制
-   - 互斥锁
-   - 信号量
-   - 条件变量
-   - 原子操作
-- 能写慈母龙OS
+### Summary
+- Learn to master the synchronization and mutual exclusion mechanism for multi-threaded applications
+    - Mutex
+    - Signal
+    - Condition variable
+    - Atomic operations
+- Able to write SMOS OS
 
-![bg right 70%](figs/maiasaura.png)
+![bg right:40% 100%](figs/maiasaura.png)
