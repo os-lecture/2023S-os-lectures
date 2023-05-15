@@ -99,17 +99,21 @@ backgroundColor: "white"
 - [Section 3 A File System Supporting Crash Consistency](./lec9/p3-fsjournal.html)
 - [Section 4 Practice: Operating System Supporting Files](./lec9/p4-fs-lab.html)
 
+---
+## Lecture 10 Inter-process communication
+- [Section 1 Overview of Inter-Process Communication (IPC)](./lec10/p1-ipcoverview.html)
+- [Section 2 IPC OS](./lec10/p2-ipclabs.html)
 
 <!--
 ---
-## Lecture 10 Threads and coroutines
+## Lecture 11 Threads and coroutines
 - [Part 1 Thread](./lec11/p1-thread.html)
 - [Section 2 Coroutine](./lec11/p2-coroutine.html)
 - [Section 3 Practice: OS (TCOS) that supports threads/coroutines](./lec11/p3-labs.html)
 
 
 ---
-## Lecture 11 Inter-process communication
+## Lecture 10 Inter-process communication
 - [Section 1 Overview of Inter-Process Communication (IPC)](./lec10/p1-ipcoverview.html)
 - [Section 2 Practice: OS that supports IPC](./lec10/p2-ipclabs.html)
 
