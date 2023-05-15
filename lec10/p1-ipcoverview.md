@@ -41,12 +41,12 @@ Spring 2023
 #### Requirements for IPC
 
 - Challenge: The functionality of a single program is limited.
-- The objective of IPC: Multiple processes collaborate to meet the requirements of complex applications
+- The objective of IPC: Multiple processes collaborate to meet complex requirements 
    - Modularization of functionality
    - Isolation between programs
    - Collaboration among multiple programs to accomplish complex tasks
 
-**Definition of Inter process communication(IPC)**: he behavior of exchanging data (sharing or passing) between processes for **interaction** with each other.
+**Definition of Inter process communication(IPC)**: the behavior of exchanging data (sharing or passing) between processes for **interaction** with each other.
 ![bg right:35% 95%](figs/ipcintro.png)
 
 ---
@@ -91,14 +91,14 @@ table {
 #### IPC Mechanisms
 IPC refers to the ability of processes to share or transfer data.
 
-| IPC mechanism | Meaning | Communication method |
-| ------------------------ | ---- |---- |
-| Pipe  | Unidirectional transfer of byte stream | Indirect communication |
-| Message Queue | Receive/send messages through the queue | Indirect communication |
-| Signal | Asynchronously send signals to a process for handling | Indirect communication |
-| Socket | nter-process networking communication for multi/single machines | Indirect communication |
-| Shared Memory | Multiple processes share a physical memory block | Direct communication |
-| File | Multiple processes can access the same file | Indirect communication |
+| IPC机制 | 含义 | 通信方式 |
+| ---------------------- | ---------------------- |----------------- |
+| 管道 (Pipe)   | 单方向传输字节流 | 间接通信 |
+| 消息队列 (Message Queue) | 通过队列中收/发消息 | 间接通信 |
+| 信号 (Signal) | 异步发送信号给进程处理 | 间接通信 |
+| 套接字 (Socket) | 多/单机进程间网络通信 | 间接通信 |
+| 共享内存 (Shared Memory) | 多个进程共享一块物理内存 | 间接通信 |
+| 文件 (File) | 多个进程可访问同一文件 | 间接通信 |
 
 ---
 #### Typical IPC mechanism in UNIX
@@ -109,7 +109,7 @@ IPC refers to the ability of processes to share or pass data.
 
 ---
 
-#### Basic Interface for message passing
+#### Basic Interfaces for message passing
 - Send messages
 - Receive messages
 - Remote Procedure Call (RPC)
@@ -123,9 +123,9 @@ Remote Procedure Call, RPC = send + recv
 #### Blocking or Non-blocking Communication
 
 - Blocking communication:
-   - Block send, block receive
+   - Blocked send, blocked receive
 - Non-blocking communication:
-   - Non-blocking send, non-blocking receive
+   - Non-blocked send, non-blocked receive
 
 ![bg right:51% 65%](figs/block-unblock-send.png)
 
