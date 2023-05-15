@@ -228,7 +228,7 @@ Support **data persistence**
 - Execution: Privilege level switching, switching between processes and the OS
 - Execution: Switching address space, accessing data across address spaces
 - Execution: **Loading applications from the file system to create processes**
-- Execution: Data access: memory-disk, **file-based reading and writing**
+- Execution: Data access: memory--disk, **file-based reading and writing**
 
 
 ---
@@ -307,20 +307,20 @@ Shell: Process 2 exited with code 0
 #### Code structure
 Add easy-fs
 ```
-├── easy-fs (new: an implementation of EasyFileSystem, a simple file system independent from the kernel)
+├── easy-fs (新增：从内核中独立出来的一个简单的文件系统 EasyFileSystem 的实现)
 │ ├── Cargo.toml
 │ └── src
-│ ├── bitmap.rs (bitmap abstraction)
-│ ├── block_cache.rs (block cache layer, which caches some blocks in the block device in memory)
-│ ├── block_dev.rs (declare the block device abstract interface BlockDevice, which requires the user of the library to provide its implementation)
-│ ├── efs.rs (realize the disk layout of the entire EasyFileSystem)
-│ ├── layout.rs (memory layout of some data structures stored on disk)
-│ ├── lib.rs (necessary information for definition)
-│ └── vfs.rs (provides the core abstraction of the virtual file system, that is, the index node Inode)
-├── easy-fs-fuse (new: package the application executable file on the current OS in the easy-fs format)
+│ ├── bitmap.rs (位图抽象)
+│ ├── block_cache.rs (块缓存层，将块设备中的部分块缓存在内存中)
+│ ├── block_dev.rs (声明块设备抽象接口 BlockDevice，需要库的使用者提供其实现)
+│ ├── efs.rs (实现整个 EasyFileSystem 的磁盘布局)
+│ ├── layout.rs (一些保存在磁盘上的数据结构的内存布局)
+│ ├── lib.rs (定义的必要信息)
+│ └── vfs.rs (提供虚拟文件系统的核心抽象，即索引节点 Inode)
+├── easy-fs-fuse (新增：将当前 OS 上的应用可执行文件按照 easy-fs 的格式进行打包)
 │ ├── Cargo.toml
 │ └── src
-│ └── main.rs
+│       └─ main.rs
 ```
 
 ---
@@ -329,16 +329,16 @@ Improve OS
 ```
 ├── os
 │ ├── build.rs
-│ ├── Cargo.toml (Modification: Add Qemu and K210 platform block device drivers to depend on crate)
-│ ├── Makefile (Modification: Add file system build process)
+│ ├── Cargo.toml (修改：新增 Qemu 和 K210 两个平台的块设备驱动依赖 crate)
+│ ├── Makefile (修改：新增文件系统的构建流程)
 │ └── src
-│ ├── config.rs (modification: add some MMIO configurations required to access block devices)
+│ ├── config.rs (修改：新增访问块设备所需的一些 MMIO 配置)
 │ ├── console.rs
-│ ├── drivers (modification: add block device drivers for Qemu and K210 platforms)
+│ ├── drivers (修改：新增 Qemu 和 K210 两个平台的块设备驱动)
 │ │ ├── block
-│ │ │ ├── mod.rs (globally instantiate block devices on different platforms as BLOCK_DEVICE for other modules to use)
-│ │ │ ├── sdcard.rs (microSD block device on K210 platform, Qemu will not use it)
-│ │ │ └── virtio_blk.rs (virtio-blk block device for Qemu platform)
+│ │ │ ├── mod.rs (将不同平台上的块设备全局实例化为 BLOCK_DEVICE 提供给其他模块使用)
+│ │ │ ├── sdcard.rs (K210 平台上的 microSD 块设备, Qemu不会用)
+│ │ │ └── virtio_blk.rs (Qemu 平台的 virtio-blk 块设备)
 │ │ └── mod.rs
 ```
 
@@ -347,17 +347,16 @@ Improve OS
 Improve OS
 ```
 ├── os
-│ ├── fs (Modification: Add support for regular files in the file system)
-│ │ ├── inode.rs (new: encapsulate the Inode abstraction provided by easy-fs into the OSInode seen by the kernel
-│ │ and implement the File Trait of the fs submodule)
-│ ├── loader.rs (removed: application loader submodule, this chapter begins to load applications from the file system)
+│ ├── fs (修改：在文件系统中新增常规文件的支持)
+│ │ ├── inode.rs (新增：将Inode抽象封装为OSInode，并实现fs子模块的 File Trait)
+│ ├── loader.rs (移除：应用加载器 loader 子模块，本章开始从文件系统中加载应用)
 │ ├── mm
-│ │ ├── memory_set.rs (modification: insert MMIO virtual page when creating address space)
+│ │ ├── memory_set.rs (修改：在创建地址空间的时候插入 MMIO 虚拟页面)
 │ ├── syscall
-│ │ ├── fs.rs (modification: add sys_open)
-│ │ └── process.rs (modification: sys_exec is changed to load ELF from the file system, and supports command line parameters)
+│ │ ├── fs.rs (修改：新增 sys_open)
+│ │ └── process.rs (修改：sys_exec 改为从文件系统中加载 ELF，并支持命令行参数)
 │ ├── task
-│ │ ├── mod.rs (modify the initialization of the initial process INITPROC)
+│ │ ├── mod.rs (修改初始进程 INITPROC 的初始化)
 ```
 
 
@@ -485,13 +484,13 @@ pub struct DirEntry {
 #### open() system call
 
 ```
-/// Function: Open a regular file and return the file descriptor that can access it.
-/// Parameter: path describes the file name of the file to be opened
-/// (For simplicity, the file system does not need to support directories, all files are placed under the root directory /),
-/// flags describe the flags to open the file, the specific meaning is given below.
-/// Return value: -1 if an error occurs, otherwise the file descriptor to open a regular file.
-/// The possible cause of the error is: the file does not exist.
-/// syscall ID: 56
+/// 功能：打开一个常规文件，并返回可以访问它的文件描述符。
+/// 参数：path 描述要打开的文件的文件名
+/// （简单起见，文件系统不需要支持目录，所有的文件都放在根目录 / 下），
+/// flags 描述打开文件的标志，具体含义下面给出。
+/// 返回值：如果出现了错误则返回 -1，否则返回打开常规文件的文件描述符。
+/// 可能的错误原因是：文件不存在。
+/// syscall ID：56
 fn sys_open(path: &str, flags: u32) -> isize
 ```
 ---
@@ -499,12 +498,12 @@ fn sys_open(path: &str, flags: u32) -> isize
 #### close() system call
 
 ```
-/// Function: The current process closes a file.
-/// Parameter: fd indicates the file descriptor of the file to be closed.
-/// Return value: 0 if closed successfully, otherwise -1.
-/// Possible cause of error: The incoming file descriptor does not correspond to an open file.
+/// 功能：当前进程关闭一个文件。
+/// 参数：fd 表示要关闭的文件的文件描述符。
+/// 返回值：如果成功关闭则返回 0 ，否则返回 -1 。
+/// 可能的出错原因：传入的文件描述符并不对应一个打开的文件。
 
-/// syscall ID: 57
+/// syscall ID：57
 fn sys_close(fd: usize) -> isize
 ```
 
@@ -513,12 +512,12 @@ fn sys_close(fd: usize) -> isize
 #### read() system call
 
 ```
-/// Function: The current process reads the file.
-/// Parameter: fd indicates the file descriptor to read the file.
-/// Return value: If buf is successfully read, the number of bytes read will be returned, otherwise -1 will be returned.
-/// Possible cause of error: The incoming file descriptor does not correspond to an open file.
+/// 功能：当前进程读取文件。
+/// 参数：fd 表示要读取文件的文件描述符。
+/// 返回值：如果成功读入buf，则返回 读取的字节数，否则返回 -1 。
+/// 可能的出错原因：传入的文件描述符并不对应一个打开的文件。
 
-/// syscall ID: 63
+/// syscall ID：63
 sys_read(fd: usize, buf: *const u8, len: usize) -> isize
 ```
 
@@ -528,12 +527,12 @@ sys_read(fd: usize, buf: *const u8, len: usize) -> isize
 #### write() system call
 
 ```
-/// Function: The current process writes a file.
-/// Parameter: fd indicates the file descriptor to write to the file.
-/// Return value: If buf is successfully written, the number of bytes written will be returned, otherwise -1 will be returned.
-/// Possible cause of error: The incoming file descriptor does not correspond to an open file.
+/// 功能：当前进程写入一个文件。
+/// 参数：fd 表示要写入文件的文件描述符。
+/// 返回值：如果成功把buf写入，则返回写入字节数 ，否则返回 -1 。
+/// 可能的出错原因：传入的文件描述符并不对应一个打开的文件。
 
-/// syscall ID: 64
+/// syscall ID：64
 fn sys_write(fd: usize, buf: *const u8, len: usize) -> isize
 ```
 
@@ -554,7 +553,7 @@ pub fn main() -> i32 {
      close(fd); // close the file
      let fd = open(filea, OpenFlags::RDONLY); // open the file in read-only mode
      let mut buffer = [0u8; 100]; // 100 byte array buffer
-     let read_len = read(fd, &mut buffer) as usize;// read the file content into the buffer
+     let read_len = read(fd, &mut buffer) as usize;// read file content into the buffer
      close(fd); // close the file
 }
 ```
@@ -590,7 +589,7 @@ pub fn main() -> i32 {
 #### Core data structure
 
 - Files are located in the root directory  ``ROOT_INODE``
-- Directories are represented by an array of ``DirEntry``
+- The content of a directory is an array of ``DirEntry``
 - Files/directories are represented by ``inode``
 ```rust
 pub struct DirEntry {
@@ -734,11 +733,11 @@ pub struct DirEntry {
 pub const BLOCK_SZ: usize = 512;
 
 pub struct BlockCache {
-     cache: [u8; BLOCK_SZ], //512 byte array
-     block_id: usize, //corresponding block number
-     //A reference to the underlying block device, through which blocks can be read and written
+     cache: [u8; BLOCK_SZ], //512字节数组
+     block_id: usize, //对应的块编号
+     //底层块设备的引用，可通过它进行块读写
      block_device: Arc<dyn BlockDevice>,
-     modified: bool, //has it been modified
+     modified: bool, //它有没有被修改过
 }
 ```
 ``get_block_cache``: get a block cache numbered ``block_id``
@@ -796,12 +795,12 @@ lazy_static! {
 
 ```rust
 pub fn sys_open(path: *const u8, flags: u32) -> isize {
-     //Call the open_file function to obtain an inode of the OSInode structure
+     //调用open_file函数获得一个OSInode结构的inode
      if let Some(inode) = open_file(path.as_str(),
                             OpenFlags::from_bits(flags).unwrap()) {
          let mut inner = task. inner_exclusive_access();
-         let fd = inner.alloc_fd(); //Get the idx of a free fd_table item, namely fd
-         inner.fd_table[fd] = Some(inode); //fill inode into fd_table[fd]
+         let fd = inner.alloc_fd(); //得到一个空闲的fd_table项的idx，即fd
+         inner.fd_table[fd] = Some(inode); //把inode填入fd_table[fd]中
          fd as isize // return fd
      ...
 ```
@@ -814,8 +813,8 @@ If failed, return `-1`
 ```rust
 fn open_file(name: &str, flags: OpenFlags) -> Option<Arc<OSInode>> {
     …
-  ROOT_INODE.create(name) //Create a DireEntry<name, inode> in the root directory
-                 .map(|inode| {//Create fd_table[OSInode] in the process
+  ROOT_INODE.create(name) //在根目录中创建一个DireEntry<name，inode>
+                 .map(|inode| {//创建进程中fd_table[OSInode]
                      Arc::new(OSInode::new(
                          readable,
                          writable,
@@ -833,8 +832,8 @@ Create a file in the root directory ``ROOT_INODE``, return ``OSInode``
 ```rust
 fn open_file(name: &str, flags: OpenFlags) -> Option<Arc<OSInode>> {
     …
-  ROOT_INODE.find(name) //Find DireEntry<name, inode> in the root directory
-             .map(|inode| { // fd_table[OSInode] in the creation process
+  ROOT_INODE.find(name) //在根目录中查找DireEntry<name，inode>
+             .map(|inode| { //创建进程中fd_table[OSInode]
                  Arc::new(OSInode::new(
                      readable,
                      writable,
