@@ -71,7 +71,7 @@ Support application flexibility and IPC
 - Expand file abstractions: Pipe, Stdout, Stdin
 - Exchange data between processes in file format
 - Input and output through serial port in file format
-- Signal implementation of interprocess asynchronous notification mechanism
+- Use singals to implement asynchronous notification between processes
 - System call number: 11 --> 17
   - Pipes: 2, used for data transfer
   - Signals: 4, used for notification
@@ -281,7 +281,7 @@ McIlroy is best known for the original Unix pipeline implementation, software co
 ---
 #### Signal: Error-Prone Software Interrupts in Unix
 
-Signals have been present in Unix since the first version, but they were a bit different from what we know today and required different system calls to catch different types of signals. Starting with Version 4, improvements were made so that all signals could be caught with a single system call.
+Signal has been supported in Unix since the first version, but they were a bit different from what we know today and required different system calls to catch different types of signals. Starting with Version 4, improvements were made so that all signals could be caught with a single system call.
 
 ![bg right:35% 90%](figs/douglas-mcllroy.jpg)
 
@@ -379,35 +379,35 @@ This application establishes a signal handler `func` for the `SIGUSR1` signal, a
 └── user
      └── src
          ├── bin
-         │ ├── pipe_large_test.rs (new: large data pipe transfer)
-         │ ├── pipetest.rs (new: parent-child process pipe transfer)
-         │ ├── run_pipe_test.rs (new: pipe tests)
-         │ ├── sig_tests.rs (new: signal mechanism tests)
-         │ ├── sig_simple.rs (new: sending signal to itself)
-         │ ├── sig_simple2.rs (new: parent process sending signal to child process)
-         ├── lib.rs (two new system calls: sys_close/sys_pipe/sys_sigaction/sys_kill...)
-         └── syscall.rs (two new system calls: sys_close/sys_pipe/sys_sigaction/sys_kill...)
+         │ ├── pipe_large_test.rs(新增：大数据量管道传输)
+         │ ├── pipetest.rs(新增：父子进程管道传输)
+         │ ├── run_pipe_test.rs(新增：管道测试)
+         │ ├── sig_tests.rs(新增：多方位测试信号机制)
+         │ ├── sig_simple.rs(新增：给自己发信号)
+         │ ├── sig_simple2.rs(新增：父进程给子进程发信号)
+         ├── lib.rs(新增两个系统调用：sys_close/sys_pipe/sys_sigaction/sys_kill...)
+         └── syscall.rs(新增两个系统调用：sys_close/sys_pipe/sys_sigaction/sys_kill...)
 ```
 
 ---
 #### Kernel code structure
 ```
-├── fs (Added: file system sub-module fs)
-│   ├── mod.rs (contains abstract File Trait for files that are open and can be read/written by processes)
-│   ├── pipe.rs (implements the first branch of the File Trait - pipes for inter-process communication)
-│   └── stdio.rs (implements the second branch of the File Trait - standard input/output)
+├── fs(新增：文件系统子模块 fs)
+│   ├── mod.rs(包含已经打开且可以被进程读写的文件的抽象 File Trait)
+│   ├── pipe.rs(实现了 File Trait 的第一个分支——可用来进程间通信的管道)
+│   └── stdio.rs(实现了 File Trait 的第二个分支——标准输入/输出)
 ├── mm
-│   └── page_table.rs (Added: UserBuffer abstraction for application address space buffer and its iterator implementation)
+│   └── page_table.rs(新增：应用地址空间的缓冲区抽象 UserBuffer 及其迭代器实现)
 ├── syscall
-│   ├── fs.rs (Modified: adjusted sys_read/write implementation, added sys_close/pipe)
-│   ├── mod.rs (Modified: adjusted syscall dispatch)
+│   ├── fs.rs(修改：调整 sys_read/write 的实现，新增 sys_close/pipe)
+│   ├── mod.rs(修改：调整 syscall 分发)
 ├── task
-│   ├── action.rs (Definition and default behavior of SignalAction for signal handling)
-│   ├── mod.rs (Signal handling related functions)
-│   ├── signal.rs (Signal value definitions for signal handling, etc.)
-│   └── task.rs (Modified: added signal related contents in task control block)
+│   ├── action.rs(信号处理SignalAction的定义与缺省行为)
+│   ├── mod.rs(信号处理相关函数)
+│   ├── signal.rs（信号处理的信号值定义等）
+│   └── task.rs(修改：在任务控制块中加入信号相关内容)
 └── trap
-├── mod.rs (Signal handling when entering/exiting the kernel)
+├── mod.rs(进入/退出内核时的信号处理)
 ```
 
 
@@ -504,15 +504,18 @@ TaskControlBlock::new(elf_data: &[u8]) -> Self{
 ---
 #### Pipe File
 
-1. System calls of Pipes
+1. System call of Pipe
 
 ```rust
-/// Function: Open a pipe for the current process.
-/// Argument: `pipe` is the starting address of a usize array of length 2 in the application address space. 
-/// The kernel needs to write the file descriptors of the pipe read end and write end in order into the array.
-/// Returns: 0 on success, -1 on error.
-/// Possible error: The address passed is invalid.
-/// Syscall ID: 59
+/// 功能：为当前进程打开一个管道。
+/// 参数：pipe 表示应用地址空间中
+/// 的一个长度为 2 的 usize 数组的
+/// 起始地址，内核需要按顺序将管道读端
+/// 和写端的文件描述符写入到数组中。
+/// 返回值：如果出现了错误则返回 -1，
+/// 否则返回 0 。
+/// 可能的错误原因是：传入的地址不合法。
+/// syscall ID：59
 pub fn sys_pipe(pipe: *mut usize) -> isize;
 ```
 
@@ -562,16 +565,16 @@ make_pipe() -> (Arc<Pipe>, Arc<Pipe>) {
 
 ---
 #### Command line arguments for the exec system call
-- The system call interface of sys_exec has been changed
+- sys_exec should be changed
 ```rust
-// Add the args parameter
+// 增加了args参数
 pub fn sys_exec(path: &str, args: &[*const u8]) -> isize;
 ```
-- Command line argument segmentation in shell programs
+- Segment the arguments in shell
 ```rust
-// Get parameters from a line of string
+// 从一行字符串中获取参数
 let args: Vec<_> = line.as_str().split(' ').collect();
-// Execute the sys_exec system call with the application name and argument addresses
+// 用应用名和参数地址来执行sys_exec系统调用
 exec(args_copy[0].as_str(), args_addr.as_slice())
 ```
 ![bg right:35% 100%](figs/tcb-ipc-standard-file.png)
@@ -586,7 +589,7 @@ exec(args_copy[0].as_str(), args_addr.as_slice())
 
 #### Command line arguments for the exec system call
 
-- Push the obtained parameter string onto the user stack
+- Push the parameter string on the user stack
 ```rust
 impl TaskControlBlock {
   pub fn exec(&self, elf_data: &[u8], args: Vec<String>) {
@@ -606,9 +609,9 @@ impl TaskControlBlock {
 
 ```rust
 pub extern "C" fn _start(argc: usize, argv: usize) -> ! {
-    //Get the number of command lines in the application, get the command line parameters to v
-   //Execute the application's main function
-    exit(main(argc, v. as_slice()));
+    //获取应用的命令行个数 argc, 获取应用的命令行参数到v中
+    //执行应用的main函数
+    exit(main(argc, v.as_slice()));
 }
 ```
 ![bg right:30% 100%](figs/user-stack-cmdargs.png)
@@ -619,12 +622,14 @@ pub extern "C" fn _start(argc: usize, argv: usize) -> ! {
 #### Redirection
 - System call to duplicate file descriptors
 ```rust
-/// Function: Duplicates a file that is already open in a process
-/// and allocates it to a new file descriptor.
-/// Parameters: 'fd' represents the file descriptor of an already opened file in the process.
-/// Returns: Returns -1 if an error occurs, otherwise the newly allocated file descriptor to the already opened file can be accessed.
-/// Possible error reasons are: 'fd' passed in does not correspond to a valid open file.
-/// Syscall ID: 24
+/// 功能：将进程中一个已经打开的文件复制
+/// 一份并分配到一个新的文件描述符中。
+/// 参数：fd 表示进程中一个已经打开的文件的文件描述符。
+/// 返回值：如果出现了错误则返回 -1，否则能够访问已打
+/// 开文件的新文件描述符。
+/// 可能的错误原因是：传入的 fd 并不对应一个合法的已打
+/// 开文件。
+/// syscall ID：24
 pub fn sys_dup(fd: usize) -> isize;
 ```
 <!-- ![bg right:30% 100%](figs/user-stack-cmdargs.png) -->
@@ -872,4 +877,4 @@ Directly record the signals to be masked in the signal_mask data of TCB.
 * Lab tasks
      * Hard link
 * Lab submission requirements
-     * The 11th day after the task is assigned (December 04, 2022);
+     * The 11th day after the task is assigned (May 28, 2023);
