@@ -97,7 +97,7 @@ IPC refers to the ability of processes to share or transfer data.
 | 消息队列 (Message Queue) | 通过队列中收/发消息 | 间接通信 |
 | 信号 (Signal) | 异步发送信号给进程处理 | 间接通信 |
 | 套接字 (Socket) | 多/单机进程间网络通信 | 间接通信 |
-| 共享内存 (Shared Memory) | 多个进程共享一块物理内存 | 间接通信 |
+| 共享内存 (Shared Memory) | 多个进程共享一块物理内存 | 直接通信 |
 | 文件 (File) | 多个进程可访问同一文件 | 间接通信 |
 
 ---
