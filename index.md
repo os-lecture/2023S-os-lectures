@@ -104,14 +104,14 @@ backgroundColor: "white"
 - [Section 1 Overview of Inter-Process Communication (IPC)](./lec10/p1-ipcoverview.html)
 - [Section 2 IPC OS](./lec10/p2-ipclabs.html)
 
-<!--
+
 ---
 ## Lecture 11 Threads and coroutines
 - [Part 1 Thread](./lec11/p1-thread.html)
 - [Section 2 Coroutine](./lec11/p2-coroutine.html)
 - [Section 3 Practice: OS (TCOS) that supports threads/coroutines](./lec11/p3-labs.html)
 
-
+<!--
 ---
 ## Lecture 10 Inter-process communication
 - [Section 1 Overview of Inter-Process Communication (IPC)](./lec10/p1-ipcoverview.html)
