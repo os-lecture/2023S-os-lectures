@@ -204,7 +204,7 @@ Spring 2024
 ### Choice 1:
    - Complete the basic experiments (5 basic experiments + additional experiments) on time: 40%
    - Midterm Exam 20% + Final Exam 40%
-   - Bouns: Homework (每做一次平时作业加1分，最高加5分，但总分不超过100分)
+   - Bouns: Homework (每做一次平时作业加1分，最高加5分，总分不超过100分)
 ### Choice 2:
    - Complete the basic experiments in 4 weeks: 40%
    - Course Design: 60%
