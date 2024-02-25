@@ -218,7 +218,7 @@ Spring 2024
 </style>
 ## Survey
 
-[Questions for 2023 Spring OS Course](http://oscourse2019.mikecrm.com/k2KiFjA) (Access password: 8VC7x2Yxk)
+[Questions for 2024 Spring OS Course](https://www.wjx.cn/vm/es1fD1R.aspx)
 
 - Why do you want to take this course?
 - How are you going to take this course?
