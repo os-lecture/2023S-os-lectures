@@ -202,12 +202,12 @@ Spring 2024
 ## Grades
 
 ### Choice 1:
-   - Complete the basic experiments (1-5) on time: 35%
-   - Midterm Exam 15% + Final Exam 50% : 65%
-   - Bonus: Finishing the addtional experiment will add up to 7 on the final score 
+   - Complete the basic experiments (5 basic experiments + additional experiments) on time: 40%
+   - Midterm Exam 20% + Final Exam 40%
+   - Bouns: Homework (每做一次平时作业加1分，最高加5分，但总分不超过100分)
 ### Choice 2:
-   - Complete the basic experiments in 5 weeks (2023 Spring): 35%
-   - Course Design: 65%
+   - Complete the basic experiments in 5 weeks (2023 Spring): 40%
+   - Course Design: 60%
      - Note: Students need to take the exam if they quit the course design.
 
 ---
