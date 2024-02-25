@@ -220,9 +220,3 @@ https://learningos.cn/rCore-Tutorial-Guide-2024S/
 
 [Questions for 2024 Spring OS Course](http://oscourse2019.mikecrm.com/TdGsawl) [password: tn6m1HK]
 
-- Why do you want to take this course?
-- How are you going to take this course?
-- What do you expect to learn from this course?
-- Are you willing to truthfully report whether you completed the experimental tasks independently?
-- What knowledge and ability do you hope to acquire in this course?
-- Previous studies?
