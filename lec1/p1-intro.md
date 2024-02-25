@@ -85,7 +85,7 @@ Spring 2024
 }
 </style>
 #### Course Reference
-- [Course Slides](https://www.yuque.com/docs/share/4c39608f-3051-4445-96ca-f3c018cb96c7)
+- [Slides](https://www.yuque.com/xyong-9fuoz/qczol5/ewvhdy3epbwbkn3n)
 - Reference books
    * [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/)
    - [In-depth understanding of computer systems](https://hansimov.gitbook.io/csapp/)
@@ -102,21 +102,21 @@ Spring 2024
 
 #### uCore-RV-64
 
-* [uCore Code](https://github.com/LearningOS/uCore-Tutorial-Code-2023S/)
-* [Document - uCore Tutorial](https://learningos.github.io/uCore-Tutorial-Guide-2023S/)
+* [uCore Code](https://github.com/LearningOS/uCore-Tutorial-Code-2024S/)
+* [Document - uCore Tutorial](https://learningos.cn/uCore-Tutorial-Guide-2024S/)
 
-* [uCore Test Cases](https://github.com/LearningOS/uCore-Tutorial-Test-2023S)
+* [uCore Test Cases](https://github.com/LearningOS/uCore-Tutorial-Test-2024S/)
 
 
 ---
 
 ### Experiment Guide
-
+https://learningos.cn/rCore-Tutorial-Guide-2024S/
 #### rCore
-- [Document - rCore Tutorial](https://learningos.github.io/rCore-Tutorial-Guide-2023S/)
-- [rCore API](https://github.com/LearningOS/rCore-Tutorial-Guide-2023S/#os-api-docs-of-rcore-tutorial-code-2022s)
-- [rCore Code](https://github.com/LearningOS/rCore-Tutorial-Code-2023S)
-- [Test Cases](https://github.com/LearningOS/rCore-Tutorial-Test-2023S)
+- [Document - rCore Tutorial](https://learningos.github.io/rCore-Tutorial-Guide-2024S/)
+- [rCore API](https://github.com/LearningOS/rCore-Tutorial-Guide-2024S/#os-api-docs-of-rcore-tutorial-code-2022a)
+- [rCore Code](https://github.com/LearningOS/rCore-Tutorial-Code-2024S)
+- [Test Cases](https://github.com/LearningOS/rCore-Tutorial-Test-2024S)
 
 #### [uCore and rCore experiment introduction videos](https://www.yuque.com/xyong-9fuoz/qczol5/axrf11?)
 -Keep updating
@@ -218,7 +218,7 @@ Spring 2024
 </style>
 ## Survey
 
-[Questions for 2024 Spring OS Course](https://www.wjx.cn/vm/es1fD1R.aspx)
+[Questions for 2024 Spring OS Course](http://oscourse2019.mikecrm.com/TdGsawl) [password: tn6m1HK]
 
 - Why do you want to take this course?
 - How are you going to take this course?
