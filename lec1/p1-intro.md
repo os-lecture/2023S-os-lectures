@@ -118,7 +118,7 @@ https://learningos.cn/rCore-Tutorial-Guide-2024S/
 - [rCore Code](https://github.com/LearningOS/rCore-Tutorial-Code-2024S)
 - [Test Cases](https://github.com/LearningOS/rCore-Tutorial-Test-2024S)
 
-#### [uCore and rCore experiment introduction videos](https://www.yuque.com/xyong-9fuoz/qczol5/axrf11?)
+#### [uCore and rCore experiment introduction videos](https://www.yuque.com/xyong-9fuoz/qczol5/lt5qafszpz62hob1?singleDoc)
 -Keep updating
 
 ---
