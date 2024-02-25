@@ -20,12 +20,12 @@ backgroundColor: "white"
 <br>
 <br>
 
-Xiang Yong, Chen Yu, Li Guoliang, Ren Ju
+Yong Xiang, Yu Chen, Guoliang Li, Ju Ren 
 
 <br>
 <br>
 
-Spring 2023
+Spring 2024
 
 ---
 <style scoped>
