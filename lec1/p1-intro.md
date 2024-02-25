@@ -36,7 +36,7 @@ Spring 2023
 
 
 ### Teaching Assistant
-  - Jun Lu, Wang Huang, Zixu Hao, Congyuan Rao, Banruo Liu, Haoyang Bi, Kaifu Tian
+  - Congyuan Rao, Kaifu Tian, Haoyang Bi, Zixu Hao, Tuowei Wang, Mingxian Su, Wang Huang
 
 ---
 
@@ -55,7 +55,7 @@ Spring 2023
 - Homepage: https://juren1987.github.io
 - Research Interests: Internet-of-Things, Edge Computing & Edge Intelligence, Operating System
 
-- First author of 《openEuler操作系统》
+- First author of 《openEuler操作系统》（第1版&第2版）
 ----
 ## Preliminary knowledge
 
